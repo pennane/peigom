@@ -1,8 +1,14 @@
 Discord bot with features for managing your server and creating all kinds of shenanigans.
 
-Requires node.js and npm.
+Requires node.js and npm and a discord bot account.
 
 install [node js](https://nodejs.org/en/download/)
+
+create a discord application [here](https://discordapp.com/developers/applications/me)
+
+Create the bot account to the application and gather your bot token. 'KEEP IN MIND THAT YOU SHOULD NEVER SHARE YOUR TOKEN WITH ANYONE!'
+![https://imgur.com/a/ZVRxs6f]
+
 
 To install dependencies run these in the wanted directory:
 ```
