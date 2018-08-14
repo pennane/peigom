@@ -1,11 +1,14 @@
 Discord bot with features for managing your server and creating all kinds of shenanigans.
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 Requires node.js and npm.
 
 To install dependencies run: npm --install
 
 =======
+=======
+>>>>>>> d7d163ec4d0c1c485bd007a02f5af2d234aa0fae
 Requires node.js and npm and a discord bot account.
 
 install [node js](https://nodejs.org/en/download/)
@@ -40,4 +43,7 @@ In 'bot/config/' edit the `default.json` file:
 ````
 
 To run the bot use `node bot/bot.js` in your bot directory.
+<<<<<<< HEAD
+>>>>>>> d7d163ec4d0c1c485bd007a02f5af2d234aa0fae
+=======
 >>>>>>> d7d163ec4d0c1c485bd007a02f5af2d234aa0fae
