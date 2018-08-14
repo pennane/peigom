@@ -1,6 +1,7 @@
 Discord bot with features for managing your server and creating all kinds of shenanigans.
 
 Requires node.js and npm.
+
 install [node js](https://nodejs.org/en/download/)
 
 To install dependencies run these in the wanted directory:
