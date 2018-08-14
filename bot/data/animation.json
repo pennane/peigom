@@ -1,0 +1,34 @@
+{
+    "swas": {
+        "desc": "Suomen ilmavoimien merkki jada jada",
+        "delay": 450,
+        "keyframes": [
+            ":white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:\n:white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:\n:white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:\n:white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:\n:white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:",
+            ":white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:\n:white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:\n:white_large_square::white_large_square::black_large_square::white_large_square::white_large_square:\n:white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:\n:white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:",
+            ":white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:\n:white_large_square::white_large_square::black_large_square::white_large_square::white_large_square:\n:white_large_square::black_large_square::black_large_square::black_large_square::white_large_square:\n:white_large_square::white_large_square::black_large_square::white_large_square::white_large_square:\n:white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:",
+            ":white_large_square::white_large_square::black_large_square::black_large_square::white_large_square:\n:black_large_square::white_large_square::black_large_square::white_large_square::white_large_square:\n:black_large_square::black_large_square::black_large_square::black_large_square::black_large_square:\n:white_large_square::white_large_square::black_large_square::white_large_square::black_large_square:\n:white_large_square::black_large_square::black_large_square::white_large_square::white_large_square:",
+            ":black_large_square::white_large_square::black_large_square::black_large_square::black_large_square:\n:black_large_square::white_large_square::black_large_square::white_large_square::white_large_square:\n:black_large_square::black_large_square::black_large_square::black_large_square::black_large_square:\n:white_large_square::white_large_square::black_large_square::white_large_square::black_large_square:\n:black_large_square::black_large_square::black_large_square::white_large_square::black_large_square:"
+        ]
+    },
+    "smile": {
+        "desc": "makes you thonk",
+        "delay": 600,
+        "keyframes": [
+            ":thinking::black_circle::black_circle::black_circle::black_circle:",
+            ":black_circle::thinking::black_circle::black_circle::black_circle:",
+            ":black_circle::black_circle::thinking::black_circle::black_circle:",
+            ":black_circle::black_circle::black_circle::thinking::black_circle:",
+            ":thinking::thinking::thinking::thinking::thinking:"
+        ]
+    },
+    "shaq": {
+        "desc": "Animation of bigshaqud",
+        "delay": 2100,
+        "keyframes": [
+            "Yo, Big Shaq, the one and only",
+            "Man's not hot, never hot",
+            "Skrrat, skidi-kat-kat",
+            "Boom"
+        ]
+    }
+}
