@@ -1,6 +1,7 @@
 Discord bot with features for managing your server and creating all kinds of shenanigans.
 
 Requires node.js and npm.
+install [node js](https://nodejs.org/en/download/)
 
 To install dependencies run these in the wanted directory:
 ```
@@ -9,7 +10,7 @@ npm install ffmpeg-binaries
 npm install node-opus
 ```
 
-In the bot/config/ edit the `default.json` file:
+In 'bot/config/' edit the `default.json` file:
 ````javascript
 "discord": {
         "token": "YOUR TOKEN HERE", //Your bot applications token here
