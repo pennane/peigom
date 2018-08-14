@@ -6,8 +6,8 @@ install [node js](https://nodejs.org/en/download/)
 
 create a discord application [here](https://discordapp.com/developers/applications/me)
 
-Create the bot account to the application and gather your bot token. 'KEEP IN MIND THAT YOU SHOULD NEVER SHARE YOUR TOKEN WITH ANYONE!'
-![https://imgur.com/a/ZVRxs6f]
+Create the bot account to the application and gather your bot token. `KEEP IN MIND THAT YOU SHOULD NEVER SHARE YOUR TOKEN WITH ANYONE!`
+![Bot token creation](https://i.imgur.com/bMciwCc.png)
 
 
 To install dependencies run these in the wanted directory:
