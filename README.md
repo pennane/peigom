@@ -33,4 +33,4 @@ In 'bot/config/' edit the `default.json` file:
     },
 ````
 
-To run the bot use 'node bot/bot.js' in installed directory to run.
+To run the bot use `node bot/bot.js` in your bot directory.
