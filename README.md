@@ -19,17 +19,24 @@ npm --install
 In 'bot/config/' edit the `default.json` file:
 ````javascript
 "discord": {
-        "token": "YOUR TOKEN HERE", //Your bot applications token here
-        "prefix": ",", //Desired prefix for all the commands
+        "token": "YOUR TOKEN HERE", // Your bot app token here
+        "prefix": ",", // Prefix for commands here
         "authorized": [
-            "AUTHORIZED USER ID HERE", // Insert your admin's id
-            "ANOTHER AUTHORIZED IF NEEDED" // You can put multiple account ids
+            "AUTHORIZED USER ID" // Authorized user id's here
         ],
         "authorizedRoles": [
-            "AUTHORIZED ROLE-NAMES HERE" // Insert role's name that you want to have admin commands
+            "AUTHORIZED ROLE" // Authorized role names here
         ],
-        "activity": ",auta" // Insert what activity bot shows in discord
-    },
+        "presence": { // For presence configuration
+            "activities": [
+                ",auta",
+                "my name be jeff",
+                "yo big man bom",
+                "sugondese is a funny meme"
+            ],
+            "type" : "LISTENING",
+            "refreshrate" : 20
+        }
 ````
 
 To run the bot use `node bot/bot.js` in your bot directory.
