@@ -10,11 +10,10 @@ Create the bot account to the application and gather your bot token. `KEEP IN MI
 ![Bot token creation](https://i.imgur.com/bMciwCc.png)
 
 
-To install dependencies run these in the wanted directory:
+To install dependencies run this in the wanted directory:
 ```
 npm --install
-npm install ffmpeg-binaries
-npm install node-opus
+
 ```
 
 In 'bot/config/' edit the `default.json` file:
