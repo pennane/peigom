@@ -6,24 +6,42 @@
         "token": "YOUR TOKEN HERE",
         "prefix": ",",
         "authorized": [
-            "AUTHORIZED USER ID HERE"
+            "AUTHORIZED USERID"
         ],
         "authorizedRoles": [
-            "AUTHORIZED ROLE-NAMES HERE"
+            "AUTHORIZED ROLENAME"
         ],
-        "activity": ",auta"
+        "presence": {
+            "activities": [
+                ",auta",
+                "my name be jeff",
+                "yo big man bom",
+                "sugondese is a funny meme"
+            ],
+            "type" : "LISTENING",
+            "refreshrate" : 20
+        }
     },
-
     "commands": {
         "thonk": {
             "syntax": "thonk",
             "desc": "Lähettää kanavalle animoidun thonkin.",
             "admin": false
         },
+        "uptime" : {
+            "syntax": "uptime",
+            "desc": "Näyttää botin päälläoloajan.",
+            "admin": false
+        },
         "dankmeme": {
             "syntax": "dankmeme",
             "desc": "Soittaa satunnaisen dank meme äänen.",
             "admin": false
+        },
+        "editme": {
+            "syntax": "-",
+            "desc": "Profiilikuvan käsittelyyn",
+            "admin": "false"
         },
         "animation": {
             "syntax": "animation <animaation nimi tai lista>",

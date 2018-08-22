@@ -1,13 +1,13 @@
 const _ = require("underscore");
 const ffmpeg = require("ffmpeg");
 const fs = require("fs");
+const http = require('https');
 
 var exports = module.exports = {};
-var cache = {};
 var IsBusy = false;
 
 
-exports.parse = function (client, msg, command, args, renew = false) {
+exports.parse = function (client, msg, command, args) {
     return new Promise((resolve, reject) => {
 
         if (!_.isObject(client) || !_.isObject(msg)) {
@@ -20,15 +20,20 @@ exports.parse = function (client, msg, command, args, renew = false) {
         var prefix = client.config.get("discord.prefix");
         runCommand(msg, command, args);
 
-
         function runCommand(msg, command, args) {
             switch (command) {
+                case ("editme"):
+                    commandEditme(msg, args);
+                    break;
                 case ("help"):
                 case ("auta"):
                     commandAuta(msg, args);
                     break;
                 case "thonk":
                     commandThonk(msg, args);
+                    break;
+                case "uptime":
+                    commandUptime(msg, args);
                     break;
                 case "dankmeme":
                     commandDankmeme(msg, args);
@@ -83,11 +88,7 @@ exports.parse = function (client, msg, command, args, renew = false) {
             }
         }
 
-        function smartEdit(msg, edit, delay = 500) {
-            setTimeout(() => msg.edit(edit), delay);
-        }
-
-        function getCommandSyntax(command, subcommand) {
+        function getCommandSyntax(subcommand) {
             var syntax;
             var syntaxhelp;
             if (subcommand !== undefined && commands[command].sub[subcommand]) {
@@ -109,8 +110,8 @@ exports.parse = function (client, msg, command, args, renew = false) {
         }
 
         function commandAuta(msg, args) {
-            var cmdName = "auta";
-            var syntax = getCommandSyntax(cmdName);
+
+            var syntax = getCommandSyntax();
             if (!args[1]) {
                 var cmds = '';
                 var acmds = '';
@@ -145,8 +146,7 @@ exports.parse = function (client, msg, command, args, renew = false) {
 
         function commandMoney(msg, args) {
             var daily = 250;
-            var cmdName = "raha";
-            var syntax = getCommandSyntax(cmdName);
+            var syntax = getCommandSyntax();
             if (!msg.author.bot) {
                 var userid = msg.author.id.toString();
                 var usrobj;
@@ -174,7 +174,7 @@ exports.parse = function (client, msg, command, args, renew = false) {
                     var subsyntax;
                     switch (args[1]) {
                         case 'saldo':
-                            subsyntax = getCommandSyntax(cmdName, "saldo");
+                            subsyntax = getCommandSyntax("saldo");
                             msg.reply(usrobj.credits)
                                 .then(msg => {
                                     /*msg.delete(15000)*/
@@ -182,7 +182,7 @@ exports.parse = function (client, msg, command, args, renew = false) {
                                 .catch(error => console.log(error));
                             break;
                         case 'uhkapeli':
-                            subsyntax = getCommandSyntax(cmdName, "uhkapeli");
+                            subsyntax = getCommandSyntax("uhkapeli");
                             if (!isNaN(parseInt(args[2])) && parseInt(args[2]) > 0) {
                                 if (parseInt(args[2]) <= parseInt(usrobj.credits)) {
                                     msg.channel.send('Käyttäjä ' + msg.author.username + ' uhkapelaa ' + args[2] + ' kolikolla. Lets mennään.')
@@ -235,7 +235,7 @@ exports.parse = function (client, msg, command, args, renew = false) {
                             }
                             break;
                         case 'lahjoita':
-                            subsyntax = getCommandSyntax(cmdName, "lahjoita");
+                            subsyntax = getCommandSyntax("lahjoita");
                             if (!isNaN(parseInt(args[2])) && parseInt(args[2]) > 0 && args[3]) {
                                 if (parseInt(args[2]) <= parseInt(usrobj.credits)) {
                                     var giftTo = '';
@@ -283,7 +283,7 @@ exports.parse = function (client, msg, command, args, renew = false) {
                             }
                             break;
                         case 'kauppa':
-                            subsyntax = getCommandSyntax(cmdName, "kauppa");
+                            subsyntax = getCommandSyntax("kauppa");
                             msg.channel.send(' <:thonk4:414484594381946910> `**' + (msg.author.username)
                                 .toUpperCase() + ', KAUPPA ON SULJETTU**` <:thonk4:414484594381946910>  ')
                                 .then(msg => {
@@ -293,7 +293,7 @@ exports.parse = function (client, msg, command, args, renew = false) {
                                 .catch(error => console.log(error));
                             break;
                         case 'palkka':
-                            var subsyntax = getCommandSyntax(cmdName, "palkka");
+                            var subsyntax = getCommandSyntax("palkka");
                             if (Date.now() - usrobj.whenclaimed > 86400000) {
                                 msg.reply(`Sait päivän palkan, eli ${daily} kolikkelia.`)
                                     .then(msg => {
@@ -340,8 +340,7 @@ exports.parse = function (client, msg, command, args, renew = false) {
         }
 
         function commandAnimation(msg, args) {
-            var cmdName = "animation";
-            var syntax = getCommandSyntax(cmdName);
+            var syntax = getCommandSyntax();
             if (args.length > 1) {
                 if (animation[args[1]]) {
                     msg.channel.send(animation[args[1]].keyframes[0]).then(msg => {
@@ -367,10 +366,8 @@ exports.parse = function (client, msg, command, args, renew = false) {
         }
 
         function commandPing(msg, args) {
-            var cmdName = "ping";
-            var syntax = getCommandSyntax(cmdName);
+            var syntax = getCommandSyntax();
             var now = Date.now();
-            console.log(msg);
             msg.reply("Pong: " + (now - msg.createdTimestamp) + "ms")
                 .then(msg => {
                     /*msg.delete(15000)*/
@@ -382,8 +379,7 @@ exports.parse = function (client, msg, command, args, renew = false) {
         }
 
         function commandDankmeme(msg, args) {
-            var cmdName = "dankmeme";
-            var syntax = getCommandSyntax(cmdName);
+            var syntax = getCommandSyntax();
             var memeSound = ['./sound/meme.mp3', './sound/meme2.mp3', './sound/meme3.mp3']
             if (msg.member.voiceChannel) {
                 IsBusy = true;
@@ -405,16 +401,14 @@ exports.parse = function (client, msg, command, args, renew = false) {
         }
 
         function commandThonk(msg, args) {
-            var cmdName = "thonk";
-            var syntax = getCommandSyntax(cmdName);
+            var syntax = getCommandSyntax();
             /*msg.delete(15000)*/
             ;
             msg.channel.send('<a:thonk:443343009229045760>');
         }
 
         function commandPussukat(msg, args) {
-            var cmdName = "pussukat";
-            var syntax = getCommandSyntax(cmdName);
+            var syntax = getCommandSyntax();
             if (msg.member.voiceChannel) {
                 IsBusy = true;
                 var dir = './sound/sp/sp' + (Math.floor(Math.random() * (42 - 1 + 1)) + 1) + '.mp3';
@@ -434,8 +428,7 @@ exports.parse = function (client, msg, command, args, renew = false) {
         }
 
         function commandOof(msg, args) {
-            var cmdName = "oof";
-            var syntax = getCommandSyntax(cmdName);
+            var syntax = getCommandSyntax();
             if (msg.member.voiceChannel) {
                 IsBusy = true;
                 msg.member.voiceChannel.join()
@@ -455,8 +448,7 @@ exports.parse = function (client, msg, command, args, renew = false) {
         }
 
         function commandTomb(msg, args) {
-            var cmdName = "tomb";
-            var syntax = getCommandSyntax(cmdName);
+            var syntax = getCommandSyntax();
             msg.channel.send('NYT RIITTAEAE VANDALISOINTI')
                 .then(msg => {
                     /*msg.delete(15000)*/
@@ -484,8 +476,7 @@ exports.parse = function (client, msg, command, args, renew = false) {
         }
 
         function commandHus(msg, args) {
-            var cmdName = "hus";
-            var syntax = getCommandSyntax(cmdName);
+            var syntax = getCommandSyntax();
             if (msg.member.voiceChannel) {
                 msg.member.voiceChannel.leave();
             }
@@ -493,11 +484,9 @@ exports.parse = function (client, msg, command, args, renew = false) {
             ;
         }
 
-
-
         function commandSpam(msg, args) {
-            var cmdName = "spam";
-            var syntax = getCommandSyntax(cmdName);
+
+            var syntax = getCommandSyntax();
             if (args[3]) {
                 var userid = args[1].replace(/\D/g, '');
                 if (msg.guild.members.get(userid)) {
@@ -531,8 +520,7 @@ exports.parse = function (client, msg, command, args, renew = false) {
         }
 
         function commandBusy(msg, args) {
-            var cmdName = "busy";
-            var syntax = getCommandSyntax(cmdName);
+            var syntax = getCommandSyntax();
             msg.channel.send('IsBusy: ' + IsBusy)
                 .then(msg => {
                     msg.delete(10000)
@@ -548,8 +536,7 @@ exports.parse = function (client, msg, command, args, renew = false) {
         }
 
         function commandSudo(msg, args) {
-            var cmdName = "sudo";
-            var syntax = getCommandSyntax(cmdName);
+            var syntax = getCommandSyntax();
             if (args[2]) {
                 var channelid = args[1].replace(/\D/g, '');
                 var sudochannel = client.channels.get(channelid);
@@ -582,8 +569,7 @@ exports.parse = function (client, msg, command, args, renew = false) {
         }
 
         function commandSudopm(msg, args) {
-            var cmdName = "sudopm";
-            var syntax = getCommandSyntax(cmdName);
+            var syntax = getCommandSyntax();
             if (args[2]) {
                 var userid = args[1].replace(/\D/g, '');
                 var sudouser = msg.guild.members.get(userid);
@@ -615,8 +601,7 @@ exports.parse = function (client, msg, command, args, renew = false) {
         }
 
         function commandSammuta(msg, args) {
-            var cmdName = "sammuta";
-            var syntax = getCommandSyntax(cmdName);
+            var syntax = getCommandSyntax();
             msg.delete(1000);
             setTimeout(function () {
                 client.destroy()
@@ -624,8 +609,7 @@ exports.parse = function (client, msg, command, args, renew = false) {
         }
 
         function commandPuhista(msg, args) {
-            var cmdName = "puhista";
-            var syntax = getCommandSyntax(cmdName);
+            var syntax = getCommandSyntax();
             if (args[1] >= 2 && args[1] <= 99) {
                 var todel = parseInt(args[1]) + 1;
                 msg.channel.bulkDelete(todel)
@@ -638,6 +622,81 @@ exports.parse = function (client, msg, command, args, renew = false) {
             }
 
         }
+
+        function commandUptime(msg, args) {
+            var syntax = getCommandSyntax();
+            var uptime = {};
+            uptime.ms = (client.uptime);
+            uptime.ts = (client.uptime / 1000);
+            uptime.h = Math.trunc(uptime.ts / 3600);
+            uptime.tsr = uptime.ts % 3600;
+            uptime.m = Math.trunc(uptime.tsr / 60);
+            uptime.s = Math.trunc(uptime.tsr % 60);
+            uptime.msg = {
+                "h": "",
+                "m": "",
+                "s": ""
+            };
+            if (uptime.h > 1) {
+                uptime.msg.h = `**${uptime.h}** tuntia, `;
+            } else if (uptime.h === 1) {
+                uptime.msg.h = `**${uptime.h}** tunnin, `;
+            }
+            else if (uptime.m > 1) {
+                uptime.msg.m = `**${uptime.m}** minuuttia, `;
+            } else if (uptime.m === 1) {
+                uptime.msg.m = `**${uptime.m}** minuutin, `;
+            } else if (uptime.s > 1) {
+                uptime.msg.s = `**${uptime.s}** sekuntia`;
+            } else if (uptime.s <= 1) {
+                uptime.msg.s = `**1** sekunnin`;
+            }
+
+            uptime.msg.complete = `Tää botti o ollu hereillä jo ${uptime.msg.h}${uptime.msg.m}${uptime.msg.s} :hourglass_flowing_sand:`
+
+            msg.channel.send(uptime.msg.complete);
+        }
+
+        function commandEditme(msg, args) {
+            var syntax = getCommandSyntax();
+            var jimp = client.jimp;
+            var avatar = msg.author.avatarURL;
+            var avatarfile = `./images/avatar${msg.author.id}.jpg`;
+            if (!fs.existsSync(avatarfile)) {
+                var file = fs.createWriteStream(avatarfile);
+                var request = http.get(avatar, function (response) {
+                    response.pipe(file);
+                });
+            }
+
+
+
+            var rand = Math.random().toString(36).substring(2, 9) + Math.random().toString(36).substring(2, 9);
+            var imgname = `./images/${rand}.jpg`
+            jimp.read(avatarfile)
+                .then(image => {
+                    return image
+                        .resize(256, 256)
+                        .quality(60)
+                        .pixelate(8)
+                        .write(imgname, (err) => {
+                            msg.channel.send({
+                                file: imgname
+                            })
+                                .then(msg => {
+                                    fs.unlink(imgname, (err) => {
+                                        if (err) {
+                                            console.log("failed to delete local image:" + err);
+                                        }
+                                    });
+                                })
+                                .catch(error => console.log(error))
+                        });
+
+                })
+                .catch(error => console.log(error))
+        }
+
         resolve({});
     });
 }
