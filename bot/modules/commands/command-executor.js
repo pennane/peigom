@@ -720,7 +720,7 @@ exports.parse = function (client, msg, command, args) {
 
         }
 
-        client.logger.log(1, tolog);
+        logger.log(1, tolog);
         resolve();
     });
 }

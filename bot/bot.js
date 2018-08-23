@@ -13,16 +13,14 @@ const CommandExecutor = require('./modules/commands/command-executor.js');
 const ActivityLogger = require('./modules/functions/activity-logger');
 const GetTime = require('./modules/functions/get-time.js');
 
+var logger = ActivityLogger;
+var time = GetTime;
+
 const client = new Discord.Client();
 client.config = config;
-client.logger = ActivityLogger;
-client.getTime = GetTime;
-client.MessageParser = MessageParser;
 client.CommandHandler = CommandHandler;
 client.CommandExecutor = CommandExecutor;
-client.timing = {
-    timing_start: Date.now()
-};
+client.timing = console.time("| Connecting")
 
 client.usrdata = {};
 if (!fs.existsSync('./data/user-data.json')) {
@@ -30,20 +28,26 @@ if (!fs.existsSync('./data/user-data.json')) {
 }
 client.usrdata = JSON.parse(fs.readFileSync('./data/user-data.json', 'utf8'));
 
-
-
 console.info(`Starting peigom-bot v.${client.config.app.version}`);
 
 client.on('ready', () => {
     var StartingInfo = require('./modules/functions/starting-info');
     var Presence = require('./modules/functions/presence-changer.js');
-
     StartingInfo.set(client);
     Presence.set(client);
-    client.logger.log(2, client.getTime.get(1));
+    logger.log(2);
 });
 
-/* Message listener */
+client.on('reconnecting', () => {
+    logger.log(4);
+    console.log(`|--${time.get(1)} > Reconnecting to websocket..`)
+});
+
+client.on('resume', () => {
+    logger.log(5);
+    console.log(`|--${time.get(1)} > Reconnected successfully`)
+});
+
 client.on('message', msg => {
     if (!msg.author.bot && msg.guild !== null) {
         var BarWordArr = client.config.get('misc.badwords');
@@ -53,16 +57,13 @@ client.on('message', msg => {
             msg.containsBadWords = false;
         }
         var prefix = client.config.get("discord.prefix");
-        if (msg.content.startsWith(prefix)) {
-            msg.prefix = prefix;
-        }
+        if (msg.content.startsWith(prefix)) msg.prefix = prefix;
         if (_.has(msg, 'prefix')) {
-            client.MessageParser.parse(client, msg)
+            MessageParser.parse(client, msg)
                 .then(parsed => {
-                    client.CommandHandler.parse(client, parsed)
+                    CommandHandler.parse(client, parsed)
                         .then(parsed => {
-                            client.CommandExecutor.parse(client, parsed.msg, parsed.handled, parsed.handledargs)
-                                .then(parsed => { });
+                            CommandExecutor.parse(client, parsed.msg, parsed.handled, parsed.handledargs);
                         });
                 });
         } else if (msg.containsBadWords) {
@@ -71,12 +72,14 @@ client.on('message', msg => {
     }
 });
 
-process.on('uncaughtException', error => {
-    client.logger.log(3, error);
-    console.log("Error has happended, check ./log/");
+client.on('error', error => {
+    logger.log(3, error);
+    console.log(`|-- ${time.get(1)} > Error has happended in the client, check ./log/`);
 });
 
+process.on('uncaughtException', error => {
+    logger.log(3, error);
+    console.log(`|-- ${time.get(1)} > Error has happended in the process, check ./log/`);
+});
 
-client.timing.conn_start = Date.now();
-/* Sends login token */
 client.login(authorize.token);
