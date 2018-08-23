@@ -5,10 +5,10 @@
     "discord": {
         "prefix": ",",
         "authorized": [
-            "143097697828601857"
+            "Authorized user id"
         ],
         "authorizedRoles": [
-            "peigom-admin"
+            "Authorized role name"
         ],
         "presence": {
             "activities": [
@@ -19,8 +19,8 @@
                 "pimpeli pom, nimi o peigom",
                 ">:^V"
             ],
-            "type" : "LISTENING",
-            "refreshrate" : 20
+            "type": "LISTENING",
+            "refreshrate": 20
         }
     },
     "commands": {
@@ -29,7 +29,7 @@
             "desc": "Lähettää kanavalle animoidun thonkin.",
             "admin": false
         },
-        "uptime" : {
+        "uptime": {
             "syntax": "uptime",
             "desc": "Näyttää botin päälläoloajan.",
             "admin": false

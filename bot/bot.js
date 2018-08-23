@@ -1,21 +1,22 @@
 process.chdir(__dirname);
 
+const authorize = require('./config/authorize.json');
+
 const config = require('config');
 const Discord = require('discord.js');
 const fs = require('fs');
 const _ = require('underscore');
-const schedule = require('node-schedule');
-const jimp = require('jimp');
-
-
 
 const MessageParser = require('./modules/core/message-parser.js');
 const CommandHandler = require('./modules/core/command-handler.js');
 const CommandExecutor = require('./modules/commands/command-executor.js');
+const ActivityLogger = require('./modules/functions/activity-logger');
+const GetTime = require('./modules/functions/get-time.js');
 
 const client = new Discord.Client();
 client.config = config;
-client.jimp = jimp;
+client.logger = ActivityLogger;
+client.getTime = GetTime;
 client.MessageParser = MessageParser;
 client.CommandHandler = CommandHandler;
 client.CommandExecutor = CommandExecutor;
@@ -23,48 +24,23 @@ client.timing = {
     timing_start: Date.now()
 };
 
-var usrdata = JSON.parse(fs.readFileSync('./data/user-data.json', 'utf8'));
+client.usrdata = {};
+if (!fs.existsSync('./data/user-data.json')) {
+    fs.writeFileSync('./data/user-data.json', '{"users": {}}');
+}
+client.usrdata = JSON.parse(fs.readFileSync('./data/user-data.json', 'utf8'));
 
-/* --------- ------ */
-
-console.info(`Starting peigom-bot v.${client.config.get('app.version')}`);
 
 
+console.info(`Starting peigom-bot v.${client.config.app.version}`);
 
 client.on('ready', () => {
-    var presence = config.discord.presence;
-    console.info(`Logged in as ${client.user.tag}!`);
-    console.info(`| Connecting: ${Date.now() - client.timing.conn_start}ms`);
-    console.info(`| Loaded: ${Object.keys(client.config.commands).length} commands`);
-    console.info(`| Loaded: ${Object.keys(usrdata.users).length} users with ${client.config.get("discord.prefix")}raha`);
-    console.info(`| Loaded: ${client.config.misc.badwords.length} forbidden words`);
-    if (client.config.get("misc.devmode") === true) {
-        console.info(`| Dev mode: true`);
-    }
-    var date = new Date()
-        .toISOString()
-        .replace(/T/, ' ')
-        .replace(/\..+/, '');
-    if (config.get("discord.presence.activities").length === 1) {
-        client.user.setActivity(presence.activities[0]);
-    } else {
-        var rand = Math.floor(Math.random() * presence.activities.length);
-        var timing = Date.now();
-        var i = rand;
+    var StartingInfo = require('./modules/functions/starting-info');
+    var Presence = require('./modules/functions/presence-changer.js');
 
-        client.user.setActivity(presence.activities[rand]);
-        var activityTimer = schedule.scheduleJob(`*/${presence.refreshrate} * * * *`, function (fireDate) {
-            if (timing - (Date.now()) > 30000) { // To prevent Discord errors
-                client.user.setActivity(config.get('discord.presence.activities')[i]);
-            }
-            if (i === presence.activities.length - 1) {
-                i = 0;
-            } else {
-                i++;
-            }
-        });
-    }
-
+    StartingInfo.set(client);
+    Presence.set(client);
+    client.logger.log(2, client.getTime.get(1));
 });
 
 /* Message listener */
@@ -95,7 +71,12 @@ client.on('message', msg => {
     }
 });
 
+process.on('uncaughtException', error => {
+    client.logger.log(3, error);
+    console.log("Error has happended, check ./log/");
+});
+
 
 client.timing.conn_start = Date.now();
 /* Sends login token */
-client.login(client.config.get('discord.token'));
+client.login(authorize.token);

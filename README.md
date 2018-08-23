@@ -10,33 +10,27 @@ Create the bot account to the application and gather your bot token. `KEEP IN MI
 ![Bot token creation](https://i.imgur.com/bMciwCc.png)
 
 
-To install dependencies run this in the wanted directory:
+To install dependencies run these in the wanted directory:
 ```
 npm --install
-
+npm install ffmpeg-binaries
+npm install node-opus
 ```
 
 In 'bot/config/' edit the `default.json` file:
 ````javascript
 "discord": {
-        "token": "YOUR TOKEN HERE", // Your bot app token here
-        "prefix": ",", // Prefix for commands here
+        "token": "YOUR TOKEN HERE", //Your bot applications token here
+        "prefix": ",", //Desired prefix for all the commands
         "authorized": [
-            "AUTHORIZED USER ID" // Authorized user id's here
+            "AUTHORIZED USER ID HERE", // Insert your admin's id
+            "ANOTHER AUTHORIZED IF NEEDED" // You can put multiple account ids
         ],
         "authorizedRoles": [
-            "AUTHORIZED ROLE" // Authorized role names here
+            "AUTHORIZED ROLE-NAMES HERE" // Insert role's name that you want to have admin commands
         ],
-        "presence": { // For presence configuration
-            "activities": [
-                ",auta",
-                "my name be jeff",
-                "yo big man bom",
-                "sugondese is a funny meme"
-            ],
-            "type" : "LISTENING",
-            "refreshrate" : 20
-        }
+        "activity": ",auta" // Insert what activity bot shows in discord
+    },
 ````
 
 To run the bot use `node bot/bot.js` in your bot directory.

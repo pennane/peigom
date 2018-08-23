@@ -2,10 +2,12 @@ const _ = require("underscore");
 const ffmpeg = require("ffmpeg");
 const fs = require("fs");
 const http = require('https');
+const jimp = require('jimp');
+const sound = require('../functions/play-sound.js');
+const logger = require('../functions/activity-logger');
 
 var exports = module.exports = {};
 var IsBusy = false;
-
 
 exports.parse = function (client, msg, command, args) {
     return new Promise((resolve, reject) => {
@@ -13,7 +15,11 @@ exports.parse = function (client, msg, command, args) {
         if (!_.isObject(client) || !_.isObject(msg)) {
             throw new Error("Invalid arguments");
         }
-
+        tolog = {
+            msg: msg,
+            command: command,
+            args: args,
+        };
         var usrdata = JSON.parse(fs.readFileSync('./data/user-data.json', 'utf8'));
         var animation = JSON.parse(fs.readFileSync('./data/animation.json', 'utf8'));
         var commands = client.config.get('commands');
@@ -22,7 +28,7 @@ exports.parse = function (client, msg, command, args) {
 
         function runCommand(msg, command, args) {
             switch (command) {
-                case ("editme"):
+                case ("vietnam"):
                     commandEditme(msg, args);
                     break;
                 case ("help"):
@@ -101,14 +107,6 @@ exports.parse = function (client, msg, command, args) {
             return syntaxhelp;
         }
 
-        function playSound(filename, msg, connection) {
-            var dispatcher = connection.playFile(filename);
-            dispatcher.on("end", end => {
-                IsBusy = false;
-                msg.member.voiceChannel.leave();
-            });
-        }
-
         function commandAuta(msg, args) {
 
             var syntax = getCommandSyntax();
@@ -129,7 +127,7 @@ exports.parse = function (client, msg, command, args) {
                     .then(msg => {
                         msg.delete(180000)
                     })
-                    .catch(error => console.log(error));
+                    .catch(error => console.info(error));
             }
             if (args[1]) {
                 var objkey = args[1]
@@ -139,7 +137,7 @@ exports.parse = function (client, msg, command, args) {
                         .then(msg => {
                             /*msg.delete(15000)*/
                         })
-                        .catch(error => console.log(error));
+                        .catch(error => console.info(error));
                 }
             }
         }
@@ -179,7 +177,7 @@ exports.parse = function (client, msg, command, args) {
                                 .then(msg => {
                                     /*msg.delete(15000)*/
                                 })
-                                .catch(error => console.log(error));
+                                .catch(error => console.info(error));
                             break;
                         case 'uhkapeli':
                             subsyntax = getCommandSyntax("uhkapeli");
@@ -190,7 +188,7 @@ exports.parse = function (client, msg, command, args) {
                                             /*msg.delete(15000)*/
                                             ;
                                         })
-                                        .catch(error => console.log(error));
+                                        .catch(error => console.info(error));
 
                                     function winorlose() {
                                         var result = Math.round(Math.random());
@@ -206,7 +204,7 @@ exports.parse = function (client, msg, command, args) {
                                                 /*msg.delete(15000)*/
                                                 ;
                                             })
-                                            .catch(error => console.log(error));
+                                            .catch(error => console.info(error));
                                         usrobj.credits = parseInt(usrobj.credits) + parseInt(args[2]);
                                     } else {
                                         msg.channel.send('Häviö!')
@@ -214,7 +212,7 @@ exports.parse = function (client, msg, command, args) {
                                                 /*msg.delete(15000)*/
                                                 ;
                                             })
-                                            .catch(error => console.log(error));
+                                            .catch(error => console.info(error));
                                         usrobj.credits = parseInt(usrobj.credits) - parseInt(args[2]);
                                     }
                                 } else {
@@ -223,7 +221,7 @@ exports.parse = function (client, msg, command, args) {
                                             /*msg.delete(15000)*/
                                             ;
                                         })
-                                        .catch(error => console.log(error));
+                                        .catch(error => console.info(error));
                                 }
                             } else {
                                 msg.reply(subsyntax)
@@ -231,7 +229,7 @@ exports.parse = function (client, msg, command, args) {
                                         /*msg.delete(15000)*/
                                         ;
                                     })
-                                    .catch(error => console.log(error));
+                                    .catch(error => console.info(error));
                             }
                             break;
                         case 'lahjoita':
@@ -256,14 +254,14 @@ exports.parse = function (client, msg, command, args) {
                                                 /*msg.delete(15000)*/
                                                 ;
                                             })
-                                            .catch(error => console.log(error));
+                                            .catch(error => console.info(error));
                                     } else {
                                         msg.reply('Valitsemasi pelaaja ei ole vielä koskaan käyttänyt komentoa: `' + prefix + 'money`, et voi lahjoittaa hänelle.`')
                                             .then(msg => {
                                                 /*msg.delete(15000)*/
                                                 ;
                                             })
-                                            .catch(error => console.log(error));
+                                            .catch(error => console.info(error));
                                     }
                                 } else {
                                     msg.channel.send(msg.author.username + ', ei tarpeeks koleja!')
@@ -271,7 +269,7 @@ exports.parse = function (client, msg, command, args) {
                                             /*msg.delete(15000)*/
                                             ;
                                         })
-                                        .catch(error => console.log(error));
+                                        .catch(error => console.info(error));
                                 }
                             } else {
                                 msg.reply(subsyntax)
@@ -279,7 +277,7 @@ exports.parse = function (client, msg, command, args) {
                                         /*msg.delete(15000)*/
                                         ;
                                     })
-                                    .catch(error => console.log(error));
+                                    .catch(error => console.info(error));
                             }
                             break;
                         case 'kauppa':
@@ -290,7 +288,7 @@ exports.parse = function (client, msg, command, args) {
                                     /*msg.delete(15000)*/
                                     ;
                                 })
-                                .catch(error => console.log(error));
+                                .catch(error => console.info(error));
                             break;
                         case 'palkka':
                             var subsyntax = getCommandSyntax("palkka");
@@ -300,7 +298,7 @@ exports.parse = function (client, msg, command, args) {
                                         /*msg.delete(15000)*/
                                         ;
                                     })
-                                    .catch(error => console.log(error));
+                                    .catch(error => console.info(error));
                                 usrobj.whenclaimed = Date.now();
                                 usrobj.credits = usrobj.credits + daily;
                             } else {
@@ -310,7 +308,7 @@ exports.parse = function (client, msg, command, args) {
                                         /*msg.delete(15000)*/
                                         ;
                                     })
-                                    .catch(error => console.log(error));
+                                    .catch(error => console.info(error));
                             }
                             break;
                         default:
@@ -318,7 +316,7 @@ exports.parse = function (client, msg, command, args) {
                                 .then(msg => {
                                     /*msg.delete(15000)*/
                                 })
-                                .catch(error => console.log(error));
+                                .catch(error => console.info(error));
                             break;
                     }
                 } else {
@@ -327,13 +325,13 @@ exports.parse = function (client, msg, command, args) {
                             /*msg.delete(15000)*/
                             ;
                         })
-                        .catch(error => console.log(error));
+                        .catch(error => console.info(error));
                 }
                 /*msg.delete(15000)*/
                 ;
                 fs.writeFile("./data/user-data.json", JSON.stringify(usrdata), function (err) {
                     if (err) {
-                        return console.log(err);
+                        return console.info(err);
                     }
                 });
             }
@@ -355,7 +353,7 @@ exports.parse = function (client, msg, command, args) {
 
                             })(frame);
                         }
-                    }).catch(error => console.log(error));
+                    }).catch(error => console.info(error));
                 } else {
                     var str = Object.keys(animation);
                     msg.channel.send("Lista saatavailla olevista animaatioista:```" + str + "```");
@@ -367,13 +365,12 @@ exports.parse = function (client, msg, command, args) {
 
         function commandPing(msg, args) {
             var syntax = getCommandSyntax();
-            var now = Date.now();
-            msg.reply("Pong: " + (now - msg.createdTimestamp) + "ms")
+            msg.reply("Pong: " + (Date.now() - msg.createdTimestamp) + "ms")
                 .then(msg => {
                     /*msg.delete(15000)*/
                     ;
                 })
-                .catch(error => console.log(error));
+                .catch(error => console.info(error));
             /*msg.delete(15000)*/
             ;
         }
@@ -386,7 +383,7 @@ exports.parse = function (client, msg, command, args) {
                 msg.member.voiceChannel.join()
                     .then(connection => {
                         var randomSound = memeSound[Math.floor(Math.random() * memeSound.length)];
-                        playSound(randomSound, msg, connection);
+                        sound.play(randomSound, msg, connection);
                     });
             } else {
                 msg.reply('mene eka jollekki voicechannelille kid.')
@@ -394,7 +391,7 @@ exports.parse = function (client, msg, command, args) {
                         /*msg.delete(15000)*/
                         ;
                     })
-                    .catch(error => console.log(error));
+                    .catch(error => console.info(error));
             }
             /*msg.delete(15000)*/
             ;
@@ -408,20 +405,27 @@ exports.parse = function (client, msg, command, args) {
         }
 
         function commandPussukat(msg, args) {
+
+
             var syntax = getCommandSyntax();
             if (msg.member.voiceChannel) {
+                var filearr = [];
+                fs.readdirSync("./sound/sp").forEach(file => {
+                    filearr.push(file);
+                });
                 IsBusy = true;
-                var dir = './sound/sp/sp' + (Math.floor(Math.random() * (42 - 1 + 1)) + 1) + '.mp3';
+                var dir = './sound/sp/' + filearr[Math.floor(Math.random() * filearr.length)];
                 msg.member.voiceChannel.join()
                     .then(connection => {
-                        playSound(dir, msg, connection);
+                        sound.play(dir, msg, connection);
+
                     });
             } else {
                 msg.reply('mene eka jollekki voicechannelille kid.')
                     .then(msg => {
                         /*msg.delete(15000)*/
                     })
-                    .catch(error => console.log(error));
+                    .catch(error => console.info(error));
             }
             /*msg.delete(15000)*/
             ;
@@ -433,7 +437,7 @@ exports.parse = function (client, msg, command, args) {
                 IsBusy = true;
                 msg.member.voiceChannel.join()
                     .then(connection => {
-                        playSound('./sound/oof.mp3', msg, connection);
+                        sound.play('./sound/oof.mp3', msg, connection);
                     });
             } else {
                 msg.reply('mene eka jollekki voicechannelille kid.')
@@ -441,7 +445,7 @@ exports.parse = function (client, msg, command, args) {
                         /*msg.delete(15000)*/
                         ;
                     })
-                    .catch(error => console.log(error));
+                    .catch(error => console.info(error));
             }
             /*msg.delete(15000)*/
             ;
@@ -454,21 +458,21 @@ exports.parse = function (client, msg, command, args) {
                     /*msg.delete(15000)*/
                     ;
                 })
-                .catch(error => console.log(error));
+                .catch(error => console.info(error));
             setTimeout(function () {
                 msg.channel.send('TAEAE ON NYT TEIKAEN HAUTA')
                     .then(msg => {
                         /*msg.delete(15000)*/
                         ;
                     })
-                    .catch(error => console.log(error));
+                    .catch(error => console.info(error));
                 setTimeout(function () {
                     msg.channel.send('OLET HERAETTYNYT MEIDAET')
                         .then(msg => {
                             /*msg.delete(15000)*/
                             ;
                         })
-                        .catch(error => console.log(error));
+                        .catch(error => console.info(error));
                 }, 1500)
             }, 1500);
             /*msg.delete(15000)*/
@@ -507,14 +511,14 @@ exports.parse = function (client, msg, command, args) {
                         .then(msg => {
                             msg.delete(15001)
                         })
-                        .catch(err => console.log(error));
+                        .catch(err => console.info(error));
                 }
             } else {
                 msg.reply(syntax)
                     .then(msg => {
                         msg.delete(15001)
                     })
-                    .catch(err => console.log(error));
+                    .catch(err => console.info(error));
             }
             msg.delete(5000);
         }
@@ -525,7 +529,7 @@ exports.parse = function (client, msg, command, args) {
                 .then(msg => {
                     msg.delete(10000)
                 })
-                .catch(error => console.log(error));
+                .catch(error => console.info(error));
             msg.delete(10000);
         }
 
@@ -550,20 +554,20 @@ exports.parse = function (client, msg, command, args) {
                         args[2] = args[2].toString();
                     }
                     sudochannel.send(args[2])
-                        .catch(err => console.log(error));
+                        .catch(err => console.info(error));
                 } else {
                     msg.reply(syntax)
                         .then(msg => {
                             msg.delete(15001)
                         })
-                        .catch(err => console.log(error));
+                        .catch(err => console.info(error));
                 }
             } else {
                 msg.reply(syntax)
                     .then(msg => {
                         msg.delete(15001)
                     })
-                    .catch(err => console.log(error));
+                    .catch(err => console.info(error));
             }
             msg.delete(10000);
         }
@@ -588,14 +592,14 @@ exports.parse = function (client, msg, command, args) {
                         .then(msg => {
                             msg.delete(15001)
                         })
-                        .catch(err => console.log(error));
+                        .catch(err => console.info(error));
                 }
             } else {
                 msg.reply(syntax)
                     .then(msg => {
                         msg.delete(15001)
                     })
-                    .catch(err => console.log(error));
+                    .catch(err => console.info(error));
             }
             msg.delete(1200);
         }
@@ -659,45 +663,65 @@ exports.parse = function (client, msg, command, args) {
 
         function commandEditme(msg, args) {
             var syntax = getCommandSyntax();
-            var jimp = client.jimp;
             var avatar = msg.author.avatarURL;
-            var avatarfile = `./images/avatar${msg.author.id}.jpg`;
+            var avatarfile = `./images/avatars/avatar${msg.author.id}.jpg`;
+            var i = 0;
+            if (fs.existsSync(avatarfile)) {
+                rest();
+            }
             if (!fs.existsSync(avatarfile)) {
                 var file = fs.createWriteStream(avatarfile);
                 var request = http.get(avatar, function (response) {
-                    response.pipe(file);
+                    response.pipe(file)
+                });
+                file.on('finish', function () {
+                    i++;
+                    if (i = 1) {
+                        rest();
+
+                    }
+
                 });
             }
 
 
+            function rest() {
+                var rand = Math.random().toString(36).substring(2, 9) + Math.random().toString(36).substring(2, 9);
+                var flashback = new jimp('./images/flashback.png');
+                var imgname = `./images/${rand}.jpg`;
+                var imgname = String(imgname);
 
-            var rand = Math.random().toString(36).substring(2, 9) + Math.random().toString(36).substring(2, 9);
-            var imgname = `./images/${rand}.jpg`
-            jimp.read(avatarfile)
-                .then(image => {
-                    return image
-                        .resize(256, 256)
-                        .quality(60)
-                        .pixelate(8)
-                        .write(imgname, (err) => {
-                            msg.channel.send({
-                                file: imgname
-                            })
-                                .then(msg => {
-                                    fs.unlink(imgname, (err) => {
-                                        if (err) {
-                                            console.log("failed to delete local image:" + err);
-                                        }
-                                    });
+                jimp.read(avatarfile)
+                    .then(image => {
+                        image
+                            .resize(parseInt("256"), parseInt("256"))
+                            .quality(parseInt("60"))
+                            .sepia()
+                            .composite(flashback, parseInt("0"), parseInt("0"))
+                            .write(imgname => {
+                                msg.channel.send({
+                                    file: imgname
                                 })
-                                .catch(error => console.log(error))
-                        });
+                                    .then(msg => {
+                                        fs.unlink(imgname, (err) => {
+                                            if (err) {
+                                                console.log("failed to delete local image:" + err);
+                                            }
+                                        });
+                                    })
+                                    .catch(error => console.info(error))
+                            }, err => {
+                                var asdfasdfasdfasdfasdf;
+                            });
 
-                })
-                .catch(error => console.log(error))
+                    })
+                    .catch(error => console.info(error))
+            }
+
         }
 
-        resolve({});
+        client.logger.log(1, tolog);
+        resolve();
     });
 }
 

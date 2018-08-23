@@ -1,9 +1,8 @@
 const _ = require("underscore");
 
 var exports = module.exports = {};
-var cache = {};
 
-exports.parse = function (client, msg, renew = false) {
+exports.parse = function (client, msg) {
     return new Promise((resolve, reject) => {
         
         if (!_.isObject(client) || !_.isObject(msg)) { throw new Error("Invalid arguments"); }
@@ -27,7 +26,7 @@ exports.parse = function (client, msg, renew = false) {
         }
 
 
-        resolve({cached: false, client: client, msg: msg, prefix: msg.prefix, command: msg.command, arguments: msg.arguments})
+        resolve({client: client, msg: msg, prefix: msg.prefix, command: msg.command, arguments: msg.arguments})
     });
 
 }

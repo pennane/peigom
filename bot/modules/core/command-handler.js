@@ -13,7 +13,7 @@ exports.parse = function (client, pmsg, renew = false) {
             pmsg.authorized = false;
         }
 
-        
+
         if (_.has(client.config.get('commands'), pmsg.command)) {
             if (client.config.get('commands')[pmsg.command].admin && pmsg.authorized) {
                 pmsg.handledcommand = pmsg.command;
