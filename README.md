@@ -17,7 +17,7 @@ npm install ffmpeg-binaries
 npm install node-opus
 ```
 
-In 'bot/config/' edit `default.json` and `authorize.json` files:
+In 'bot/config/' edit `default_example.json` and `authorize_example.json` files and remove the `_example`s:
 ````javascript
 {
         "token": "YOUR TOKEN HERE" //Your bot applications token here
