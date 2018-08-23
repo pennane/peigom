@@ -17,10 +17,15 @@ npm install ffmpeg-binaries
 npm install node-opus
 ```
 
-In 'bot/config/' edit the `default.json` file:
+In 'bot/config/' edit `default.json` and `authorize.json` files:
+````javascript
+{
+        "token": "YOUR TOKEN HERE" //Your bot applications token here
+}
+````
+
 ````javascript
 "discord": {
-        "token": "YOUR TOKEN HERE", //Your bot applications token here
         "prefix": ",", //Desired prefix for all the commands
         "authorized": [
             "AUTHORIZED USER ID HERE", // Insert your admin's id
