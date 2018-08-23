@@ -1,3 +1,4 @@
 .DS_Store
 bot/config/authorize.json
 bot/config/default.json
+bot/data/usrdata.json
