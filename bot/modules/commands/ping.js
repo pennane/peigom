@@ -7,8 +7,11 @@ var info = {
 
 module.exports = exports = {};
 
-exports.run = function(msg, client, args) {
-    msg.reply("Pong: " + (Date.now() - msg.createdTimestamp) + "ms");
+exports.run = function (msg, client, args) {
+    return new Promise((resolve, reject) => {
+        msg.reply("Pong: " + (Date.now() - msg.createdTimestamp) + "ms");
+        resolve();
+    });
 }
 
 exports.info = info;

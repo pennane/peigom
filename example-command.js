@@ -11,10 +11,14 @@ var syntax = info.syntax;
 module.exports = exports = {};
 
 exports.run = function(msg, client, args) {
-   /*
-        CODE HERE
-        MOVE READY FILE TO ./modules/commands/
-   */
+    return new Promise((resolve, reject) => {
+        /*
+        COMMAND LOGIC HERE
+        MOVE COMPLETED FILE TO ./modules/commands/
+        */
+       resolve();
+    })
+   
 }
 
 exports.info = info;

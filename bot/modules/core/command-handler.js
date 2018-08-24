@@ -3,29 +3,23 @@ const _ = require("underscore");
 var exports = module.exports = {};
 var cache = {};
 
-exports.parse = function (client, pmsg, renew = false) {
+exports.parse = function (client, parsed) {
     return new Promise((resolve, reject) => {
-        if (!_.isObject(client) || !_.isObject(pmsg)) { throw new Error("Invalid arguments"); }
+        if (!_.isObject(client) || !_.isObject(parsed)) { throw new Error("Invalid arguments"); }
 
-        if (_.contains(client.config.get('discord.authorized'), pmsg.msg.author.id)) {
-            pmsg.authorized = true;
-        } else {
-            pmsg.authorized = false;
-        }
-
-        if (_.has(client.CommandExecutor.commands, pmsg.command)) {
-            if (client.CommandExecutor.commands[pmsg.command].info.admin && pmsg.authorized) {
-                pmsg.handledcommand = pmsg.command;
-            } else if (!client.CommandExecutor.commands[pmsg.command].info.admin) {
-                pmsg.handledcommand = pmsg.command;
+        if (_.has(client.CommandExecutor.commands, parsed.command)) {
+            if (client.CommandExecutor.commands[parsed.command].info.admin && parsed.msg.authorized) {
+                parsed.handledcommand = parsed.command;
+            } else if (!client.CommandExecutor.commands[parsed.command].info.admin) {
+                parsed.handledcommand = parsed.command;
             } else {
-                pmsg.handledcommand = false;
+                parsed.handledcommand = false;
             }
-        } else if (!_.has(client.config.get('commands'), pmsg.command)) {
-            pmsg.handledcommand = false;
+        } else if (!_.has(client.config.get('commands'), parsed.command)) {
+            parsed.handledcommand = false;
         }
-
-        resolve({ msg: pmsg.msg, handled: pmsg.handledcommand, handledargs: pmsg.arguments, client: client })
+        
+        resolve({ msg: parsed.msg, command: parsed.handledcommand, args: parsed.arguments, client: client })
     });
 
 }

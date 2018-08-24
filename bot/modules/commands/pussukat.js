@@ -13,24 +13,32 @@ var syntax = info.syntax;
 module.exports = exports = {};
 
 exports.run = function (msg, client, args) {
-    if (msg.member.voiceChannel) {
-        var filearr = [];
-        fs.readdirSync("./sound/sp").forEach(file => {
-            filearr.push(file);
-        });
-        client.IsBusy = true;
-        var dir = './sound/sp/' + filearr[Math.floor(Math.random() * filearr.length)];
-        msg.member.voiceChannel.join()
-            .then(connection => {
-                sound.play(dir, msg, connection, client);
-
+    return new Promise((resolve, reject) => {
+        if (msg.member.voiceChannel && !(msg.guild.voiceConnection)) {
+            var filearr = [];
+            fs.readdirSync("./sound/sp").forEach(file => {
+                filearr.push(file);
             });
-    } else {
-        msg.reply('mene eka jollekki voicechannelille kid.')
-            .then(msg => {
-            })
-            .catch(error => console.info(error));
-    }
+            client.IsBusy = true;
+            var dir = './sound/sp/' + filearr[Math.floor(Math.random() * filearr.length)];
+            msg.member.voiceChannel.join()
+                .then(connection => {
+                    sound.play(dir, msg, connection, client)
+                    .then(resolve())
+                    .catch(error => console.log(error));
+
+                })
+                .catch(error => console.log(error));
+            } else if (!msg.member.voiceChannel) {
+                resolve();
+                msg.reply('mene eka jollekki voicechannelille kid.')
+                    .then(msg => {
+                    })
+                    .catch(error => console.info(error));
+            } else {
+                resolve();
+            }
+    });
 }
 
 exports.info = info;

@@ -7,7 +7,7 @@ exports.parse = function (client, msg) {
         
         if (!_.isObject(client) || !_.isObject(msg)) { throw new Error("Invalid arguments"); }
         if (_.has(msg, 'prefix')) {
-            var prefix = client.config.get('discord.prefix');
+            var prefix = client.config.discord.prefix;
 
             if (msg.content.startsWith(prefix)) {
                 msg.prefix = prefix;
@@ -16,13 +16,18 @@ exports.parse = function (client, msg) {
 
             if (!_.has(msg, 'prefix')) { throw new Error("Cannot resolve prefix"); }
         }
-        if (!_.has(msg, 'trimmed')) { throw new Error("Missing trimmed argument when prefix is present"); }
 
         if (!_.has(msg, 'command')) {
             msg.command = msg.trimmed.split(' ')[0];
             msg.arguments =  msg.trimmed
             .trim()
             .split(/ +/g);
+        }
+
+        if (_.contains(client.config.get('discord.authorized'), msg.author.id)) {
+            msg.authorized = true;
+        } else {
+            msg.authorized = false;
         }
 
 

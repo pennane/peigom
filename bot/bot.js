@@ -52,9 +52,9 @@ client.on('message', msg => {
     if (!msg.author.bot && msg.guild !== null) {
         var BarWordArr = client.config.get('misc.badwords');
         if (BarWordArr.some(word => msg.content.includes(word))) {
-            msg.containsBadWords = true;
+            msg.badwords = true;
         } else {
-            msg.containsBadWords = false;
+            msg.badwords = false;
         }
         var prefix = client.config.get("discord.prefix");
         if (msg.content.startsWith(prefix)) msg.prefix = prefix;
@@ -63,22 +63,30 @@ client.on('message', msg => {
                 .then(parsed => {
                     CommandHandler.parse(client, parsed)
                         .then(parsed => {
-                            CommandExecutor.parse(parsed.msg, client, parsed.handled, parsed.handledargs);
-                        });
-                });
-        } else if (msg.containsBadWords) {
+                            CommandExecutor.parse(parsed.msg, client, parsed.command, parsed.args)
+                                .then(parsed => {
+                                    /* */
+                                })
+                                .catch(error => console.info(error));
+                        })
+                        .catch(error => console.info(error));
+                })
+                .catch(error => console.info(error));
+        } else if (msg.badwords) {
             msg.react(client.emojis.get("304687480471289866"));
         }
     }
 });
 
 client.on('error', error => {
-    logger.log(3, error);
+    logger.log(3, error)
+    .catch(error => console.log(error));
     console.log(`|-- ${time.get(1)} > Error has happended in the client, check ./log/`);
 });
 
 process.on('uncaughtException', error => {
-    logger.log(3, error);
+    logger.log(3, error)
+    .catch(error => console.log(error));
     console.log(`|-- ${time.get(1)} > Error has happended in the process, check ./log/`);
 });
 

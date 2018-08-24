@@ -55,7 +55,13 @@ exports.log = function (mode, content) {
             fs.appendFileSync(filenm, msgtolog, function (err) {
                 if (err) throw err;
             });
-        } else {
+        } else if (mode === 6) { // Failed command
+            var msgtolog = `\r\n[Command Failed] User: ${content.msg.author.username}, ${content.msg.author.id} Command: ${content.command} Args: ${content.args} Where: @${content.msg.channel.guild.name}#${content.msg.channel.name} When: ${content.msg.createdTimestamp}`;
+            fs.appendFileSync(filenm, msgtolog, function (err) {
+                if (err) throw err;
+            });
+        } 
+        else {
             throw new Error("Error: Received activity mode does not exist.");
         }
             resolve();

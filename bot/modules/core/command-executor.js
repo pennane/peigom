@@ -6,8 +6,8 @@ var exports = module.exports = {}, coms = {}, filearr = [];
 
 fs.readdirSync("./modules/commands/").forEach(file => {
     if (file.endsWith(".js")) {
-        filearr.push(file);        
-    }  
+        filearr.push(file);
+    }
 });
 
 for (file in filearr) {
@@ -17,16 +17,26 @@ for (file in filearr) {
 
 exports.commands = coms;
 
-exports.files = function() {
-    return {coms : coms, files : filearr}
+exports.files = function () {
+    return { coms: coms, files: filearr }
 };
 
-exports.parse = function(msg, client, command, args) {
-    return new Promise((resolve,reject) => {
+exports.parse = function (msg, client, command, args) {
+    return new Promise((resolve, reject) => {
         if (_.has(coms, command)) {
-            coms[command].run(msg, client, args);
+            coms[command].run(msg, client, args)
+                .then(function () {
+                    logger.log(1, { msg: msg, command: command, args: args })
+                    .catch(error => console.log(error));
+                })
+                .catch(error => {
+                    console.log(error);
+                    logger.log(6, { msg: msg, command: command, args: args })
+                    .catch(error => console.log(error));
+                });
+
+            
         }
-        logger.log(1, {msg: msg, command: command, args: args});
         resolve();
     });
 

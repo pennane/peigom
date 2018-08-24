@@ -9,6 +9,7 @@ var syntax = info.syntax;
 module.exports = exports = {};
 
 exports.run = function (msg, client, args) {
+    return new Promise((resolve, reject) => {
     if (args[3]) {
         var userid = args[1].replace(/\D/g, '');
         if (msg.guild.members.get(userid)) {
@@ -39,6 +40,9 @@ exports.run = function (msg, client, args) {
             .catch(err => console.info(error));
     }
     msg.delete(5000);
+
+    resolve();
+});
 }
 
 exports.info = info;
