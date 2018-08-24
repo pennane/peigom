@@ -31,7 +31,6 @@ client.usrdata = JSON.parse(fs.readFileSync('./data/user-data.json', 'utf8'));
 console.info(`Starting peigom-bot v.${client.config.app.version}`);
 
 client.on('ready', () => {
-    console.log(CommandExecutor.commands);
     var StartingInfo = require('./modules/functions/starting-info');
     var Presence = require('./modules/functions/presence-changer.js');
     StartingInfo.set(client);
