@@ -2,4 +2,4 @@
 bot/config/authorize.json
 bot/config/default.json
 bot/data/user-data.json
-
+node_modules/*

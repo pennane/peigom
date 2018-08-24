@@ -5,10 +5,10 @@
     "discord": {
         "prefix": ",",
         "authorized": [
-            "Authorized user id"
+            "AUTHORIED USER ID"
         ],
         "authorizedRoles": [
-            "Authorized role name"
+            "AUTHORIZED ROLE NAME"
         ],
         "presence": {
             "activities": [
@@ -17,134 +17,17 @@
                 "yo big man bom",
                 "sugondese is a funny meme",
                 "pimpeli pom, nimi o peigom",
-                ">:^V"
+                ">:^V",
+                "töis mut ei töis",
+                "örörör is very bad"
             ],
-            "type": "LISTENING",
-            "refreshrate": 20
+            "type" : "LISTENING",
+            "refreshrate" : 20
         }
     },
     "commands": {
-        "thonk": {
-            "syntax": "thonk",
-            "desc": "Lähettää kanavalle animoidun thonkin.",
-            "admin": false
-        },
-        "uptime": {
-            "syntax": "uptime",
-            "desc": "Näyttää botin päälläoloajan.",
-            "admin": false
-        },
-        "dankmeme": {
-            "syntax": "dankmeme",
-            "desc": "Soittaa satunnaisen dank meme äänen.",
-            "admin": false
-        },
-        "vietnam": {
-            "syntax": "-",
-            "desc": "Profiilikuvan käsittelyyn",
-            "admin": false
-        },
-        "animation": {
-            "syntax": "animation <animaation nimi tai lista>",
-            "desc": "Toistaa käyttäjän antaman animaation",
-            "admin": false
-        },
-        "oof": {
-            "syntax": "oof",
-            "desc": "Soittaa oof äänen",
-            "admin": false
-        },
-        "tomb": {
-            "syntax": "tomb",
-            "desc": "Lähettää kanavalle tomb viestit.",
-            "admin": false
-        },
-        "pussukat": {
-            "syntax": "pussukat",
-            "desc": "Soittaa satunnaisen sussen pussukan.",
-            "admin": false
-        },
-        "hus": {
-            "syntax": "hus",
-            "desc": "Heittää botin pois äänikanavalta.",
-            "admin": false
-        },
-        "ping": {
-            "syntax": "ping",
-            "desc": "Kertoo onko botti toiminnassa.",
-            "admin": false
-        },
-        "auta": {
-            "syntax": "auta {komennon nimi}",
-            "desc": "Kertoo kaikki komennot, tai tietoa komennosta.",
-            "admin": false
-        },
-        "help": {
-            "syntax": "help {komennon nimi}",
-            "desc": "Kertoo kaikki komennot, tai tietoa komennosta.",
-            "admin": false
-        },
         "raha": {
-            "syntax": "raha <saldo / uhkapeli / lahjoita / kauppa / palkka>",
-            "desc": "Kosmeettisen virtuaalisen valuutan pyörittelyyn.",
-            "admin": false,
-            "sub": {
-                "saldo": {
-                    "syntax": "raha saldo",
-                    "desc": "Näyttää oman rahatilanteen."
-                },
-                "uhkapeli": {
-                    "syntax": "raha uhkapeli <määrä>",
-                    "desc": "Heittää asettamallasi määrällä kolikkoa. Voitolla tuplaat panoksen, ja häviöllä menetät."
-                },
-                "lahjoita": {
-                    "syntax": "raha lahjoita <määrä> <@kenelle>",
-                    "desc": "Lahjoittaa asettamasi määrän haluamallesi käyttäjälle."
-                },
-                "kauppa": {
-                    "syntax": "raha kauppa",
-                    "desc": "Tällä hetkellä komennolla ei funktiota."
-                },
-                "palkka": {
-                    "syntax": "raha palkka",
-                    "desc": "Antaa sinulle päivän palkan."
-                }
-            }
-        },
-        "busy": {
-            "syntax": "busy",
-            "desc": "Kertoo onko botti 'kiireinen'. Käyttö debuggaamiseen.",
-            "admin": true
-        },
-        "sudo": {
-            "syntax": "sudo <#text-kanava> <teksti>",
-            "desc": "Lähettää asettamasi viestin asettamallesi tekstikanavalle.",
-            "admin": true
-        },
-        "sudopm": {
-            "syntax": "sudo <@käyttäjä> <teksti>",
-            "desc": "Lähettää asettamasi viestin asettamallesi pelaajalle.",
-            "admin": true
-        },
-        "restart": {
-            "syntax": "restart",
-            "desc": "Käynnistää botin uudelleen.",
-            "admin": true
-        },
-        "sammuta": {
-            "syntax": "sammuta",
-            "desc": "Sammuttaa botin, pystyy käynnistämään uudelleen vain komentolinjalta.",
-            "admin": true
-        },
-        "puhista": {
-            "syntax": "puhista <määrä (2-99)>",
-            "desc": "Poistaa annetun määrän viestejä kanavalta.",
-            "admin": true
-        },
-        "spam": {
-            "syntax": "spam <@pelaaja> <määrä> <viesti>",
-            "desc": "Lähettää asettamasi viestin asettamallesi pelaajalle asettamasi monta kertaa.",
-            "admin": true
+            "daily": 250
         }
     },
     "misc": {

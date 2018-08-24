@@ -1,8 +1,8 @@
 var exports = module.exports = {};
-exports.play = function (filename, msg, connection) {
+exports.play = function (filename, msg, connection, client) {
     var dispatcher = connection.playFile(filename);
     dispatcher.on("end", end => {
-        IsBusy = false;
+        client.IsBusy = false;
         msg.member.voiceChannel.leave();
     });
 }

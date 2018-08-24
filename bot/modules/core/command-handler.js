@@ -13,11 +13,10 @@ exports.parse = function (client, pmsg, renew = false) {
             pmsg.authorized = false;
         }
 
-
-        if (_.has(client.config.get('commands'), pmsg.command)) {
-            if (client.config.get('commands')[pmsg.command].admin && pmsg.authorized) {
+        if (_.has(client.CommandExecutor.commands, pmsg.command)) {
+            if (client.CommandExecutor.commands[pmsg.command].info.admin && pmsg.authorized) {
                 pmsg.handledcommand = pmsg.command;
-            } else if (!client.config.get('commands')[pmsg.command].admin) {
+            } else if (!client.CommandExecutor.commands[pmsg.command].info.admin) {
                 pmsg.handledcommand = pmsg.command;
             } else {
                 pmsg.handledcommand = false;

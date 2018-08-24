@@ -9,7 +9,7 @@ const _ = require('underscore');
 
 const MessageParser = require('./modules/core/message-parser.js');
 const CommandHandler = require('./modules/core/command-handler.js');
-const CommandExecutor = require('./modules/commands/command-executor.js');
+const CommandExecutor = require('./modules/core/command-executor');
 const ActivityLogger = require('./modules/functions/activity-logger');
 const GetTime = require('./modules/functions/get-time.js');
 
@@ -17,8 +17,8 @@ var logger = ActivityLogger;
 var time = GetTime;
 
 const client = new Discord.Client();
+client.IsBusy = false;
 client.config = config;
-client.CommandHandler = CommandHandler;
 client.CommandExecutor = CommandExecutor;
 client.timing = console.time("| Connecting")
 
@@ -31,6 +31,7 @@ client.usrdata = JSON.parse(fs.readFileSync('./data/user-data.json', 'utf8'));
 console.info(`Starting peigom-bot v.${client.config.app.version}`);
 
 client.on('ready', () => {
+    console.log(CommandExecutor.commands);
     var StartingInfo = require('./modules/functions/starting-info');
     var Presence = require('./modules/functions/presence-changer.js');
     StartingInfo.set(client);
@@ -63,7 +64,7 @@ client.on('message', msg => {
                 .then(parsed => {
                     CommandHandler.parse(client, parsed)
                         .then(parsed => {
-                            CommandExecutor.parse(client, parsed.msg, parsed.handled, parsed.handledargs);
+                            CommandExecutor.parse(parsed.msg, client, parsed.handled, parsed.handledargs);
                         });
                 });
         } else if (msg.containsBadWords) {
