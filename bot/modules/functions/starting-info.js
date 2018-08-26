@@ -9,6 +9,7 @@ exports.set = function (client) {
         client.timing.completed = true;
     }
     console.info(`| Loaded: ${Object.keys(client.CommandExecutor.commands).length} commands`);
+    console.info(`| Loaded: ${client.guilds.size} servers`)
     console.info(`| Loaded: ${Object.keys(client.usrdata.users).length} users with ${client.config.get("discord.prefix")}raha`);
     console.info(`| Loaded: ${client.config.misc.badwords.length} forbidden words`);
     if (client.config.get("misc.devmode") === true) {

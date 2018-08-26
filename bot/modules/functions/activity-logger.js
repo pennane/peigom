@@ -1,12 +1,6 @@
 const fs = require("fs");
 const _ = require("underscore");
 const path = require("path");
-process.on('uncaughtException', error => {
-    logger.log(3, error)
-    .catch(error => console.log(error));
-    console.log(`|-- ${time.get(1)} > Error has happended in the ${path.base(__filename)}, check ./log/`);
-});
-
 const time = require("./get-time.js");
 
 var exports = module.exports = {};
