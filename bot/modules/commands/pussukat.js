@@ -6,7 +6,7 @@ var info = {
     name: "pussukat",
     admin: false,
     syntax: "pussukat",
-    desc: "Soittaa satunnaisen Sussen pussukan."
+    desc: "Soittaa satunnaisen kappaleen botin pussukat kansiosta"
 }
 var syntax = info.syntax;
 
@@ -20,7 +20,7 @@ exports.run = function (msg, client, args) {
                 filearr.push(file);
             });
             client.IsBusy = true;
-            var dir = './sound/sp/' + filearr[Math.floor(Math.random() * filearr.length)];
+            var dir = './sound/pussukat/' + filearr[Math.floor(Math.random() * filearr.length)];
             msg.member.voiceChannel.join()
                 .then(connection => {
                     sound.play(dir, msg, connection, client)

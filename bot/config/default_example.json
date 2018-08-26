@@ -5,7 +5,7 @@
     "discord": {
         "prefix": ",",
         "authorized": [
-            "AUTHORIED USER ID"
+            "AUTHORIZED USER ID"
         ],
         "authorizedRoles": [
             "AUTHORIZED ROLE NAME"
@@ -31,6 +31,10 @@
         }
     },
     "misc": {
+        "welcome" : {
+            "heading" : "Tervetuloa severiin",
+            "after": ". >:^U\nMä oon peigom-bot ja mä pirän sua silmäl"
+        },
         "devmode": false,
         "badwords": [
             "paska",

@@ -1,11 +1,19 @@
 const fs = require("fs");
 const _ = require("underscore");
+const path = require("path");
+process.on('uncaughtException', error => {
+    logger.log(3, error)
+    .catch(error => console.log(error));
+    console.log(`|-- ${time.get(1)} > Error has happended in the ${path.base(__filename)}, check ./log/`);
+});
 
 const time = require("./get-time.js");
 
 var exports = module.exports = {};
 exports.log = function (mode, content) {
     return new Promise((resolve, reject) => {
+        
+
         if (!mode === parseInt(mode, 10)) {
             throw new Error("Error: Received activity mode is not an integer!")
         }
@@ -31,7 +39,7 @@ exports.log = function (mode, content) {
         }
 
         if (mode === 1) { // Command
-            var msgtolog = `\r\n[Command] User: ${content.msg.author.username}, ${content.msg.author.id} Command: ${content.command} Args: ${content.args} Where: @${content.msg.channel.guild.name}#${content.msg.channel.name} When: ${content.msg.createdTimestamp}`;
+            var msgtolog = `\r\n[Command] User: ${content.msg.author.username}, ${content.msg.author.id} Command: ${content.command} Args: ${content.args} Where: @${content.msg.channel.guild.name}:${content.msg.channel.guild.id}#${content.msg.channel.name} When: ${content.msg.createdTimestamp}`;
             fs.appendFileSync(filenm, msgtolog, function (err) {
                 if (err) throw err;
             });
@@ -56,12 +64,31 @@ exports.log = function (mode, content) {
                 if (err) throw err;
             });
         } else if (mode === 6) { // Failed command
-            var msgtolog = `\r\n[Command Failed] User: ${content.msg.author.username}, ${content.msg.author.id} Command: ${content.command} Args: ${content.args} Where: @${content.msg.channel.guild.name}#${content.msg.channel.name} When: ${content.msg.createdTimestamp}`;
+            var msgtolog = `\r\n[Command Failed] User: ${content.msg.author.username}: ${content.msg.author.id} Command: ${content.command} Args: ${content.args} Where: @${content.msg.channel.guild.name}#${content.msg.channel.name} When: ${content.msg.createdTimestamp}`;
             fs.appendFileSync(filenm, msgtolog, function (err) {
                 if (err) throw err;
             });
-        } 
-        else {
+        } else if (mode ===7) { // New guild member
+            var msgtolog = `\r\n[New member] User ${content.user.username}: ${content.id} Where: ${content.guild.name}:${content.guild.id} When: ${todayPrecise}`;
+            fs.appendFileSync(filenm, msgtolog, function (error) {
+                if (err) throw err;
+            });
+        } else if (mode === 8) { // Member left
+            var msgtolog = `\r\n[Member left] User ${content.user.username}: ${content.id} Where: ${content.guild.name}:${content.guild.id} When: ${todayPrecise}`;
+            fs.appendFileSync(filenm, msgtolog, function (error) {
+                if (err) throw err;
+            });
+        } else if (mode === 9) { // New server
+            var msgtolog = `\r\n[New server] Server: ${content.name}:${content.id} When: ${todayPrecise}`;
+            fs.appendFileSync(filenm, msgtolog, function (error) {
+                if (err) throw err;
+            });
+        } else if (mode === 10) { // Removed server
+            var msgtolog = `\r\n[Removed server] Server: ${content.name}:${content.id} When: ${todayPrecise}`;
+            fs.appendFileSync(filenm, msgtolog, function (error) {
+                if (err) throw err;
+            });
+        }  else {
             throw new Error("Error: Received activity mode does not exist.");
         }
             resolve();
