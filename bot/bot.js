@@ -2,6 +2,7 @@ process.chdir(__dirname);
 
 const authorize = require('./config/authorize.json');
 
+const schedule = require('node-schedule');
 const config = require('config');
 const Discord = require('discord.js');
 const fs = require('fs');
@@ -20,7 +21,10 @@ const client = new Discord.Client();
 client.IsBusy = false;
 client.config = config;
 client.CommandExecutor = CommandExecutor;
-client.timing = console.time("| Connecting")
+client.timing = {
+    timer: console.time("| Connecting"),
+    completed: false
+};
 
 client.usrdata = {};
 if (!fs.existsSync('./data/user-data.json')) {
@@ -32,10 +36,26 @@ console.info(`Starting peigom-bot v.${client.config.app.version}`);
 
 client.on('ready', () => {
     var StartingInfo = require('./modules/functions/starting-info');
-    var Presence = require('./modules/functions/presence-changer.js');
     StartingInfo.set(client);
-    Presence.set(client);
     logger.log(2);
+    var presence = client.config.discord.presence;
+    if (presence.activities.length === 1) {
+        client.user.setActivity(presence.activities[0]);
+    } else {
+        var rand = Math.floor(Math.random() * presence.activities.length);
+        var timing = Date.now();
+        var i = rand;
+        client.user.setActivity(presence.activities[rand]);
+        console.log(`| Activity: ${presence.activities[rand]}`);
+        var activityTimer = schedule.scheduleJob(`*/${presence.refreshrate} * * * *`, function (fireDate) {
+            client.user.setActivity(client.config.get('discord.presence.activities')[i]);
+            if (i === presence.activities.length - 1) {
+                i = 0;
+            } else {
+                i++;
+            }
+        });
+    }
 });
 
 client.on('reconnecting', () => {

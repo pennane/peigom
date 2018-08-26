@@ -12,9 +12,7 @@ exports.set = function (client) {
         var i = rand;
         client.user.setActivity(presence.activities[rand]);
         var activityTimer = schedule.scheduleJob(`*/${presence.refreshrate} * * * *`, function (fireDate) {
-            if (timing - (Date.now()) > 30000) { // To prevent Discord errors
-                client.user.setActivity(client.config.get('discord.presence.activities')[i]);
-            }
+            client.user.setActivity(client.config.get('discord.presence.activities')[i]);
             if (i === presence.activities.length - 1) {
                 i = 0;
             } else {
