@@ -7,6 +7,7 @@ var info = {
     admin: false,
     syntax: "raha <saldo / uhkapeli / lahjoita / kauppa / palkka>",
     desc: "Kosmeettisen virtuaalivaluutan pyörittelyyn",
+    daily: 250,
     sub: {
         "saldo": {
             "syntax": "raha saldo",
@@ -38,7 +39,7 @@ exports.run = function (msg, client, args) {
         const prefix = config.discord.prefix;
         var syntax = info.syntax;
         var userdata = client.usrdata;
-        var daily = config.commands.raha.daily;
+        var daily = info.daily;
         if (!msg.author.bot) {
             var userid = msg.author.id.toString();
             var usrobj;

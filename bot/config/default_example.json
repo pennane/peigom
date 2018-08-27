@@ -22,12 +22,7 @@
                 "örörör is very bad"
             ],
             "type" : "LISTENING",
-            "refreshrate" : 20
-        }
-    },
-    "commands": {
-        "raha": {
-            "daily": 250
+            "refreshrate" : 30
         }
     },
     "misc": {
