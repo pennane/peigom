@@ -1,6 +1,6 @@
 {
   "name": "peigombot",
-  "version": "0.8",
+  "version": "0.8.0",
   "description": "Discord bot with features for managing your server and creating all kinds of shenanigans.",
   "main": "bot.js",
   "license": "gpl-3.0",
