@@ -16,7 +16,7 @@ exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         if (msg.member.voiceChannel && !(msg.guild.voiceConnection)) {
             var filearr = [];
-            fs.readdirSync("./sound/sp").forEach(file => {
+            fs.readdirSync("./sound/pussukat").forEach(file => {
                 filearr.push(file);
             });
             client.IsBusy = true;
