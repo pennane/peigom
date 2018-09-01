@@ -15,9 +15,7 @@ exports.parse = function (client, parsed) {
             } else {
                 parsed.handledcommand = false;
             }
-        } else if (!_.has(client.config.get('commands'), parsed.command)) {
-            parsed.handledcommand = false;
-        }
+        } 
         
         resolve({ msg: parsed.msg, command: parsed.handledcommand, args: parsed.arguments, client: client })
     });

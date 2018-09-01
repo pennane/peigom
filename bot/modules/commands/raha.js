@@ -1,5 +1,9 @@
 const config = require('config');
 const fs = require('fs');
+const Discord = require('discord.js');
+
+let embed = new Discord.RichEmbed()
+    .setColor(0xF4E542);
 
 
 var info = {
@@ -36,10 +40,15 @@ var exports = module.exports = {};
 
 exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
+
         const prefix = config.discord.prefix;
-        var syntax = info.syntax;
-        var userdata = client.usrdata;
-        var daily = info.daily;
+        let syntax = info.syntax;
+        let userdata = client.usrdata;
+        let daily = info.daily;
+
+        embed.setTitle(`Komento ${info.name} toimii näin:`)
+            .setDescription(`\`${syntax}\``);
+
         if (!msg.author.bot) {
             var userid = msg.author.id.toString();
             var usrobj;
@@ -59,62 +68,57 @@ exports.run = function (msg, client, args) {
                 switch (args[1]) {
                     case 'saldo':
                         subsyntax = info.sub[args[1]].syntax;
-                        msg.reply(usrobj.credits)
-                            .then(msg => {
-
-                            })
+                        embed.setTitle(`${msg.member.user.username} balanssi:`)
+                            .setDescription(`${usrobj.credits} kolea`)
+                        msg.channel.send(embed)
                             .catch(error => console.info(error));
                         break;
                     case 'uhkapeli':
                         subsyntax = info.sub[args[1]].syntax;
                         if (!isNaN(parseInt(args[2])) && parseInt(args[2]) > 0) {
                             if (parseInt(args[2]) <= parseInt(usrobj.credits)) {
-                                msg.channel.send('Käyttäjä ' + msg.author.username + ' uhkapelaa ' + args[2] + ' kolikolla. Lets mennään.')
-                                    .then(msg => {
+                                embed.setTitle(`Käyttäjä ${msg.author.username} uhkapelaa ${args[2]} kolikolla. Lets mennään.`)
+                                    .setDescription(`:game_die:`);
+                                msg.channel.send(embed)
+                                    .then(newmsg => {
+                                        let newembed = embed;
+                                        function winorlose() {
+                                            var result = Math.round(Math.random());
 
-                                        ;
-                                    })
-                                    .catch(error => console.info(error));
+                                            if (result === 1) {
+                                                return true;
+                                            } else {
+                                                return false;
+                                            }
 
-                                function winorlose() {
-                                    var result = Math.round(Math.random());
-                                    if (result === 1) {
-                                        return true;
-                                    } else {
-                                        return false;
-                                    }
-                                }
-                                if (winorlose()) {
-                                    msg.channel.send('Voitto!')
-                                        .then(msg => {
+                                        }
 
-                                            ;
-                                        })
-                                        .catch(error => console.info(error));
-                                    usrobj.credits = parseInt(usrobj.credits) + parseInt(args[2]);
-                                } else {
-                                    msg.channel.send('Häviö!')
-                                        .then(msg => {
+                                        setTimeout(function() {
+                                            if (winorlose()) {
+                                                newembed.setDescription(`:game_die: Voitto! Sait ${args[2]} kolikkoa :game_die:`)
+                                                newmsg.edit(newembed)
+                                                    .catch(error => console.info(error));
+                                                usrobj.credits = parseInt(usrobj.credits) + parseInt(args[2]);
+                                            } else {
+                                                newembed.setDescription(`:game_die: Häviö! Hävisit ${args[2]} kolikkoa :game_die:`)
+                                                newmsg.edit(newembed)
+                                                    .catch(error => console.info(error));
+                                                usrobj.credits = parseInt(usrobj.credits) - parseInt(args[2]);
+                                            }
+                                        }, 1500)
 
-                                            ;
-                                        })
-                                        .catch(error => console.info(error));
-                                    usrobj.credits = parseInt(usrobj.credits) - parseInt(args[2]);
-                                }
+
+                                    });
                             } else {
-                                msg.channel.send(msg.author.username + ', ei tarpeeks koleja!')
-                                    .then(msg => {
-
-                                        ;
-                                    })
+                                embed.setTitle(`${msg.member.user.username}, ,:`)
+                                    .setDescription(`Sulla ei oo tarpeeks koleja!`)
+                                msg.channel.send(embed)
                                     .catch(error => console.info(error));
                             }
                         } else {
-                            msg.reply(subsyntax)
-                                .then(msg => {
-
-                                    ;
-                                })
+                            embed.setTitle(`Komennon ${info.name} alakomento ${info.sub[args[1]].name} toimii näin:`)
+                                .setDescription(`\`${subsyntax}\``)
+                            msg.channel.send(embed)
                                 .catch(error => console.info(error));
                         }
                         break;
@@ -135,82 +139,60 @@ exports.run = function (msg, client, args) {
                                 if (gambleCheck(args[3].replace(/\D/g, ''))) {
                                     usrobj.credits = usrobj.credits - parseInt(args[2]);
                                     giftTo.credits = giftTo.credits + parseInt(args[2]);
-                                    msg.reply('`Lahjoitit ' + parseInt(args[2]) + ' kolikkoa onnistuneesti!`')
-                                        .then(msg => {
-
-                                            ;
-                                        })
+                                    embed.setTitle(`${msg.member.user.username}, huomaa:`)
+                                        .setDescription(`Lahjoitit ${parseInt(args[2])} kolikkoa onnistuneesti!`)
+                                    msg.channel.send(embed)
                                         .catch(error => console.info(error));
                                 } else {
-                                    msg.reply('Valitsemasi pelaaja ei ole vielä koskaan käyttänyt komentoa: \`' + prefix + info.name + '\`. Et voi lahjoittaa hänelle.')
-                                        .then(msg => {
-
-                                            ;
-                                        })
+                                    embed.setTitle(`${msg.member.user.username}, huomaa:`)
+                                        .setDescription(`Valitsemasi pelaaja ei ole vielä koskaan käyttänyt komentoa: \`${prefix}${info.name}\`. Et voi lahjoittaa hänelle.`)
+                                    msg.channel.send(embed)
                                         .catch(error => console.info(error));
                                 }
                             } else {
-                                msg.channel.send(msg.author.username + ', ei tarpeeks koleja!')
-                                    .then(msg => {
-
-                                        ;
-                                    })
+                                embed.setTitle(`${msg.member.user.username}, huomaa:`)
+                                    .setDescription(`Sulla ei oo tarpeeks koleja!`)
+                                msg.channel.send(embed)
                                     .catch(error => console.info(error));
                             }
                         } else {
-                            msg.reply(subsyntax)
-                                .then(msg => {
-
-                                    ;
-                                })
+                            embed.setTitle(`Komennon ${info.name} alakomento ${info.sub[args[1]].name} toimii näin:`)
+                                .setDescription(`\`${subsyntax}\``)
+                            msg.channel.send(embed)
                                 .catch(error => console.info(error));
                         }
                         break;
                     case 'kauppa':
                         subsyntax = info.sub[args[1]].syntax;
-                        msg.channel.send(' <:thonk4:414484594381946910> `**' + (msg.author.username)
-                            .toUpperCase() + ', KAUPPA ON SULJETTU**` <:thonk4:414484594381946910>  ')
-                            .then(msg => {
-
-                                ;
-                            })
+                        embed.setTitle(`${msg.member.user.username}, huomaa:`)
+                            .setDescription(`<:thonk4:414484594381946910> \`\*\*KAUPPA ON SULJETTU\`\*\* <:thonk4:414484594381946910>`)
+                        msg.channel.send(embed)
                             .catch(error => console.info(error));
                         break;
                     case 'palkka':
                         subsyntax = info.sub[args[1]].syntax;
                         if (Date.now() - usrobj.whenclaimed > 86400000) {
-                            msg.reply(`Sait päivän palkan, eli ${daily} kolikkelia.`)
-                                .then(msg => {
-
-                                    ;
-                                })
+                            embed.setTitle(`${msg.member.user.username}, huomaa:`)
+                                .setDescription(`Sait päivän palkan, eli ${daily} kolikkelia.`)
+                            msg.channel.send(embed)
                                 .catch(error => console.info(error));
                             usrobj.whenclaimed = Date.now();
                             usrobj.credits = usrobj.credits + daily;
                         } else {
                             var timeremaining = Math.round(((((((usrobj.whenclaimed + 86400000) - Date.now()) / 1000) / 60) / 60) * 100) / 100);
-                            msg.reply('Vielä ' + timeremaining + ' tuntia et saat kolikkeleit.')
-                                .then(msg => {
-
-                                    ;
-                                })
+                            embed.setTitle(`${msg.member.user.username}, huomaa:`)
+                                .setDescription(`Vielä ${timeremaining} tuntia et saat kolikkeleita.`)
+                            msg.channel.send(embed)
                                 .catch(error => console.info(error));
                         }
                         break;
                     default:
-                        msg.reply(syntax)
-                            .then(msg => {
-
-                            })
+                        msg.channel.send(embed)
                             .catch(error => console.info(error));
                         break;
                 }
             } else {
-                msg.reply(syntax)
-                    .then(msg => {
-
-                        ;
-                    })
+                msg.channel.send(embed)
                     .catch(error => console.info(error));
             }
 

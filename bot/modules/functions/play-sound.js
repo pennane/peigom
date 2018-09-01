@@ -5,12 +5,10 @@ exports.play = function (filename, msg, connection, client) {
         var dispatcher = connection.playFile(filename);
         dispatcher.on("end", end => {
             client.IsBusy = false;
-            if (msg.member.voiceChannel) {
-                msg.member.voiceChannel.leave();
-                    
+            if (msg.guild.me.voiceChannel) {
+                msg.guild.me.voiceChannel.leave();       
                 client.IsBusy = false;
             }
-
         });
         resolve();
     });

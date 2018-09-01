@@ -9,7 +9,8 @@ module.exports = exports = {};
 
 exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        msg.delete(1000);
+        msg.delete(1000)
+            .catch(err => console.log(err))
         setTimeout(function () {
             client.destroy();
             process.exit();

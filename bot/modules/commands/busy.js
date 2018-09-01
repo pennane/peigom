@@ -1,24 +1,25 @@
+const Discord = require('discord.js');
+
+let embed = new Discord.RichEmbed()
+    .setColor(0xF4E542);
+
 var info = {
     name: "busy",
     admin: true,
     syntax: "busy",
     desc: "Kertoo onko botti 'kiireinen'. Käyttö debuggaamiseen."
 }
-var syntax = info.syntax;
+let syntax = info.syntax;
 
 module.exports = exports = {};
 
 exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-    msg.channel.send('IsBusy: ' + client.IsBusy)
-        .then(msg => {
-            msg.delete(10000)
-            resolve();
-        })
-        .catch(error => {
-            console.log(error)
-        });
-    msg.delete(10000);
+        embed.setTitle(`Onko botti 'kiireinen':`)
+        embed.setDescription(`\`${client.IsBusy}\``)
+        msg.channel.send(embed)
+            .then(() => resolve())
+            .catch(error => console.log(error));
     });
 }
 

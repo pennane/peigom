@@ -1,24 +1,31 @@
+const Discord = require('discord.js');
 
-var info = {
+let embed = new Discord.RichEmbed()
+    .setColor(0xF4E542)
+    .setTitle("Botin kommentti:")
+    .setDescription("example");
+
+let info = {
     name: "example",
     admin: false,
     syntax: "example <amount> <@who>",
     desc: "description for ,example"
 }
 
-var syntax = info.syntax;
+let syntax = info.syntax;
+
 
 module.exports = exports = {};
 
-exports.run = function(msg, client, args) {
+exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         /*
         COMMAND LOGIC HERE
         MOVE COMPLETED FILE TO ./modules/commands/
         */
-       resolve();
+        resolve();
     })
-   
+
 }
 
 exports.info = info;

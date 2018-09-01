@@ -1,3 +1,8 @@
+const Discord = require('discord.js');
+
+let embed = new Discord.RichEmbed()
+    .setColor(0xF4E542);
+
 var info = {
     name: "sudo",
     admin: true,
@@ -10,6 +15,8 @@ module.exports = exports = {};
 
 exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
+        embed.setDescription(`\`${syntax}\``)
+            .setTitle(`Komento ${info.name} toimii näin:`)
         if (args[2]) {
             var channelid = args[1].replace(/\D/g, '');
             var sudochannel = client.channels.get(channelid);
@@ -25,14 +32,14 @@ exports.run = function (msg, client, args) {
                 sudochannel.send(args[2])
                     .catch(err => console.info(error));
             } else {
-                msg.reply(syntax)
+                msg.channel.send(embed)
                     .then(msg => {
                         msg.delete(15001)
                     })
                     .catch(err => console.info(error));
             }
         } else {
-            msg.reply(syntax)
+            msg.channel.send(embed)
                 .then(msg => {
                     msg.delete(15001)
                 })

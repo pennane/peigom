@@ -1,5 +1,9 @@
 const sound = require('../functions/play-sound.js');
 const ffmpeg = require("ffmpeg");
+const Discord = require('discord.js');
+
+let embed = new Discord.RichEmbed()
+    .setColor(0xF4E542);
 
 var info = {
     name: "dankmeme",
@@ -28,9 +32,9 @@ exports.run = function (msg, client, args) {
 
         } else if (!msg.member.voiceChannel) {
             resolve();
-            msg.reply('mene eka jollekki voicechannelille kid.')
-                .then(msg => {
-                })
+            embed.setTitle(`Botin kommentti:`)
+            .setDescription(`${msg.member.user.username} mene eka jollekki voicechannelille, kid.`);
+            msg.channel.send(embed)
                 .catch(error => console.info(error));
         } else {
             resolve();

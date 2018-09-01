@@ -10,7 +10,8 @@ module.exports = exports = {};
 
 exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        msg.channel.send('<a:thonk:443343009229045760>');
+        msg.channel.send('<a:thonk:443343009229045760>')
+            .catch(err => console.log(err))
         resolve();
     });
 }

@@ -1,7 +1,10 @@
 const fs = require('fs');
 const sharp = require('sharp');
 const https = require('https');
+const Discord = require('discord.js');
 
+let embed = new Discord.RichEmbed()
+    .setColor(0xF4E542);
 
 var info = {
     name: "jpeg",
@@ -20,20 +23,29 @@ exports.run = function (msg, client, args) {
             var flashback = './images/flashback.png';
             var imgname = `./images/${rand}.jpg`;
             var imgname = String(imgname);
-
+            embed
+                .setTitle("Hyper jpeg laatu");
             sharp(avatarfile)
                 .resize(256, 256)
-                .jpeg({quality: 1})
+                .jpeg({ quality: 1 })
                 .toFile(imgname)
                 .then(image => {
+                    embed.setImage(`attachment://jpeg.jpg`);
                     msg.channel.send({
-                        file: imgname
+                        embed: embed,
+                        files: [{
+                            attachment: imgname,
+                            name: 'jpeg.jpg'
+                        }]
                     })
                         .then(image => {
+
                             fs.unlinkSync(imgname);
                             fs.unlinkSync(avatarfile);
                         })
-                });
+                        .catch(err => console.log(err));
+                })
+                .catch(err => console.log(err));
         }
         var avatar = msg.author.avatarURL;
         var avatarfile = `./images/avatars/avatar${msg.author.id}${Date.now()}.jpg`;

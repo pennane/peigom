@@ -1,3 +1,8 @@
+const Discord = require('discord.js');
+
+let embed = new Discord.RichEmbed()
+    .setColor(0xF4E542);
+
 var info = {
     name: "uptime",
     admin: false,
@@ -10,6 +15,7 @@ module.exports = exports = {};
 
 exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
+        embed.setTitle("Botin uptime:")
         var uptime = {};
         uptime.ms = (client.uptime);
         uptime.ts = (client.uptime / 1000);
@@ -38,8 +44,9 @@ exports.run = function (msg, client, args) {
         }
 
         uptime.msg.complete = `Tää botti o ollu hereillä jo ${uptime.msg.h}${uptime.msg.m}${uptime.msg.s} :hourglass_flowing_sand:`
-
-        msg.channel.send(uptime.msg.complete);
+        embed.setDescription(uptime.msg.complete)
+        msg.channel.send(embed)
+            .catch(err => console.log(err))
         resolve();
     });
 

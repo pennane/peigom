@@ -1,7 +1,10 @@
 const fs = require('fs');
 const sharp = require('sharp');
 const https = require('https');
+const Discord = require('discord.js');
 
+let embed = new Discord.RichEmbed()
+    .setColor(0xF4E542);
 
 var info = {
     name: "vietnam",
@@ -15,6 +18,8 @@ module.exports = exports = {};
 
 exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
+        embed
+        .setTitle("Fläsbäkit");
         function rest() {
             var rand = Math.random().toString(36).substring(2, 9) + Math.random().toString(36).substring(2, 9);
             var flashback = './images/flashback.png';
@@ -28,14 +33,21 @@ exports.run = function (msg, client, args) {
                 .jpeg({ quality: 60 })
                 .toFile(imgname)
                 .then(image => {
+                    embed.setImage(`attachment://flashback.jpg`);
                     msg.channel.send({
-                        file: imgname
+                        embed: embed,
+                        files: [{
+                            attachment: imgname,
+                            name: 'flashback.jpg'
+                        }]
                     })
                         .then(image => {
                             fs.unlinkSync(imgname);
                             fs.unlinkSync(avatarfile);
                         })
-                });
+                        .catch(err => console.log(err));
+                })
+                .catch(err => console.log(err))
         }
         var avatar = msg.author.avatarURL;
         var avatarfile = `./images/avatars/avatar${msg.author.id}${Date.now()}.jpg`;
@@ -52,9 +64,7 @@ exports.run = function (msg, client, args) {
                 i++;
                 if (i = 1) {
                     rest();
-
                 }
-
             });
 
 

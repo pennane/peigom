@@ -1,6 +1,7 @@
 const _ = require('underscore');
 const fs = require('fs');
 const logger = require('../functions/activity-logger.js');
+const spam = require('../functions/spam-protection.js');
 
 var exports = module.exports = {}, coms = {}, filearr = [];
 
@@ -24,18 +25,32 @@ exports.files = function () {
 exports.parse = function (msg, client, command, args) {
     return new Promise((resolve, reject) => {
         if (_.has(coms, command)) {
-            coms[command].run(msg, client, args)
-                .then(function () {
-                    logger.log(1, { msg: msg, command: command, args: args })
-                    .catch(error => console.log(error));
+            let allowed = true;
+            spam.check(client, msg.member.user, command)
+                .then(parsed => {
+                    if (!parsed.allowed && client.config.misc.commandspamprotection) {
+                        msg.reply(`Rauhoitu komentojen kanssa, venaa ${parsed.waittime} sekuntia.`)
+                            .catch(error => console.log(error));
+                        return resolve();
+                    } else {
+                        coms[command].run(msg, client, args)
+                            .then(() => {
+                                logger.log(1, { msg: msg, command: command, args: args })
+                                    .catch(error => console.log(error));
+                            })
+                            .catch(error => {
+                                console.log(error);
+                                logger.log(6, { msg: msg, command: command, args: args })
+                                    .catch(error => console.log(error));
+                            });
+                    }
                 })
-                .catch(error => {
-                    console.log(error);
-                    logger.log(6, { msg: msg, command: command, args: args })
-                    .catch(error => console.log(error));
-                });
+                .catch(error => console.log(error));
 
-            
+
+
+
+
         }
         resolve();
     });

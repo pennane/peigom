@@ -1,15 +1,20 @@
 const fs = require('fs');
 const sharp = require('sharp');
 const https = require('https');
+const Discord = require('discord.js');
 
-
-var info = {
+let info = {
     name: "minime",
     admin: false,
     syntax: "minime",
     desc: "Lähettää kanavalle mini sinut."
 }
-var syntax = info.syntax;
+
+let embed = new Discord.RichEmbed()
+    .setColor(0xF4E542);
+
+let syntax = info.syntax;
+
 
 module.exports = exports = {};
 
@@ -20,20 +25,29 @@ exports.run = function (msg, client, args) {
             var flashback = './images/flashback.png';
             var imgname = `./images/${rand}.jpg`;
             var imgname = String(imgname);
+            embed
+                .setTitle("Mini me");
 
             sharp(avatarfile)
                 .resize(16, 16)
                 .jpeg({ quality: 90 })
                 .toFile(imgname)
                 .then(image => {
+                    embed.setImage(`attachment://minime.jpg`);
                     msg.channel.send({
-                        file: imgname
+                        embed: embed,
+                        files: [{
+                            attachment: imgname,
+                            name: 'minime.jpg'
+                        }]
                     })
                         .then(image => {
                             fs.unlinkSync(imgname);
                             fs.unlinkSync(avatarfile);
                         })
-                });
+                        .catch(err => console.log(err))
+                })
+                .catch(err => console.log(err));
         }
         var avatar = msg.author.avatarURL;
         var avatarfile = `./images/avatars/avatar${msg.author.id}${Date.now()}.jpg`;

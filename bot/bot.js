@@ -22,6 +22,8 @@ client.config = config;
 client.CommandExecutor = CommandExecutor;
 client.timing = { timer: console.time("| Connecting"), completed: false };
 client.usrdata = JSON.parse(fs.readFileSync('./data/user-data.json', 'utf8'));
+client.spam = {};
+client.spam.users = {};
 
 console.info(`Starting peigom-bot v.${client.config.app.version}`);
 
@@ -116,6 +118,8 @@ client.on('error', error => {
         .catch(error => console.log(error));
     console.log(`|-- ${time.get(1)} > Error has happended in the client, check ./log/`);
 });
+
+client.on('warn', warn => console.warn(warn));
 
 process.on('uncaughtException', error => {
     logger.log(3, error)

@@ -15,10 +15,10 @@ exports.run = function (msg, client, args) {
         client.destroy()
             .then(() => {
                 client.login(auth.token);
-                console.time("| Connecting");
             })
             .catch(error => console.log(error));
-        msg.delete(10000);
+        msg.delete(10000)
+            .catch(err => console.log(err))
         resolve();
     });
 }

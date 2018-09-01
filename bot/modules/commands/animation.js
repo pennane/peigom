@@ -1,4 +1,5 @@
 
+const Discord = require('discord.js');
 const animation = require('../../data/animation.json');
 
 var info = {
@@ -13,6 +14,8 @@ module.exports = exports = {};
 exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         var syntax = info.syntax;
+        let embed = new Discord.RichEmbed()
+            .setColor(0xF4E542);
         if (args.length > 1) {
             if (animation[args[1]]) {
                 msg.channel.send(animation[args[1]].keyframes[0]).then(msg => {
@@ -31,10 +34,15 @@ exports.run = function (msg, client, args) {
                 }).catch(error => console.info(error));
             } else {
                 var str = Object.keys(animation);
-                msg.channel.send("Lista saatavailla olevista animaatioista:```" + str + "```");
+                embed.setTitle(`Lista saatavailla olevista animaatioista:`)
+                    .setDescription(`\`${str}\``)
+                msg.channel.send(embed);
             }
         } else {
-            msg.channel.send(syntax);
+            embed.setTitle(`Komento ${info.name} toimii näin:`)
+            .setDescription(`\`${syntax}\``)
+        msg.channel.send(embed)
+        .catch(err => console.log(err));
         }
 
         resolve();
