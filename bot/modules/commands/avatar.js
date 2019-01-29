@@ -1,17 +1,15 @@
 const Discord = require("discord.js");
 
-var info = {
+let info = {
     name: "avatar",
     admin: false,
     syntax: "avatar {@kuka}",
     desc: "Esittää oman, tai muun avatarin"
 }
 
-var syntax = info.syntax;
+let syntax = info.syntax;
 
-module.exports = exports = {};
-
-exports.run = function (msg, client, args) {
+module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         if (args.length === 1) {
             let user = msg.member;
@@ -38,4 +36,4 @@ exports.run = function (msg, client, args) {
 
 }
 
-exports.info = info;
+module.exports.info = info;

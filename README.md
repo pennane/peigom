@@ -2,10 +2,19 @@ Discord bot with features for managing your server and creating all kinds of she
 
 Requires node.js, npm and a discord bot account.
 
-To install dependencies:
+install [node js](https://nodejs.org/en/download/)
+
+create a discord application [here](https://discordapp.com/developers/applications/me)
+
+Create the bot account to the application and gather your bot token. `KEEP IN MIND THAT YOU SHOULD NEVER SHARE YOUR TOKEN WITH ANYONE!`
+![Bot token creation](https://i.imgur.com/bMciwCc.png)
+
+
+To install dependencies run these in the wanted directory:
 ```
 npm --install
-
+npm install ffmpeg-binaries
+npm install node-opus
 ```
 
 In 'bot/config/' edit `default_example.json` and `authorize_example.json` files and remove the `_example`s:
@@ -29,4 +38,4 @@ In 'bot/config/' edit `default_example.json` and `authorize_example.json` files 
     },
 ````
 
-To run the bot use `node bot/bot.js` in your bot directory.
+To run the bot use `node bot/index.js` or `npm start` in your bot directory.

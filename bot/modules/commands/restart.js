@@ -1,16 +1,14 @@
 const auth = require('../../config/authorize.json');
 
-var info = {
+let info = {
     name: "restart",
     admin: true,
     syntax: "restart",
     desc: "Käynnistää websocketin uudelleen"
 }
-var syntax = info.syntax;
+let syntax = info.syntax;
 
-module.exports = exports = {};
-
-exports.run = function (msg, client, args) {
+module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         client.destroy()
             .then(() => {
@@ -23,4 +21,4 @@ exports.run = function (msg, client, args) {
     });
 }
 
-exports.info = info;
+module.exports.info = info;

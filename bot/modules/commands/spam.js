@@ -11,24 +11,22 @@ let info = {
 }
 let syntax = info.syntax;
 
-module.exports = exports = {};
-
-exports.run = function (msg, client, args) {
+module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         embed.setDescription(`\`${syntax}\``)
             .setTitle(`Komento ${info.name} toimii näin:`);
         if (args[3]) {
-            var userid = args[1].replace(/\D/g, '');
+            let userid = args[1].replace(/\D/g, '');
             if (msg.guild.members.get(userid)) {
                 if (typeof (args[2]) !== 'string') {
                     args[2] = args[2].toString();
                 }
                 if (args[4]) {
-                    for (var i = 4; i < args.length; i++) {
+                    for (let i = 4; i < args.length; i++) {
                         args[3] = args[3] + ' ' + args[i];
                     }
                 }
-                for (var i = 0; i < args[2]; i++) {
+                for (let i = 0; i < args[2]; i++) {
                     msg.guild.members.get(userid)
                         .send(args[3]);
                 }
@@ -52,4 +50,4 @@ exports.run = function (msg, client, args) {
     });
 }
 
-exports.info = info;
+module.exports.info = info;

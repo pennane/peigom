@@ -6,17 +6,15 @@ let embed = new Discord.RichEmbed()
     .setColor(0xF4E542);
 
 
-var info = {
+let info = {
     name: "tomb",
     admin: false,
     syntax: "tomb",
     desc: "Lähettää kanavalle tomb viestit."
 }
-var syntax = info.syntax;
+let syntax = info.syntax;
 
-module.exports = exports = {};
-
-exports.run = function (msg, client, args) {
+module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         embed.setTitle(`OLET TEHNYT TUHMUUKSIA!`)
             .setDescription('NYT RIITTAEAE VANDALISOINTI')
@@ -38,4 +36,4 @@ exports.run = function (msg, client, args) {
         resolve();
     });
 }
-exports.info = info;
+module.exports.info = info;

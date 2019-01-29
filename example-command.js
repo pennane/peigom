@@ -15,9 +15,7 @@ let info = {
 let syntax = info.syntax;
 
 
-module.exports = exports = {};
-
-exports.run = function (msg, client, args) {
+module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         /*
         COMMAND LOGIC HERE
@@ -28,4 +26,4 @@ exports.run = function (msg, client, args) {
 
 }
 
-exports.info = info;
+module.exports.info = info;

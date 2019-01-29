@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 let embed = new Discord.RichEmbed()
     .setColor(0xF4E542);
 
-var info = {
+let info = {
     name: "puhista",
     admin: true,
     syntax: "puhista <määrä (2-99)>",
@@ -13,11 +13,9 @@ var info = {
 embed.setTitle("Botin kommentti:");
 
 
-var syntax = info.syntax;
+let syntax = info.syntax;
 
-module.exports = exports = {};
-
-exports.run = function (msg, client, args) {
+module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         if (args[1] >= 2 && args[1] <= 99) {
             embed.setDescription(`Poistin ${args[1]} viestiä.`)
@@ -39,4 +37,4 @@ exports.run = function (msg, client, args) {
     });
 }
 
-exports.info = info;
+module.exports.info = info;

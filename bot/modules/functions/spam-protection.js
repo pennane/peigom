@@ -1,28 +1,27 @@
-const schedule = require('node-schedule');
-const Discord = require('discord.js');
-const _ = require('underscore');
+const config = require('config');
+let spamData = { users: {} }
 
-let com_interval = 5 //seconds
-let gen_interval = 3 //seconds
-
-var exports = module.exports = {};
-exports.check = (client, user, command) => {
+module.exports.check = (user, command) => {
     return new Promise((resolve, reject) => {
+        let state = config.misc.commandspamprotection.state;
+        if (state === false) {
+            return resolve({allowed:true});
+        }
+        let com_interval = config.misc.commandspamprotection.com_interval // seconds
+        let gen_interval = config.misc.commandspamprotection.gen_interval // seconds
         let allowed = true;
         let type = null;
         let waittime = null;
         let now = Date.now();
 
-        if (!client || !user || !command) {
+        if (!user || !command) {
             reject(new Error("Did not receive required arguments"))
         }
-        if (!_.isObject(client) || !_.isObject(user)) {
-            reject(new Error("Received faulty arguments"))
-        }
+
         let userid = user.id;
 
-        if (!client.spam.users[userid]) {
-            client.spam.users[userid] = {
+        if (!spamData.users[userid]) {
+            spamData.users[userid] = {
                 command: {},
                 info: {
                     name: user.username,
@@ -32,7 +31,7 @@ exports.check = (client, user, command) => {
             }
         }
 
-        let userobj = client.spam.users[userid];
+        let userobj = spamData.users[userid];
 
         if (!userobj.command[command]) {
             userobj.command[command] = {

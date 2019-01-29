@@ -8,29 +8,21 @@ let embed = new Discord.RichEmbed()
 
 
 let info = {
-    name: "pussukat",
+    name: "vesi",
     admin: false,
-    syntax: "pussukat",
-    desc: "Soittaa satunnaisen kappaleen botin pussukat kansiosta"
+    syntax: "vesi",
+    desc: "nami nami"
 }
 let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         if (msg.member.voiceChannel && !(msg.guild.voiceConnection)) {
-            let filearr = [];
-            fs.readdirSync("./assets/sound/pussukat").forEach(file => {
-                filearr.push(file);
-            });
-            let dir = './assets/sound/pussukat/' + filearr[Math.floor(Math.random() * filearr.length)];
             msg.member.voiceChannel.join()
                 .then(connection => {
-                    sound.play(dir, msg, connection, client)
-                        .then(resolve())
-                        .catch(error => console.log(error));
-
-                })
-                .catch(error => console.log(error));
+                    sound.play('./assets/sound/vesi.mp3', msg, connection, client)
+                        .then(resolve());
+                });
         } else if (!msg.member.voiceChannel) {
             resolve();
             embed.setTitle(`Botin kommentti:`)
@@ -40,6 +32,7 @@ module.exports.run = function (msg, client, args) {
         } else {
             resolve();
         }
+
     });
 }
 

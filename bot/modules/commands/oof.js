@@ -5,23 +5,20 @@ const Discord = require('discord.js');
 let embed = new Discord.RichEmbed()
     .setColor(0xF4E542); 0
 
-var info = {
+let info = {
     name: "oof",
     admin: false,
     syntax: "oof",
     desc: "Soittaa oof äänen"
 }
-var syntax = info.syntax;
+let syntax = info.syntax;
 
-module.exports = exports = {};
-
-exports.run = function (msg, client, args) {
+module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         if (msg.member.voiceChannel && !(msg.guild.voiceConnection)) {
-            client.IsBusy = true;
             msg.member.voiceChannel.join()
                 .then(connection => {
-                    sound.play('./sound/oof.mp3', msg, connection, client)
+                    sound.play('./assets/sound/oof.mp3', msg, connection, client)
                         .then(resolve());
                 });
         } else if (!msg.member.voiceChannel) {
@@ -36,4 +33,4 @@ exports.run = function (msg, client, args) {
 
     });
 }
-exports.info = info;
+module.exports.info = info;

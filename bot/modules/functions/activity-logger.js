@@ -1,90 +1,74 @@
 const fs = require("fs");
 const _ = require("underscore");
-const path = require("path");
 const time = require("./get-time.js");
 
-var exports = module.exports = {};
-exports.log = function (mode, content) {
+module.exports.log = (mode, content) => {
     return new Promise((resolve, reject) => {
-        
+        if (!mode === parseInt(mode, 10)) throw new Error("Error: Received activity mode is not an integer!");
 
-        if (!mode === parseInt(mode, 10)) {
-            throw new Error("Error: Received activity mode is not an integer!")
-        }
-        var today = time.get();
-        var todayPrecise = time.get(1);
-        var yyyy = time.yyyy();
-        var mm = time.mm();
-        var dd = time.dd();
-        var hh = time.hh();
-        var m = time.m();
-        var ss = time.ss();
+        let today = time.get(),
+            todayPrecise = time.get(1),
+            yyyy = time.yyyy(),
+            mm = time.mm(),
+            dd = time.dd(),
+            hh = time.hh(),
+            m = time.m(),
+            ss = time.ss();
 
-        var filenm = `./log/${yyyy}/${mm}/${dd}.txt`;
+        let filenm = `./log/${yyyy}/${mm}/${dd}.txt`;
 
-        if (!fs.existsSync(`./log/${yyyy}`)) {
-            fs.mkdirSync(`./log/${yyyy}`)
-        }
-        if (!fs.existsSync(`./log/${yyyy}/${mm}`)) {
-            fs.mkdirSync(`./log/${yyyy}/${mm}`)
-        }
-        if (!fs.existsSync(`./log/${yyyy}/${mm}/${dd}.txt`)) {
-            fs.writeFileSync(`./log/${yyyy}/${mm}/${dd}.txt`)
+        if (!fs.existsSync(`./log/${yyyy}`)) fs.mkdirSync(`./log/${yyyy}`);
+        if (!fs.existsSync(`./log/${yyyy}/${mm}`)) fs.mkdirSync(`./log/${yyyy}/${mm}`);
+        if (!fs.existsSync(`./log/${yyyy}/${mm}/${dd}.txt`)) fs.writeFileSync(`./log/${yyyy}/${mm}/${dd}.txt`);
+
+
+        let msgtolog = "";
+        let modes = {
+            1: () => { /* Discord Command */
+                msgtolog = `\r\n[Command] User: ${content.msg.author.username}, ${content.msg.author.id} Command: ${content.command} Args: ${content.args} Where: @${content.msg.channel.guild.name}:${content.msg.channel.guild.id}#${content.msg.channel.name} When: ${content.msg.createdTimestamp}`;
+            },
+            2: () => { /* Client Connected */
+                msgtolog = `\r\n[Connected @ ${todayPrecise}] `;
+            },
+            3: () => { /* Client Error */
+                msgtolog = `\r\n[Error @ ${todayPrecise}]\r\n${content}\r\n${content.stack ? content.stack : "no error stack"}\n[ ---------- ]`;
+            },
+            4: () => { /* Client Reconnecting */
+                msgtolog = `\r\n[Reconnecting @ ${todayPrecise}]`;
+            },
+            5: () => { /* Client Reconnected */
+                msgtolog = `\r\n[Resumed @ ${todayPrecise}]`;
+            },
+            6: () => { /* Discord Command Failure */
+                msgtolog = `\r\n[Command Failed] User: ${content.msg.author.username}: ${content.msg.author.id} Command: ${content.command} Args: ${content.args} Where: @${content.msg.channel.guild.name}#${content.msg.channel.name} When: ${content.msg.createdTimestamp}`;
+            },
+            7: () => { /* New Member at Server x */
+                msgtolog = `\r\n[New member] User ${content.user.username}: ${content.id} Where: ${content.guild.name}:${content.guild.id} When: ${todayPrecise}`;
+            },
+            8: () => { /* Member Left from Server x */
+                msgtolog = `\r\n[Member left] User ${content.user.username}: ${content.id} Where: ${content.guild.name}:${content.guild.id} When: ${todayPrecise}`;
+            },
+            9: () => { /* Client joined a New Server */
+                msgtolog = `\r\n[New server] Server: ${content.name}:${content.id} When: ${todayPrecise}`;
+            },
+            10: () => { /* Server Removed from Client */
+                msgtolog = `\r\n[Removed server] Server: ${content.name}:${content.id} When: ${todayPrecise}`;
+            }
         }
 
-        if (mode === 1) { // Command
-            var msgtolog = `\r\n[Command] User: ${content.msg.author.username}, ${content.msg.author.id} Command: ${content.command} Args: ${content.args} Where: @${content.msg.channel.guild.name}:${content.msg.channel.guild.id}#${content.msg.channel.name} When: ${content.msg.createdTimestamp}`;
-            fs.appendFileSync(filenm, msgtolog, function (err) {
+        if (modes[mode]) {
+            modes[mode]();
+            fs.appendFileSync(filenm, msgtolog, (err) => {
                 if (err) throw err;
             });
-        } else if (mode === 2) { // Connect
-            var msgtolog = `\r\n[Connected @ ${todayPrecise}] `;
-            fs.appendFileSync(filenm, msgtolog, function (err) {
-                if (err) throw err;
-            });
-        } else if (mode === 3) { // Error
-            var msgtolog = `\r\n[Error @ ${todayPrecise}]\r\n${content}\r\n[ ---------- ]`;
-            fs.appendFileSync(filenm, msgtolog, function (err) {
-                if (err) throw err;
-            });
-        } else if (mode === 4) { // Reconnecting
-            var msgtolog = `\r\n[Reconnecting @ ${todayPrecise}]`;
-            fs.appendFileSync(filenm, msgtolog, function (err) {
-                if (err) throw err;
-            });
-        } else if (mode === 5) { // Reconnect succeeds
-            var msgtolog = `\r\n[Resumed @ ${todayPrecise}]`;
-            fs.appendFileSync(filenm, msgtolog, function (err) {
-                if (err) throw err;
-            });
-        } else if (mode === 6) { // Failed command
-            var msgtolog = `\r\n[Command Failed] User: ${content.msg.author.username}: ${content.msg.author.id} Command: ${content.command} Args: ${content.args} Where: @${content.msg.channel.guild.name}#${content.msg.channel.name} When: ${content.msg.createdTimestamp}`;
-            fs.appendFileSync(filenm, msgtolog, function (err) {
-                if (err) throw err;
-            });
-        } else if (mode ===7) { // New guild member
-            var msgtolog = `\r\n[New member] User ${content.user.username}: ${content.id} Where: ${content.guild.name}:${content.guild.id} When: ${todayPrecise}`;
-            fs.appendFileSync(filenm, msgtolog, function (error) {
-                if (err) throw err;
-            });
-        } else if (mode === 8) { // Member left
-            var msgtolog = `\r\n[Member left] User ${content.user.username}: ${content.id} Where: ${content.guild.name}:${content.guild.id} When: ${todayPrecise}`;
-            fs.appendFileSync(filenm, msgtolog, function (error) {
-                if (err) throw err;
-            });
-        } else if (mode === 9) { // New server
-            var msgtolog = `\r\n[New server] Server: ${content.name}:${content.id} When: ${todayPrecise}`;
-            fs.appendFileSync(filenm, msgtolog, function (error) {
-                if (err) throw err;
-            });
-        } else if (mode === 10) { // Removed server
-            var msgtolog = `\r\n[Removed server] Server: ${content.name}:${content.id} When: ${todayPrecise}`;
-            fs.appendFileSync(filenm, msgtolog, function (error) {
-                if (err) throw err;
-            });
-        }  else {
+        } else {
             throw new Error("Error: Received activity mode does not exist.");
         }
-            resolve();
+        resolve();
     });
 }
+process.on('uncaughtException', error => {
+    module.exports.log(3, error)
+        .catch(error => console.log(error));
+    console.log(`|-- ${time.get(1)} > Error has happended in the process, check ./log/`);
+});

@@ -3,34 +3,34 @@ const ffmpeg = require('ffmpeg');
 const fs = require('fs');
 const Discord = require('discord.js');
 
+const dancemoves = require('../../assets/misc/fortnite/dancemoves')
+
 let embed = new Discord.RichEmbed()
     .setColor(0xF4E542);
 
-
 let info = {
-    name: "pussukat",
-    admin: false,
-    syntax: "pussukat",
-    desc: "Soittaa satunnaisen kappaleen botin pussukat kansiosta"
+    name: "fortnite",
+    admin: true,
+    syntax: "fortnite",
+    desc: "tanssi eeppisiä fornite liikkeitä"
 }
+
 let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         if (msg.member.voiceChannel && !(msg.guild.voiceConnection)) {
-            let filearr = [];
-            fs.readdirSync("./assets/sound/pussukat").forEach(file => {
-                filearr.push(file);
-            });
-            let dir = './assets/sound/pussukat/' + filearr[Math.floor(Math.random() * filearr.length)];
             msg.member.voiceChannel.join()
-                .then(connection => {
-                    sound.play(dir, msg, connection, client)
-                        .then(resolve())
-                        .catch(error => console.log(error));
-
-                })
-                .catch(error => console.log(error));
+                .then(async connection => {
+                    sound.play('./assets/sound/fortnite.mp3', msg, connection, client)
+                        .then(resolve());
+                    dancemoves.forEach((move, i) => {
+                        setTimeout(() => {
+                            msg.channel.send(move)
+                        }, 7000 * i / dancemoves.length + 500);
+                        
+                    })
+                });
         } else if (!msg.member.voiceChannel) {
             resolve();
             embed.setTitle(`Botin kommentti:`)
@@ -40,6 +40,7 @@ module.exports.run = function (msg, client, args) {
         } else {
             resolve();
         }
+
     });
 }
 

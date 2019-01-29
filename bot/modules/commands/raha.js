@@ -2,14 +2,17 @@ const config = require('config');
 const fs = require('fs');
 const Discord = require('discord.js');
 
+if (!fs.existsSync('./assets/misc/raha/user-data.json')) { fs.writeFileSync('./data/user-data.json', '{"users": {}}') }
+let userdata = JSON.parse(fs.readFileSync('./assets/misc/raha/user-data.json', 'utf8'))
+
 let embed = new Discord.RichEmbed()
     .setColor(0xF4E542);
 
 
-var info = {
+let info = {
     name: "raha",
     admin: false,
-    syntax: "raha <saldo / uhkapeli / lahjoita / kauppa / palkka>",
+    syntax: "raha <saldo / uhkapeli / lahjoita /  palkka>",
     desc: "Kosmeettisen virtuaalivaluutan pyörittelyyn",
     daily: 250,
     sub: {
@@ -25,10 +28,6 @@ var info = {
             "syntax": "raha lahjoita <määrä> <@kenelle>",
             "desc": "Lahjoittaa asettamasi määrän haluamallesi käyttäjälle."
         },
-        "kauppa": {
-            "syntax": "raha kauppa",
-            "desc": "Tällä hetkellä komennolla ei funktiota."
-        },
         "palkka": {
             "syntax": "raha palkka",
             "desc": "Antaa sinulle päivän palkan."
@@ -36,22 +35,19 @@ var info = {
     }
 }
 
-var exports = module.exports = {};
-
-exports.run = function (msg, client, args) {
+module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
 
         const prefix = config.discord.prefix;
         let syntax = info.syntax;
-        let userdata = client.usrdata;
         let daily = info.daily;
 
         embed.setTitle(`Komento ${info.name} toimii näin:`)
             .setDescription(`\`${syntax}\``);
 
         if (!msg.author.bot) {
-            var userid = msg.author.id.toString();
-            var usrobj;
+            let userid = msg.author.id.toString();
+            let usrobj;
             if (userdata.users[msg.author.id]) {
                 usrobj = userdata.users[msg.author.id];
             } else {
@@ -64,7 +60,7 @@ exports.run = function (msg, client, args) {
                 usrobj = userdata.users[msg.author.id]
             };
             if (args[1]) {
-                var subsyntax;
+                let subsyntax;
                 switch (args[1]) {
                     case 'saldo':
                         subsyntax = info.sub[args[1]].syntax;
@@ -83,7 +79,7 @@ exports.run = function (msg, client, args) {
                                     .then(newmsg => {
                                         let newembed = embed;
                                         function winorlose() {
-                                            var result = Math.round(Math.random());
+                                            let result = Math.round(Math.random());
 
                                             if (result === 1) {
                                                 return true;
@@ -126,10 +122,10 @@ exports.run = function (msg, client, args) {
                         subsyntax = info.sub[args[1]].syntax;
                         if (!isNaN(parseInt(args[2])) && parseInt(args[2]) > 0 && args[3]) {
                             if (parseInt(args[2]) <= parseInt(usrobj.credits)) {
-                                var giftTo = '';
+                                let giftTo = '';
 
                                 function gambleCheck(userid) {
-                                    for (var i = 0; i < userdata.users.length; i++) {
+                                    for (let i = 0; i < userdata.users.length; i++) {
                                         if (userdata.users[i].id == userid) {
                                             giftTo = userdata.users[i];
                                             return true;
@@ -162,13 +158,6 @@ exports.run = function (msg, client, args) {
                                 .catch(error => console.info(error));
                         }
                         break;
-                    case 'kauppa':
-                        subsyntax = info.sub[args[1]].syntax;
-                        embed.setTitle(`${msg.member.user.username}, huomaa:`)
-                            .setDescription(`<:thonk4:414484594381946910> \`\*\*KAUPPA ON SULJETTU\`\*\* <:thonk4:414484594381946910>`)
-                        msg.channel.send(embed)
-                            .catch(error => console.info(error));
-                        break;
                     case 'palkka':
                         subsyntax = info.sub[args[1]].syntax;
                         if (Date.now() - usrobj.whenclaimed > 86400000) {
@@ -179,7 +168,7 @@ exports.run = function (msg, client, args) {
                             usrobj.whenclaimed = Date.now();
                             usrobj.credits = usrobj.credits + daily;
                         } else {
-                            var timeremaining = Math.round(((((((usrobj.whenclaimed + 86400000) - Date.now()) / 1000) / 60) / 60) * 100) / 100);
+                            let timeremaining = Math.round(((((((usrobj.whenclaimed + 86400000) - Date.now()) / 1000) / 60) / 60) * 100) / 100);
                             embed.setTitle(`${msg.member.user.username}, huomaa:`)
                                 .setDescription(`Vielä ${timeremaining} tuntia et saat kolikkeleita.`)
                             msg.channel.send(embed)
@@ -197,7 +186,7 @@ exports.run = function (msg, client, args) {
             }
 
             ;
-            fs.writeFile("./data/user-data.json", JSON.stringify(userdata), function (err) {
+            fs.writeFile('./assets/misc/raha/user-data.json', JSON.stringify(userdata), function (err) {
                 if (err) {
                     return console.info(err);
                 }
@@ -208,4 +197,4 @@ exports.run = function (msg, client, args) {
     });
 }
 
-exports.info = info;
+module.exports.info = info;

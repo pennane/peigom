@@ -1,19 +1,24 @@
-var info = {
+const Discord = require('discord.js');
+
+let info = {
     name: "thonk",
     admin: false,
     syntax: "thonk",
     desc: "Lähettää kanavalle animoidun thonkin."
 }
-var syntax = info.syntax;
+let syntax = info.syntax;
 
-module.exports = exports = {};
-
-exports.run = function (msg, client, args) {
+module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        msg.channel.send('<a:thonk:443343009229045760>')
-            .catch(err => console.log(err))
+        if (client.emojis.has("443343009229045760") && (msg.guild.emojis.has("443343009229045760") || msg.channel.permissionsFor(msg.guild.me).has("USE_EXTERNAL_EMOJIS"))) {
+            msg.channel.send('<a:thonk:443343009229045760>')
+                .catch(err => console.log(err))
+        } else {
+            msg.channel.send(':thinking:')
+                .catch(err => console.log(err));
+        }
         resolve();
     });
 }
 
-exports.info = info;
+module.exports.info = info;

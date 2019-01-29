@@ -6,25 +6,23 @@ const Discord = require('discord.js');
 let embed = new Discord.RichEmbed()
     .setColor(0xF4E542);
 
-var info = {
+let info = {
     name: "vietnam",
     admin: false,
     syntax: "vietnam",
     desc: "Lähettää kanavalle vietnam fläshbäkkejä."
 }
-var syntax = info.syntax;
+let syntax = info.syntax;
 
-module.exports = exports = {};
-
-exports.run = function (msg, client, args) {
+module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         embed
         .setTitle("Fläsbäkit");
         function rest() {
-            var rand = Math.random().toString(36).substring(2, 9) + Math.random().toString(36).substring(2, 9);
-            var flashback = './images/flashback.png';
-            var imgname = `./images/${rand}.jpg`;
-            var imgname = String(imgname);
+            let rand = Math.random().toString(36).substring(2, 9) + Math.random().toString(36).substring(2, 9);
+            let flashback = './assets/images/flashback.png';
+            let imgname = `./assets/images/${rand}.jpg`;
+            imgname = String(imgname);
 
             sharp(avatarfile)
                 .resize(256, 256)
@@ -49,15 +47,15 @@ exports.run = function (msg, client, args) {
                 })
                 .catch(err => console.log(err))
         }
-        var avatar = msg.author.avatarURL;
-        var avatarfile = `./images/avatars/avatar${msg.author.id}${Date.now()}.jpg`;
-        var i = 0;
+        let avatar = msg.author.avatarURL;
+        let avatarfile = `./assets/images/avatars/avatar${msg.author.id}${Date.now()}.jpg`;
+        let i = 0;
         if (fs.existsSync(avatarfile)) {
             rest();
         }
         if (!fs.existsSync(avatarfile)) {
-            var file = fs.createWriteStream(avatarfile);
-            var request = https.get(avatar, function (response) {
+            let file = fs.createWriteStream(avatarfile);
+            let request = https.get(avatar, function (response) {
                 response.pipe(file)
             });
             file.on('finish', function () {
@@ -73,4 +71,4 @@ exports.run = function (msg, client, args) {
     })
 
 }
-exports.info = info;
+module.exports.info = info;

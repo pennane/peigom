@@ -8,21 +8,18 @@ let embed = new Discord.RichEmbed()
 
 
 let info = {
-    name: "pussukat",
+    name: "imgonnasaythenword",
     admin: false,
-    syntax: "pussukat",
-    desc: "Soittaa satunnaisen kappaleen botin pussukat kansiosta"
+    syntax: "imgonnasaythenword",
+    desc: "thats racist, you cannot say the nword"
 }
 let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         if (msg.member.voiceChannel && !(msg.guild.voiceConnection)) {
-            let filearr = [];
-            fs.readdirSync("./assets/sound/pussukat").forEach(file => {
-                filearr.push(file);
-            });
-            let dir = './assets/sound/pussukat/' + filearr[Math.floor(Math.random() * filearr.length)];
+            let filearr = ["nword.mp3","nword2.mp3"];
+            let dir = './assets/sound/' + filearr[Math.floor(Math.random() * filearr.length)];
             msg.member.voiceChannel.join()
                 .then(connection => {
                     sound.play(dir, msg, connection, client)

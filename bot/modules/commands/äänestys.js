@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 const config = require('config');
-var info = {
+let info = {
     name: "äänestys",
     admin: false,
     syntax: "äänestys <Joo/ei kysymys>",
@@ -9,9 +9,7 @@ var info = {
 
 let syntax = info.syntax;
 
-module.exports = exports = {};
-
-exports.run = function (msg, client, args) {
+module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         let embed = new Discord.RichEmbed()
             .setColor(0xF4E542);
@@ -43,4 +41,4 @@ exports.run = function (msg, client, args) {
 
 }
 
-exports.info = info;
+module.exports.info = info;

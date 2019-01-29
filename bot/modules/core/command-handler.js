@@ -1,23 +1,34 @@
 const _ = require("underscore");
+const CommandExecutor = require('./command-executor')
 
-var exports = module.exports = {};
-var cache = {};
-
-exports.parse = function (client, parsed) {
+module.exports.handle = ({cmd, args, msg}) => {
     return new Promise((resolve, reject) => {
-        if (!_.isObject(client) || !_.isObject(parsed)) { throw new Error("Invalid arguments"); }
-
-        if (_.has(client.CommandExecutor.commands, parsed.command)) {
-            if (client.CommandExecutor.commands[parsed.command].info.admin && parsed.msg.authorized) {
-                parsed.handledcommand = parsed.command;
-            } else if (!client.CommandExecutor.commands[parsed.command].info.admin) {
-                parsed.handledcommand = parsed.command;
-            } else {
-                parsed.handledcommand = false;
+        let unauthorized = {};
+        let command = false;
+        if (_.has(CommandExecutor.commands, cmd)) {
+            if (CommandExecutor.commands[cmd].info.redirect && CommandExecutor.commands[CommandExecutor.commands[cmd].info.destination]) {
+                cmd = CommandExecutor.commands[cmd].info.destination;
+                args[0] = cmd
             }
-        } 
-        
-        resolve({ msg: parsed.msg, command: parsed.handledcommand, args: parsed.arguments, client: client })
+
+            if (CommandExecutor.commands[cmd].info.admin && msg.authorized) {
+                command = cmd;
+            } else if (CommandExecutor.commands[cmd].info.admin && !msg.authorized) {
+                unauthorized = {
+                    isIt: true,
+                    command: cmd
+                };
+            } else if (!CommandExecutor.commands[cmd].info.admin) {
+                command = cmd;
+            } 
+        }
+
+        resolve({
+            msg: msg,
+            command: command,
+            args: args,
+            unauthorized: unauthorized
+        })
     });
 
 }

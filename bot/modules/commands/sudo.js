@@ -3,26 +3,24 @@ const Discord = require('discord.js');
 let embed = new Discord.RichEmbed()
     .setColor(0xF4E542);
 
-var info = {
+let info = {
     name: "sudo",
     admin: true,
     syntax: "sudo <#text-kanava> <teksti>",
     desc: "Lähettää asettamasi viestin asettamallesi tekstikanavalle."
 }
-var syntax = info.syntax;
+let syntax = info.syntax;
 
-module.exports = exports = {};
-
-exports.run = function (msg, client, args) {
+module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         embed.setDescription(`\`${syntax}\``)
             .setTitle(`Komento ${info.name} toimii näin:`)
         if (args[2]) {
-            var channelid = args[1].replace(/\D/g, '');
-            var sudochannel = client.channels.get(channelid);
+            let channelid = args[1].replace(/\D/g, '');
+            let sudochannel = client.channels.get(channelid);
             if (sudochannel) {
                 if (args[3]) {
-                    for (var i = 3; i < args.length; i++) {
+                    for (let i = 3; i < args.length; i++) {
                         args[2] = args[2] + ' ' + args[i];
                     }
                 }
@@ -50,4 +48,4 @@ exports.run = function (msg, client, args) {
     });
 }
 
-exports.info = info;
+module.exports.info = info;

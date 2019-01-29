@@ -5,24 +5,21 @@ const Discord = require('discord.js');
 let embed = new Discord.RichEmbed()
     .setColor(0xF4E542);
 
-var info = {
+let info = {
     name: "dankmeme",
     admin: false,
     syntax: "dankmeme",
     desc: "Soittaa satunnaisen dank meme -äänen."
 }
-var syntax = info.syntax;
+let syntax = info.syntax;
 
-module.exports = exports = {};
-
-exports.run = function (msg, client, args) {
+module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        var memeSound = ['./sound/meme.mp3', './sound/meme2.mp3', './sound/meme3.mp3']
+        let memeSound = ['./assets/sound/meme.mp3', './assets/sound/meme2.mp3', './assets/sound/meme3.mp3']
         if (msg.member.voiceChannel && !(msg.guild.voiceConnection)) {
-            client.IsBusy = true;
             msg.member.voiceChannel.join()
                 .then(connection => {
-                    var randomSound = memeSound[Math.floor(Math.random() * memeSound.length)];
+                    let randomSound = memeSound[Math.floor(Math.random() * memeSound.length)];
                     sound.play(randomSound, msg, connection, client)
                         .then(resolve())
                         .catch(error => {
@@ -42,4 +39,4 @@ exports.run = function (msg, client, args) {
     });
 }
 
-exports.info = info;
+module.exports.info = info;

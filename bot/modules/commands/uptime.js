@@ -3,20 +3,18 @@ const Discord = require('discord.js');
 let embed = new Discord.RichEmbed()
     .setColor(0xF4E542);
 
-var info = {
+let info = {
     name: "uptime",
     admin: false,
     syntax: "uptime",
     desc: "Kertoo botin tähänastisen käynnissäoloajan"
 }
-var syntax = info.syntax;
+let syntax = info.syntax;
 
-module.exports = exports = {};
-
-exports.run = function (msg, client, args) {
+module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         embed.setTitle("Botin uptime:")
-        var uptime = {};
+        let uptime = {};
         uptime.ms = (client.uptime);
         uptime.ts = (client.uptime / 1000);
         uptime.h = Math.trunc(uptime.ts / 3600);
@@ -52,4 +50,4 @@ exports.run = function (msg, client, args) {
 
 }
 
-exports.info = info;
+module.exports.info = info;

@@ -1,13 +1,11 @@
-var info = {
+let info = {
     name: "sammuta",
     admin: true,
     syntax: "sammuta",
     desc: "Sammuttaa botin, uudelleenkäynnistys vain komentolinjan kautta."
 }
 
-module.exports = exports = {};
-
-exports.run = function (msg, client, args) {
+module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         msg.delete(1000)
             .catch(err => console.log(err))
@@ -19,4 +17,4 @@ exports.run = function (msg, client, args) {
     });
 }
 
-exports.info = info;
+module.exports.info = info;
