@@ -13,12 +13,15 @@ let info = {
     syntax: "vesi",
     desc: "nami nami"
 }
+
 let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        if (msg.member.voiceChannel && !(msg.guild.voiceConnection)) {
-            msg.member.voiceChannel.join()
+        let userid = args[1] && msg.authorized ? args[1].replace(/\D/g, '') : null
+        let voiceChannel = userid ? msg.guild.members.get(userid).voiceChannel : msg.member.voiceChannel
+        if (voiceChannel && !(msg.guild.voiceConnection)) {
+            voiceChannel.join()
                 .then(connection => {
                     sound.play('./assets/sound/vesi.mp3', msg, connection, client)
                         .then(resolve());

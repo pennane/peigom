@@ -17,10 +17,12 @@ let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        if (msg.member.voiceChannel && !(msg.guild.voiceConnection)) {
-            let filearr = ["nword.mp3","nword2.mp3"];
-            let dir = './assets/sound/' + filearr[Math.floor(Math.random() * filearr.length)];
-            msg.member.voiceChannel.join()
+        let filearr = ["nword.mp3", "nword2.mp3"];
+        let dir = './assets/sound/' + filearr[Math.floor(Math.random() * filearr.length)];
+        let userid = args[1] && msg.authorized ? args[1].replace(/\D/g, '') : null
+        let voiceChannel = userid ? msg.guild.members.get(userid).voiceChannel : msg.member.voiceChannel
+        if (voiceChannel && !(msg.guild.voiceConnection)) {
+            voiceChannel.join()
                 .then(connection => {
                     sound.play(dir, msg, connection, client)
                         .then(resolve())
@@ -39,5 +41,7 @@ module.exports.run = function (msg, client, args) {
         }
     });
 }
+
+
 
 module.exports.info = info;
