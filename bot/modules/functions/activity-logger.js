@@ -1,5 +1,4 @@
 const fs = require("fs");
-const _ = require("underscore");
 const time = require("./get-time.js");
 
 module.exports.log = (mode, content) => {
@@ -19,7 +18,7 @@ module.exports.log = (mode, content) => {
 
         if (!fs.existsSync(`./log/${yyyy}`)) fs.mkdirSync(`./log/${yyyy}`);
         if (!fs.existsSync(`./log/${yyyy}/${mm}`)) fs.mkdirSync(`./log/${yyyy}/${mm}`);
-        if (!fs.existsSync(`./log/${yyyy}/${mm}/${dd}.txt`)) fs.writeFileSync(`./log/${yyyy}/${mm}/${dd}.txt`);
+        if (!fs.existsSync(`./log/${yyyy}/${mm}/${dd}.txt`)) fs.writeFileSync(`./log/${yyyy}/${mm}/${dd}.txt`, `Logs from ${dd}.${mm}.${yyyy}`);
 
 
         let msgtolog = "";
