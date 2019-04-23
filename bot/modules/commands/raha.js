@@ -1,11 +1,11 @@
 const config = require('config');
 const fs = require('fs');
 const Discord = require('discord.js');
-
-fs.writeFile('./assets/misc/raha/user-data.json', '{"users": {}}', { flag: 'wx' }, function (err) {
-    if (err) throw err;
-    console.log("It's saved!");
-});
+try {
+    fs.writeFile('./assets/misc/raha/user-data.json', '{"users": {}}', { flag: 'wx' });    
+} catch (err) {
+    
+}
 
 let userdata = JSON.parse(fs.readFileSync('./assets/misc/raha/user-data.json', 'utf8'))
 
