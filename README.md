@@ -1,41 +1,41 @@
-Discord bot with features for managing your server and creating all kinds of shenanigans.
+# Peigom Bot
 
-Requires node.js, npm and a discord bot account.
+Peigom Bot is a bot for discord with features for managing servers and emitting entartainment.
 
-install [node js](https://nodejs.org/en/download/)
+Types of commands Peigom has as of now:
+* Image manipulation
+* Voiceclip playback
+* Chat management
+* Other fun shenanigans
 
-create a discord application [here](https://discordapp.com/developers/applications/me)
 
-Create the bot account to the application and gather your bot token. `KEEP IN MIND THAT YOU SHOULD NEVER SHARE YOUR TOKEN WITH ANYONE!`
-![Bot token creation](https://i.imgur.com/bMciwCc.png)
+### Installation
 
+Peigom Bot requires [Node.js](https://nodejs.org/) and a [Discord bot account](https://discordapp.com/developers/applications/) to run.
 
-To install dependencies run these in the wanted directory:
+Install the dependencies and start rolling
+
+```sh
+$ git clone https://github.com/Pennane/peigom-bot/
+$ cd peigom-bot
+$ npm install
+$ npm start
 ```
-npm --install
-npm install ffmpeg-binaries
-npm install node-opus
-```
 
-In 'bot/config/' edit `default_example.json` and `authorize_example.json` files and remove the `_example`s:
-````javascript
-{
-        "token": "YOUR TOKEN HERE" //Your bot applications token here
-}
-````
+For Peigom bot to work you need to setup config at `bot/config`
 
-````javascript
-"discord": {
-        "prefix": ",", //Desired prefix for all the commands
-        "authorized": [
-            "AUTHORIZED USER ID HERE", // Insert your admin's id
-            "ANOTHER AUTHORIZED IF NEEDED" // You can put multiple account ids
-        ],
-        "authorizedRoles": [
-            "AUTHORIZED ROLE-NAMES HERE" // Insert role's name that you want to have admin commands
-        ],
-        "activity": ",auta" // Insert what activity bot shows in discord
-    },
-````
+### Development
 
-To run the bot use `node bot/index.js` or `npm start` in your bot directory.
+There is a template command in the root called `example-command.js`.
+You can edit it and then move it to `bot/modules/commands/` for it to work.
+
+
+
+### Other
+An outdated Finnish guide on how to use the bot [here](https://arttu.pennanen.org/sub/peigom-bot_opas/)
+
+License
+----
+
+GPL-3.0
+
