@@ -2,9 +2,6 @@ const config = require("config")
 
 module.exports.parse = function (msg) {
     return new Promise((resolve, reject) => {
-
-        if (typeof msg === 'object' && msg !== null) { throw new Error("Invalid arguments") }
-
         if (msg.hasOwnProperty('prefix')) {
             let prefix = config.discord.prefix;
 
