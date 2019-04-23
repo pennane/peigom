@@ -1,4 +1,3 @@
-const _ = require('underscore');
 const fs = require('fs');
 const logger = require('../functions/activity-logger.js');
 const spam = require('../functions/spam-protection.js');
@@ -28,7 +27,7 @@ module.exports.files = () => {
 
 module.exports.execute = ({msg, command, args, unauthorized}, client) => {
     return new Promise((resolve, reject) => {
-        if (_.has(coms, command)) {
+        if (coms.hasOwnProperty(command)) {
             let allowed = true;
             spam.check(msg.member.user, command)
                 .then(parsed => {

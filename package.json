@@ -1,6 +1,6 @@
 {
   "name": "peigombot",
-  "version": "1.0.2",
+  "version": "1.1",
   "description": "Discord bot with features for managing your server and creating all kinds of shenanigans.",
   "main": "bot.js",
   "license": "gpl-3.0",
@@ -18,10 +18,9 @@
     "discord.js": "^11.4.2",
     "ffmpeg": "0.0.4",
     "ffmpeg-binaries": "^4.0.0",
-    "node-opus": "^0.3.0",
+    "node-opus": "^0.3.1",
     "node-schedule": "^1.3.1",
-    "sharp": "^0.21.1",
-    "underscore": "^1.9.1"
+    "sharp": "^0.21.1"
   },
   "devDependencies": {},
   "scripts": {
