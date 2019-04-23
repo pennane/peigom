@@ -22,7 +22,8 @@ console.info(`Starting peigom-bot v.${config.app.version}`)
 
 
 client.on('ready', () => {
-    let r = Math.floor(Math.random() * presence.activities.length), i = r
+    let r = Math.floor(Math.random() * presence.activities.length)
+    let i = r
     
     StartingInfo.set(client)
     client.user.setActivity(presence.activities[r])
