@@ -3,10 +3,8 @@ const fs = require('fs');
 const logger = require('../functions/activity-logger.js');
 const spam = require('../functions/spam-protection.js');
 const config = require('config')
-
-,
-    coms = {},
-    filearr = [];
+let coms = {}
+let filearr = [];
 
 fs.readdirSync("./modules/commands/").forEach(file => {
     if (file.endsWith(".js")) {
