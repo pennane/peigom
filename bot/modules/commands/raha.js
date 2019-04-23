@@ -2,7 +2,11 @@ const config = require('config');
 const fs = require('fs');
 const Discord = require('discord.js');
 
-if (!fs.existsSync('./assets/misc/raha/user-data.json')) { fs.writeFileSync('./assets/misc/raha/user-data.json', '{"users": {}}') }
+fs.writeFile('./assets/misc/raha/user-data.json', '{"users": {}}', { flag: 'wx' }, function (err) {
+    if (err) throw err;
+    console.log("It's saved!");
+});
+
 let userdata = JSON.parse(fs.readFileSync('./assets/misc/raha/user-data.json', 'utf8'))
 
 let embed = new Discord.RichEmbed()
