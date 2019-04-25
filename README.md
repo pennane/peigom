@@ -18,15 +18,17 @@ Install the dependencies and start rolling
 ```sh
 $ git clone https://github.com/Pennane/peigom-bot/
 $ cd peigom-bot
+$ npm install ffmpeg-binaries
+$ cd peigom-bot/node_modules/ffmpeg-binaries
+$ npm install
+$ cd ../../
 $ npm install
 $ npm start
 ```
-If `sharp` throws error download its old version: 
+If `sharp` throws error, force download its older version: 
 ```sh
 $ npm install sharp@0.20.7
 ```
-
-If audio commands don't work try installing `ffmpeg-binaries` globally and reinstalling `node-opus`
 
 For Peigom bot to work you need to setup config at `bot/config`
 
