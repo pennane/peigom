@@ -3,14 +3,13 @@ let spamData = { users: {} }
 
 module.exports.check = (user, command) => {
     return new Promise((resolve, reject) => {
-        let state = config.misc.commandspamprotection.state;
+        let state = config.misc.spamprotection.enabled;
         if (state === false) {
             return resolve({allowed:true});
         }
-        let com_interval = config.misc.commandspamprotection.com_interval // seconds
-        let gen_interval = config.misc.commandspamprotection.gen_interval // seconds
+        let commandInterval = config.misc.spamprotection.commandInterval // seconds
+        let generalInterval = config.misc.spamprotection.generalInterval // seconds
         let allowed = true;
-        let type = null;
         let waittime = null;
         let now = Date.now();
 
@@ -41,16 +40,16 @@ module.exports.check = (user, command) => {
 
 
         function test() {
-            if ((userobj.command[command].lasttime) && ((now - userobj.command[command].lasttime) < (com_interval * 1000))) {
+            if ((userobj.command[command].lasttime) && ((now - userobj.command[command].lasttime) < (commandInterval * 1000))) {
                 allowed = false;
                 type = "command";
-                waittime = ((com_interval * 1000) - (now - userobj.command[command].lasttime)) / 1000;
+                waittime = ((commandInterval * 1000) - (now - userobj.command[command].lasttime)) / 1000;
                 waittime = parseInt(waittime);
                 return false;
-            } else if ((userobj.lasttime) && ((now - userobj.lasttime) < (gen_interval * 1000))) {
+            } else if ((userobj.lasttime) && ((now - userobj.lasttime) < (generalInterval * 1000))) {
                 allowed = false;
                 type = "general";
-                waittime = ((gen_interval * 1000) - (now - userobj.lasttime)) / 1000;
+                waittime = ((generalInterval * 1000) - (now - userobj.lasttime)) / 1000;
                 waittime = parseInt(waittime);
                 return false;
             }
@@ -70,7 +69,6 @@ module.exports.check = (user, command) => {
             userobj.lasttime = now
         }
         
-        resolve({ allowed: allowed, type: type, waittime: waittime })
-
+        resolve({ allowed: allowed, wait: waittime })
     });
 }

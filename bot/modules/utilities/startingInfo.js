@@ -3,6 +3,7 @@ const loader = require('../core/commandLoader')
 const config = require('config')
 const chalk = require('chalk')
 const fs = require('fs')
+const badwords = require('../../assets/misc/badwords/badwords.json').badwords
 
 let commandDir = __dirname + '/../newCommands'
 let { commands } = loader.loadCommands(commandDir);
@@ -21,5 +22,5 @@ module.exports.set = (client) => {
     console.info(chalk.yellow('| Loaded: ') + Object.keys(commands).length + " commands")
     console.info(chalk.yellow('| Loaded: ') + client.guilds.size +  " servers")
     console.info(chalk.yellow('| Loaded: ') + (userData ? Object.keys(userData.users).length : 0 + " users with " + config.get("discord.prefix")) +"raha")
-    console.info(chalk.yellow('| Loaded: ') + config.misc.badwords.length + " forbidden words")
+    console.info(chalk.yellow('| Loaded: ') + badwords.length + " forbidden words")
 }

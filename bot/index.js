@@ -39,7 +39,7 @@ client.on('ready', () => {
 client.on('message', async (msg) => {
     const isBot = msg.author.bot || msg.guild === null
     if (await isBot) return;
-    parser.parseMsg(msg)
+    parser.parseMsg(msg, client)
 })
 
 client.on("guildMemberAdd", (member) => {
@@ -68,5 +68,3 @@ client.on('warn', (warn) => console.warn(warn))
 process.on('uncaughtException', err => { logger.log(3, err) })
 
 client.login(authorize.token)
-
-module.exports.client = client;

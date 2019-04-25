@@ -30,10 +30,10 @@
             "heading" : "Tervetuloa severiin",
             "after": ". >:^U\nMä oon peigom-bot ja mä pirän sua silmäl"
         },
-        "commandspamprotection": {
+        "spamprotection": {
             "state": false,
-            "gen_delay": 5,
-            "com_delay": 3
+            "generalInterval": 5,
+            "commandInterval": 3
         }
     }
 }
