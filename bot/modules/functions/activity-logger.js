@@ -1,5 +1,7 @@
-const fs = require("fs");
-const time = require("./get-time.js");
+const fs = require('fs');
+const chalk = require('chalk')
+
+const time = require('./get-time.js');
 
 module.exports.log = (mode, content) => {
     return new Promise((resolve, reject) => {
@@ -69,5 +71,5 @@ module.exports.log = (mode, content) => {
 process.on('uncaughtException', error => {
     module.exports.log(3, error)
         .catch(error => console.log(error));
-    console.log(chalk.red(`|-- ${time.get(1)} > Error has happended in the process, check ./log/`));
+    console.log(chalk.red(`|-- ${time.get(1)} > Error has happended in the process, check ${chalk.white("./log/")}`));
 });

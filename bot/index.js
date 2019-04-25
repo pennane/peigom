@@ -12,7 +12,7 @@ const logger            =   require('./modules/functions/activity-logger')
 const time              =   require('./modules/functions/get-time.js')
 
 const client            =   new Discord.Client()
-client.timing           =   { timer: console.time("| Connecting"), completed: false }
+client.timing           =   { timer: new Date(), completed: false }
 
 let presence            =   config.discord.presence
 let version             =   require(__dirname+'/../package.json').version
@@ -32,7 +32,7 @@ client.on('ready', () => {
         else i++;
     })
     
-    console.info(`| Activity: ${client.user.localPresence.game.name}`)
+    console.info(chalk.yellow('| Activity: ')+ client.user.localPresence.game.name)
     logger.log(2)
 })
 
@@ -45,7 +45,10 @@ client.on('message', async (msg) => {
 client.on("guildMemberAdd", member => {
     console.info(chalk.gray("|-- New member on " + member.guild.name + ":" + member.guild.id + ", " + member.user.username + ":" + member.user.id))
     member.send(`${config.misc.welcome.heading} \`${member.guild.name}\`${config.misc.welcome.after}`)
-        .catch(err => console.log(err))
+        .catch(err => {
+            logger.log(3, err)
+            console.log(chalk.red(`|-- ${time.get(1)} > Error has happended in the ${chalk.yellow("client")}, check ${chalk.white("./log/")}`))
+        })
     logger.log(7, member)
 })
 
@@ -76,14 +79,14 @@ client.on('resume', () => {
 
 client.on('error', err => {
     logger.log(3, err)
-    console.log(chalk.red(`|-- ${time.get(1)} > Error has happended in the client, check ./log/`))
+    console.log(chalk.red(`|-- ${time.get(1)} > Error has happended in the ${chalk.yellow("client")}, check ${chalk.white("./log/")}`))
 })
 
 client.on('warn', warn => console.warn(warn))
 
 process.on('uncaughtException', err => {
     logger.log(3, err)
-    console.log(chalk.red(`|-- ${time.get(1)} > Error has happended in the process, check ./log/`))
+    console.log(chalk.red(`|-- ${time.get(1)} > Error has happended in the ${chalk.yellow("process")}, check ${chalk.white("./log/")}`))
 })
 
 client.login(authorize.token)
