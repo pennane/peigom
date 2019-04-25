@@ -33,6 +33,7 @@ client.on('ready', () => {
     })
     
     console.info(chalk.yellow('| Activity: ') + client.user.localPresence.game.name)
+    
     logger.log(2)
 })
 
@@ -42,7 +43,7 @@ client.on('message', async (msg) => {
     parser.parseMsg(msg)
 })
 
-client.on("guildMemberAdd", member => {
+client.on("guildMemberAdd", (member) => {
     member.send(`${config.misc.welcome.heading} \`${member.guild.name}\`${config.misc.welcome.after}`)
         .then(() => logger.log(7, member))
         .catch(err => {
@@ -51,35 +52,21 @@ client.on("guildMemberAdd", member => {
     l
 })
 
-client.on("guildMemberRemove", member => {
-    logger.log(8, member)
-})
+client.on("guildMemberRemove", (member) => { logger.log(8, member) })
 
-client.on("guildCreate", guild => {
-    logger.log(9, guild)
-})
+client.on("guildCreate", (guild) => { logger.log(9, guild) })
 
-client.on("guildDelete", guild => {
-    logger.log(10, guild)
-})
+client.on("guildDelete", (guild) => { logger.log(10, guild) })
 
-client.on('reconnecting', () => {
-    logger.log(4)
-})
+client.on('reconnecting', () => { logger.log(4) })
 
-client.on('resume', () => {
-    logger.log(5)
-})
+client.on('resume', () => { logger.log(5) })
 
-client.on('error', err => {
-    logger.log(3, err)
-})
+client.on('error', (err) => { logger.log(3, err) })
 
-client.on('warn', warn => console.warn(warn))
+client.on('warn', (warn) => console.warn(warn))
 
-process.on('uncaughtException', err => {
-    logger.log(3, err)
-})
+process.on('uncaughtException', err => { logger.log(3, err) })
 
 client.login(authorize.token)
 
