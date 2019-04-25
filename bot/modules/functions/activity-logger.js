@@ -69,5 +69,5 @@ module.exports.log = (mode, content) => {
 process.on('uncaughtException', error => {
     module.exports.log(3, error)
         .catch(error => console.log(error));
-    console.log(`|-- ${time.get(1)} > Error has happended in the process, check ./log/`);
+    console.log(chalk.red(`|-- ${time.get(1)} > Error has happended in the process, check ./log/`));
 });
