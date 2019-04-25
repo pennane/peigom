@@ -1,5 +1,4 @@
 const sound = require('../utilities/playSound.js');
-const ffmpeg = require("ffmpeg");
 const Discord = require('discord.js');
 
 let embed = new Discord.RichEmbed().setColor(0xF4E542);
