@@ -8,7 +8,7 @@ const dancemoves = require('../../assets/misc/fortnite/dancemoves')
 let embed = new Discord.RichEmbed()
     .setColor(0xF4E542);
 
-let info = {
+const meta = {
     name: "fortnite",
     admin: true,
     syntax: "fortnite",
@@ -46,4 +46,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.info = info;
+module.exports.meta = meta;

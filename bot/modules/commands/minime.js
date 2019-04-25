@@ -3,7 +3,7 @@ const sharp = require('sharp');
 const https = require('https');
 const Discord = require('discord.js');
 
-let info = {
+const meta = {
     name: "minime",
     admin: false,
     syntax: "minime",
@@ -73,4 +73,4 @@ module.exports.run = function (msg, client, args) {
     })
 
 }
-module.exports.info = info;
+module.exports.meta = meta;

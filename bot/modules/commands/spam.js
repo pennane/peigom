@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 let embed = new Discord.RichEmbed()
     .setColor(0xF4E542);
 
-let info = {
+const meta = {
     name: "spam",
     admin: true,
     syntax: "spam <@pelaaja> <määrä> <viesti>",
@@ -50,4 +50,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.info = info;
+module.exports.meta = meta;

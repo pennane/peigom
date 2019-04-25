@@ -7,7 +7,7 @@ let embed = new Discord.RichEmbed()
     .setColor(0xF4E542);
 
 
-let info = {
+const meta = {
     name: "imgonnasaythenword",
     admin: false,
     syntax: "imgonnasaythenword",
@@ -44,4 +44,4 @@ module.exports.run = function (msg, client, args) {
 
 
 
-module.exports.info = info;
+module.exports.meta = meta;

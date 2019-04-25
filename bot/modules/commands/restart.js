@@ -1,6 +1,6 @@
 const auth = require('../../config/authorize.json');
 
-let info = {
+const meta = {
     name: "restart",
     admin: true,
     syntax: "restart",
@@ -21,4 +21,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.info = info;
+module.exports.meta = meta;

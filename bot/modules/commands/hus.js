@@ -1,4 +1,4 @@
-let info = {
+const meta = {
     name: "hus",
     admin: false,
     syntax: "hus",
@@ -21,4 +21,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.info = info;
+module.exports.meta = meta;

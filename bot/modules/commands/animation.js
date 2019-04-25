@@ -2,11 +2,12 @@
 const Discord = require('discord.js');
 const animation = require('../../assets/misc/animation/animation.json');
 
-let info = {
+const meta = {
     name: "animation",
     admin: false,
     syntax: "animation <animaation nimi tai lista>",
-    desc: "Toistaa käyttäjän antaman animaation"
+    desc: "Toistaa käyttäjän antaman animaation",
+    triggers: ["animation"]
 }
 
 module.exports.run = function (msg, client, args) {
@@ -48,4 +49,4 @@ module.exports.run = function (msg, client, args) {
 
 }
 
-module.exports.info = info;
+module.exports.meta = meta;

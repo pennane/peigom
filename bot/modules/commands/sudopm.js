@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 let embed = new Discord.RichEmbed()
     .setColor(0xF4E542);
 
-let info = {
+const meta = {
     name: "sudopm",
     admin: true,
     syntax: "sudopm <@käyttäjä> <teksti>",
@@ -47,4 +47,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.info = info;
+module.exports.meta = meta;

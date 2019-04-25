@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 
-let info = {
+const meta = {
     name: "thonk",
     admin: false,
     syntax: "thonk",
@@ -21,4 +21,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.info = info;
+module.exports.meta = meta;

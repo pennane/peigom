@@ -2,7 +2,7 @@ const config = require('config');
 const CommandExecutor = require('../core/command-executor.js');
 const Discord = require('discord.js');
 
-const info = {
+const meta = {
     name: "auta",
     admin: false,
     syntax: "auta <komennon/toiminnon nimi>",
@@ -153,4 +153,4 @@ module.exports.run = function (msg, client, args) {
 
 }
 
-module.exports.info = info;
+module.exports.meta = meta;

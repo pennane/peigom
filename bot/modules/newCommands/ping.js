@@ -2,9 +2,9 @@ const Discord = require('discord.js');
 
 let embed = new Discord.RichEmbed().setColor(0xF4E542);
 
-let meta = {
+const meta = {
     name: "ping",
-    admin: true,
+    admin: false,
     syntax: "ping",
     desc: "Kertoo botin viiveen",
     triggers: ["ping","pong"]

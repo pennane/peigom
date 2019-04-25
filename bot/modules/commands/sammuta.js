@@ -1,4 +1,4 @@
-let info = {
+const meta = {
     name: "sammuta",
     admin: true,
     syntax: "sammuta",
@@ -17,4 +17,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.info = info;
+module.exports.meta = meta;

@@ -6,7 +6,7 @@ let embed = new Discord.RichEmbed()
     .setColor(0xF4E542);
 0
 
-let info = {
+const meta = {
     name: "ooof",
     admin: false,
     syntax: "ooof",
@@ -36,4 +36,4 @@ module.exports.run = function (msg, client, args) {
 
     });
 }
-module.exports.info = info;
+module.exports.meta = meta;
