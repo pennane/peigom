@@ -9,7 +9,6 @@ const chalk             =   require('chalk')
 const parser            =   require('./modules/core/messageParser')
 const startingInfo      =   require('./modules/functions/startingInfo')
 const logger            =   require('./modules/functions/activityLogger')
-const time              =   require('./modules/functions/getTime')
 
 const client            =   new Discord.Client()
 client.timing           =   { timer: new Date(), completed: false }
@@ -33,7 +32,7 @@ client.on('ready', () => {
     })
     
     console.info(chalk.yellow('| Activity: ') + client.user.localPresence.game.name)
-    
+
     logger.log(2)
 })
 
