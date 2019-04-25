@@ -1,4 +1,5 @@
-const Discord = require('discord.js');
+const logger = require('./activityLogger')
+
 module.exports.play = function (filename, msg, connection, client) {
     return new Promise((resolve, reject) => {
         try {
