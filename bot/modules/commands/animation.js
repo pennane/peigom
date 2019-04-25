@@ -38,7 +38,7 @@ module.exports.run = function (msg, client, args) {
                 msg.channel.send(embed);
             }
         } else {
-            embed.setTitle(`Komento ${info.meta} toimii näin:`)
+            embed.setTitle(`Komento ${meta.syntax} toimii näin:`)
             .setDescription(`\`${syntax}\``)
         msg.channel.send(embed)
         .catch(err => console.log(err));

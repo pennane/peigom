@@ -21,6 +21,6 @@ module.exports.set = (client) => {
     }
     console.info(chalk.yellow('| Loaded: ') + Object.keys(commands).length + " commands")
     console.info(chalk.yellow('| Loaded: ') + client.guilds.size +  " servers")
-    console.info(chalk.yellow('| Loaded: ') + (userData ? Object.keys(userData.users).length : 0 + " users with " + config.get("discord.prefix")) +"raha")
+    console.info(chalk.yellow('| Loaded: ') + (userData ? Object.keys(userData.users).length : 0) + " users with " + config.get("discord.prefix") + "raha")
     console.info(chalk.yellow('| Loaded: ') + badwords.length + " forbidden words")
 }

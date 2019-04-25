@@ -17,7 +17,7 @@ class Command {
     constructor({ meta, run }) {
         if (!meta || !isObj(meta)) {
             logger.log(12, {
-                name:meta.name,
+                name: "undefined_command_name",
                 reason: "Meta is not present"
             })
         }

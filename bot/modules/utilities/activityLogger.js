@@ -64,11 +64,15 @@ module.exports.log = (mode, content) => {
             },
             11: () => { /* Command Failed to Load */
                 msgtolog = `\r\n[Failed command] Command '${content}' failed to load`
-                console.log(chalk.red(`|-- Command ${chalk.yellow(content)} failed to load `))
+                console.log(chalk.red(`|-- Command ${chalk.yellow(content)} failed to load. Check ${chalk.white("./log/")} for more`))
             },
             12: () => { /* Faulty command */
                 msgtolog = `\r\n[Invalid command] Failed command: ${content.name}. Reason: ${content.reason}`
-                console.log(chalk.red(`|-- Command ${chalk.yellow(content.name)} failed to construct itself `))
+                console.log(chalk.red(`|-- Command ${chalk.yellow(content.name)} failed to construct itself. Check ${chalk.white("./log/")} for more`))
+            },
+            13: () => { /* Command Failed with stack */
+                msgtolog = `\r\n[Faulty command file] '${content.file}' failed to load. \r\n ${content.err} \r\n ${content.stack}`
+                console.log(chalk.red(`|-- File ${chalk.yellow(content.file)} failed to load. Check ${chalk.white("./log/")} for more`))
             }
         }
 

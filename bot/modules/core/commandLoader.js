@@ -26,7 +26,7 @@ module.exports.loadCommands = function (path) {
             })
             commands[command.name] = command;
         } catch (err) {
-            logger.log(11, command.name)
+            logger.log(13, {file, err, stack: err.stack})
         }
 
     })
