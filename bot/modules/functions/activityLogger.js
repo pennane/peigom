@@ -1,7 +1,7 @@
 const fs = require('fs');
 const chalk = require('chalk')
 
-const time = require('./getTime.js/index.js');
+const time = require('./getTime');
 
 module.exports.log = (mode, content) => {
     return new Promise((resolve, reject) => {
