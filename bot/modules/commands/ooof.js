@@ -1,4 +1,4 @@
-const sound = require('../functions/play-sound.js');
+const sound = require('../functions/playSound.js');
 const ffmpeg = require("ffmpeg");
 const Discord = require('discord.js');
 

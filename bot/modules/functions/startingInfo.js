@@ -1,4 +1,4 @@
-const time = require('./get-time.js');
+const time = require('./getTime.js');
 const loader = require('../core/commandLoader')
 const config = require('config')
 const chalk = require('chalk')

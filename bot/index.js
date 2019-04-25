@@ -7,9 +7,9 @@ const Discord           =   require('discord.js')
 const chalk             =   require('chalk')
 
 const parser            =   require('./modules/core/messageParser')
-const startingInfo      =   require('./modules/functions/starting-info')
-const logger            =   require('./modules/functions/activity-logger')
-const time              =   require('./modules/functions/get-time.js')
+const startingInfo      =   require('./modules/functions/startingInfo')
+const logger            =   require('./modules/functions/activityLogger')
+const time              =   require('./modules/functions/getTime.js/index.js')
 
 const client            =   new Discord.Client()
 client.timing           =   { timer: new Date(), completed: false }
