@@ -1,6 +1,6 @@
 const fs = require('fs')
 const Command = require('./command')
-const logger = require('../functions/activityLogger')
+const logger = require('../utilities/activityLogger')
 
 module.exports.loadCommands = function (path) {
     let files = []

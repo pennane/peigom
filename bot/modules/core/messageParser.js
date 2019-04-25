@@ -1,6 +1,8 @@
 const { client } = require('../../index')
 const config = require('config')
 const loader = require('./commandLoader')
+const spamCheck = require('../utilities/spamProtection')
+
 let badWords = require('../../assets/misc/badwords/badwords.json')
 
 let commandDir = __dirname+'/../newCommands'
