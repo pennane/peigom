@@ -32,7 +32,7 @@ client.on('ready', () => {
         else i++;
     })
     
-    console.info(chalk.yellow('| Activity: ')+ client.user.localPresence.game.name)
+    console.info(chalk.yellow('| Activity: ') + client.user.localPresence.game.name)
     logger.log(2)
 })
 
@@ -43,50 +43,42 @@ client.on('message', async (msg) => {
 })
 
 client.on("guildMemberAdd", member => {
-    console.info(chalk.gray("|-- New member on " + member.guild.name + ":" + member.guild.id + ", " + member.user.username + ":" + member.user.id))
     member.send(`${config.misc.welcome.heading} \`${member.guild.name}\`${config.misc.welcome.after}`)
+        .then(() => logger.log(7, member))
         .catch(err => {
             logger.log(3, err)
-            console.log(chalk.red(`|-- ${time.get(1)} > Error has happended in the ${chalk.yellow("client")}, check ${chalk.white("./log/")}`))
         })
-    logger.log(7, member)
+    l
 })
 
 client.on("guildMemberRemove", member => {
-    console.info(chalk.gray("|-- Member left from " + member.guild.name + ":" + member.guild.id + ", " + member.user.username + ":" + member.user.id))
     logger.log(8, member)
 })
 
 client.on("guildCreate", guild => {
-    console.info(chalk.gray(`|-- New guild joined: ${guild.name}:${guild.id}. This guild has ${guild.memberCount} members.`))
     logger.log(9, guild)
 })
 
 client.on("guildDelete", guild => {
-    console.log(chalk.gray(`|-- Bot removed from: ${guild.name}:${guild.id}`))
     logger.log(10, guild)
 })
 
 client.on('reconnecting', () => {
     logger.log(4)
-    console.log(chalk.orange(`|-- ${time.get(1)} > Reconnecting to websocket..`))
 })
 
 client.on('resume', () => {
     logger.log(5)
-    console.log(chalk.green(`|-- ${time.get(1)} > Reconnected successfully`))
 })
 
 client.on('error', err => {
     logger.log(3, err)
-    console.log(chalk.red(`|-- ${time.get(1)} > Error has happended in the ${chalk.yellow("client")}, check ${chalk.white("./log/")}`))
 })
 
 client.on('warn', warn => console.warn(warn))
 
 process.on('uncaughtException', err => {
     logger.log(3, err)
-    console.log(chalk.red(`|-- ${time.get(1)} > Error has happended in the ${chalk.yellow("process")}, check ${chalk.white("./log/")}`))
 })
 
 client.login(authorize.token)

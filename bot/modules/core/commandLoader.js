@@ -1,5 +1,6 @@
 const fs = require('fs')
 const Command = require('./command')
+const logger = require('../functions/activityLogger')
 
 module.exports.loadCommands = function (path) {
     let files = []
@@ -25,7 +26,7 @@ module.exports.loadCommands = function (path) {
             })
             commands[command.name] = command;
         } catch (err) {
-            console.log("Command " + command.name + " failed to load.")
+            logger.log(11, command.name)
         }
 
     })
