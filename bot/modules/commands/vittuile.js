@@ -1,4 +1,5 @@
 const config = require('config');
+const names = require('../../assets/misc/badwords/badwords.json').badwords
 
 const meta = {
     name: "vittuile",
@@ -10,8 +11,6 @@ const meta = {
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        let msgauthorname = msg.author.name;
-        let names = config.misc.badwords;
         let rand = Math.floor(Math.random() * names.length);
         if (msg.member.nickname) {
             msg.channel.send(`**${msg.member.nickname} a.ka. ${msg.author.username}**, ai rupeet vittuilee?`)
