@@ -1,5 +1,5 @@
 const config = require('config')
-
+const logger = require('../utilities/activityLogger')
 
 function isObj(obj) {
     return typeof obj === 'object' && obj !== null
@@ -15,14 +15,37 @@ function isFunc(func) {
 
 class Command {
     constructor({ meta, run }) {
+        if (!meta || !isObj(meta)) {
+            logger.log(12, {
+                name:meta.name,
+                reason: "Meta is not present"
+            })
+        }
+        if (!meta.triggers || !isArr(meta.triggers)) {
+            logger.log(12, {
+                name:meta.name,
+                reason: "Triggers are not present"
+            })
+        }
+        if ( !run || !isFunc(run)) {
+            logger.log(12, {
+                name:meta.name,
+                reason: "Functionality not present"
+            })
+            throw new Error("Invalid arguments")
+        }
         if (!isObj(meta) || !isArr(meta.triggers) || !isFunc(run)) {
+            logger.log(12, {
+                name:meta.name,
+                reason: "Constructor received invalid arguments"
+            })
             throw new Error("Invalid arguments")
         }
         this.name = meta.name
         this.description = meta.desc
         this.admin = meta.admin
         this.syntax = meta.syntax
-        this.triggers = meta.triggers
+        this.triggers = [...new Set(meta.triggers)];
 
         this.run = run
     }

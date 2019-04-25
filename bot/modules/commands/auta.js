@@ -1,5 +1,4 @@
 const config = require('config');
-const CommandExecutor = require('../core/command-executor.js');
 const Discord = require('discord.js');
 
 const meta = {
@@ -12,36 +11,39 @@ const meta = {
         color: 0xF4E542,
         author: "Susse",
         footer: "bumtsi bum, nimi o peigom © 2018"
-    }
+    },
+    triggers: ["auta", "help"]
 }
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        let prefix = config.discord.prefix;
-
+       
+       let prefix = config.discord.prefix;
+       msg.reply("sorry! "+prefix+"auta ei toimi tällä hetkellä.")
+/* 
         const embed = new Discord.RichEmbed()
             .setAuthor(`${client.user.username}`, `${client.user.avatarURL}`)
-            .setTitle(`${config.app.name}  \`${info.name}\``)
-            .setColor(info.embed.color)
-            .setDescription(info.embed.desc)
-            .setFooter(info.embed.footer, "https://arttu.pennanen.org/file/thonk.gif")
+            .setTitle(`${config.app.name}  \`${meta.name}\``)
+            .setColor(meta.embed.color)
+            .setDescription(meta.embed.desc)
+            .setFooter(meta.embed.footer, "https://arttu.pennanen.org/file/thonk.gif")
             .setTimestamp()
         let unfilteredcfile = CommandExecutor.files();
         let cfile = {coms: {}}
        
        
         for (i in unfilteredcfile.coms) {
-            if (!(unfilteredcfile.coms[i].info.redirect)) {
+            if (!(unfilteredcfile.coms[i].meta.redirect)) {
               cfile.coms[i] = unfilteredcfile.coms[i]
             }
         }
 
         let admin = {};
         if (!args[1]) {
-            embed.addField(`:mega: Tietoa komennoista:`, `\`${prefix}${info.name} komennot <näytä kuvaukset: true / false>\``);
-            embed.addField(`:loudspeaker: Tietoa admin komennoista:`, `\`${prefix}${info.name} admin <näytä kuvaukset: true / false>\``);
-            embed.addField(`:thinking: Tietoa botista:`, `\`${prefix}${info.name} ${config.app.name} \``);
-            embed.addField(`:question: Tietoa tietystä komennosta:`, `\`${prefix}${info.name} <komennon nimi> \``);
+            embed.addField(`:mega: Tietoa komennoista:`, `\`${prefix}${meta.name} komennot <näytä kuvaukset: true / false>\``);
+            embed.addField(`:loudspeaker: Tietoa admin komennoista:`, `\`${prefix}${meta.name} admin <näytä kuvaukset: true / false>\``);
+            embed.addField(`:thinking: Tietoa botista:`, `\`${prefix}${meta.name} ${config.app.name} \``);
+            embed.addField(`:question: Tietoa tietystä komennosta:`, `\`${prefix}${meta.name} <komennon nimi> \``);
             msg.channel.send(embed)
                 .catch(error => console.log(error));
         } else {
@@ -56,11 +58,11 @@ module.exports.run = function (msg, client, args) {
                     let obj = cfile.coms[i];
                     let append;
                     if (args[2] === "true" || args[2] === "tosi" || args[2] === "1") {
-                        append = `\n${prefix}${obj.info.name}\n\`${obj.info.desc}\``;
+                        append = `\n${prefix}${obj.meta.name}\n\`${obj.meta.desc}\``;
                     } else {
-                        append = `\n${prefix}${obj.info.name}`;
+                        append = `\n${prefix}${obj.meta.name}`;
                     }
-                    if (!obj.info.admin) {
+                    if (!obj.meta.admin) {
                         if ((cmds + append).length > 800) {
                             embed.addField("----", cmds, 1);
                             if (i === Object.keys(cfile.coms).length) {
@@ -88,11 +90,11 @@ module.exports.run = function (msg, client, args) {
                     let obj = cfile.coms[i];
                     let append;
                     if (args[2] === "true" || args[2] === "tosi" || args[2] === "1") {
-                        append = `\n${prefix}${obj.info.name}\n\`${obj.info.desc}\``;
+                        append = `\n${prefix}${obj.meta.name}\n\`${obj.meta.desc}\``;
                     } else {
-                        append = `\n${prefix}${obj.info.name}`;
+                        append = `\n${prefix}${obj.meta.name}`;
                     }
-                    if (obj.info.admin) {
+                    if (obj.meta.admin) {
                         if ((cmds + append).length > 800) {
                             embed.addField("----", cmds, 1);
                             if (i === Object.keys(cfile.coms).length) {
@@ -137,17 +139,17 @@ module.exports.run = function (msg, client, args) {
             } else {
                 embed.addBlankField()
                     .setTitle(':eyes: Hupsista')
-                    .setDescription(`Antamaasi  \`${prefix}${info.name}\` toimintoa \`${args[1]}\` ei ole olemassa.`)
-                    .addField(`:pencil: Kokeile \`${prefix}${info.name} komennot\``, `(tai pelkästään ${prefix}${info.name})`)
+                    .setDescription(`Antamaasi  \`${prefix}${meta.name}\` toimintoa \`${args[1]}\` ei ole olemassa.`)
+                    .addField(`:pencil: Kokeile \`${prefix}${meta.name} komennot\``, `(tai pelkästään ${prefix}${meta.name})`)
                     .addBlankField();
-                msgtosend = `Antamaasi \`${prefix}${info.name}\` toimintoa \`${args[1]}\` ei ole olemassa.`
+                msgtosend = `Antamaasi \`${prefix}${meta.name}\` toimintoa \`${args[1]}\` ei ole olemassa.`
                 msg.channel.send(embed)
                     .catch(error => console.log(error));
             }
         }
 
 
-
+*/
         resolve();
     });
 

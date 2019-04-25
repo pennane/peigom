@@ -1,15 +1,14 @@
 const Discord = require('discord.js');
 
-let embed = new Discord.RichEmbed()
-    .setColor(0xF4E542);
+let embed = new Discord.RichEmbed().setColor(0xF4E542);
 
 const meta = {
     name: "uptime",
     admin: false,
     syntax: "uptime",
-    desc: "Kertoo botin tähänastisen käynnissäoloajan"
+    desc: "Kertoo botin tähänastisen käynnissäoloajan",
+    triggers: ["uptime"]
 }
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {

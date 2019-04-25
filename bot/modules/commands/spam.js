@@ -1,20 +1,19 @@
 const Discord = require('discord.js');
 
-let embed = new Discord.RichEmbed()
-    .setColor(0xF4E542);
+let embed = new Discord.RichEmbed().setColor(0xF4E542);
 
 const meta = {
     name: "spam",
     admin: true,
     syntax: "spam <@pelaaja> <määrä> <viesti>",
-    desc: "Lähettää asettamasi viestin asettamallesi pelaajalle asettamasi monta kertaa."
+    desc: "Lähettää asettamasi viestin asettamallesi pelaajalle asettamasi monta kertaa.",
+    triggers: ["spam"]
 }
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        embed.setDescription(`\`${syntax}\``)
-            .setTitle(`Komento ${info.name} toimii näin:`);
+        embed.setDescription(`\`${meta.syntax}\``)
+            .setTitle(`Komento ${meta.name} toimii näin:`);
         if (args[3]) {
             let userid = args[1].replace(/\D/g, '');
             if (msg.guild.members.get(userid)) {

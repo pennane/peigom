@@ -1,18 +1,16 @@
-const sound = require('../functions/playSound.js');
+const sound = require('../utilities/playSound.js');
 const ffmpeg = require("ffmpeg");
 const Discord = require('discord.js');
 
-let embed = new Discord.RichEmbed()
-    .setColor(0xF4E542);
-0
+let embed = new Discord.RichEmbed().setColor(0xF4E542);
 
 const meta = {
     name: "oof",
     admin: false,
     syntax: "oof",
-    desc: "Soittaa oof äänen"
+    desc: "Soittaa oof äänen",
+    triggers: ["oof"]
 }
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {

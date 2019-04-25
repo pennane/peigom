@@ -1,18 +1,15 @@
-const sound = require('../functions/playSound.js');
-const ffmpeg = require("ffmpeg");
 const Discord = require('discord.js');
 
-let embed = new Discord.RichEmbed()
-    .setColor(0xF4E542);
+let embed = new Discord.RichEmbed().setColor(0xF4E542);
 
 
 const meta = {
     name: "tomb",
     admin: false,
     syntax: "tomb",
-    desc: "Lähettää kanavalle tomb viestit."
+    desc: "Lähettää kanavalle tomb viestit.",
+    triggers: ["tomb"]
 }
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {

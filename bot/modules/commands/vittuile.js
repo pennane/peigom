@@ -1,17 +1,12 @@
 const config = require('config');
-const Discord = require('discord.js');
-
-let embed = new Discord.RichEmbed()
-    .setColor(0xF4E542);
 
 const meta = {
     name: "vittuile",
     admin: false,
     syntax: "vittuile",
-    desc: "Vittuile botille"
+    desc: "Vittuile botille",
+    triggers: ["vittuile"]
 }
-
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {

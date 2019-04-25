@@ -1,18 +1,16 @@
-const sound = require('../functions/playSound.js');
+const sound = require('../utilities/playSound.js');
 const ffmpeg = require("ffmpeg");
 const Discord = require('discord.js');
 
-let embed = new Discord.RichEmbed()
-    .setColor(0xF4E542);
-0
+let embed = new Discord.RichEmbed().setColor(0xF4E542);
 
 const meta = {
     name: "ooof",
     admin: false,
     syntax: "ooof",
-    desc: "elongated oof"
+    desc: "elongated oof",
+    triggers: ["ooof"]
 }
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {

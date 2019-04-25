@@ -2,9 +2,9 @@ const meta = {
     name: "hus",
     admin: false,
     syntax: "hus",
-    desc: "Heittää botin pois äänikanavalta."
+    desc: "Heittää botin pois äänikanavalta.",
+    triggers: ["hus"]
 }
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {

@@ -12,7 +12,7 @@ const meta = {
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        let syntax = info.syntax;
+        let syntax = meta.syntax;
         let embed = new Discord.RichEmbed()
             .setColor(0xF4E542);
         if (args.length > 1) {
@@ -38,7 +38,7 @@ module.exports.run = function (msg, client, args) {
                 msg.channel.send(embed);
             }
         } else {
-            embed.setTitle(`Komento ${info.name} toimii näin:`)
+            embed.setTitle(`Komento ${info.meta} toimii näin:`)
             .setDescription(`\`${syntax}\``)
         msg.channel.send(embed)
         .catch(err => console.log(err));

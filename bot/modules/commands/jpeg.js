@@ -3,22 +3,20 @@ const sharp = require('sharp');
 const https = require('https');
 const Discord = require('discord.js');
 
-let embed = new Discord.RichEmbed()
-    .setColor(0xF4E542);
+let embed = new Discord.RichEmbed().setColor(0xF4E542);
 
 const meta = {
     name: "jpeg",
     admin: false,
     syntax: "jpeg",
-    desc: "Luulekko et mä tiedän mikä jpeg on? Haluun vaa kuvan mun hodarista."
+    desc: "Luulekko et mä tiedän mikä jpeg on? Haluun vaa kuvan mun hodarista.",
+    triggers: ["jpeg", "jpg"]
 }
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         function rest() {
             let rand = Math.random().toString(36).substring(2, 9) + Math.random().toString(36).substring(2, 9);
-            let flashback = './assets/images/flashback.png';
             let imgname = `./assets/images/${rand}.jpg`;
             imgname = String(imgname);
             embed
@@ -59,15 +57,10 @@ module.exports.run = function (msg, client, args) {
                 i++;
                 if (i = 1) {
                     rest();
-
                 }
-
             });
-
-
         }
         resolve();
     })
-
 }
 module.exports.meta = meta;

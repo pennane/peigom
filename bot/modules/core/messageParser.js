@@ -3,7 +3,7 @@ const loader = require('./commandLoader')
 const { check } = require('../utilities/spamProtection')
 
 let badWords = require('../../assets/misc/badwords/badwords.json').badwords
-let commandDir = __dirname + '/../newCommands'
+let commandDir = __dirname + '/../commands'
 let prefix = config.get("discord.prefix")
 let spamProtection = config.get("misc.spamprotection")
 let { commands, triggers } = loader.loadCommands(commandDir);

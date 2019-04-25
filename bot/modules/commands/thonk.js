@@ -1,12 +1,10 @@
-const Discord = require('discord.js');
-
 const meta = {
     name: "thonk",
     admin: false,
     syntax: "thonk",
-    desc: "Lähettää kanavalle animoidun thonkin."
+    desc: "Lähettää kanavalle animoidun thonkin.",
+    triggers: ["thonk"]
 }
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {

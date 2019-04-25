@@ -63,8 +63,12 @@ module.exports.log = (mode, content) => {
                 console.log(chalk.gray(`|-- Bot removed from: ${guild.name}:${guild.id}`))
             },
             11: () => { /* Command Failed to Load */
-                msgtolog = `\r\n[Failed command] Command '${content}' failed to load'`
+                msgtolog = `\r\n[Failed command] Command '${content}' failed to load`
                 console.log(chalk.red(`|-- Command ${chalk.yellow(content)} failed to load `))
+            },
+            12: () => { /* Faulty command */
+                msgtolog = `\r\n[Invalid command] Failed command: ${content.name}. Reason: ${content.reason}`
+                console.log(chalk.red(`|-- Command ${chalk.yellow(content.name)} failed to construct itself `))
             }
         }
 

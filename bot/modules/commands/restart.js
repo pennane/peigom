@@ -4,9 +4,9 @@ const meta = {
     name: "restart",
     admin: true,
     syntax: "restart",
-    desc: "Käynnistää websocketin uudelleen"
+    desc: "Käynnistää websocketin uudelleen",
+    triggers: ["restart", "reboot"]
 }
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {

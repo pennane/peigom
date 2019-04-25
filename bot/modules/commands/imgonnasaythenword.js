@@ -1,6 +1,4 @@
-const sound = require('../functions/playSound.js');
-const ffmpeg = require('ffmpeg');
-const fs = require('fs');
+const sound = require('../utilities/playSound.js');
 const Discord = require('discord.js');
 
 let embed = new Discord.RichEmbed()
@@ -11,9 +9,9 @@ const meta = {
     name: "imgonnasaythenword",
     admin: false,
     syntax: "imgonnasaythenword",
-    desc: "thats racist, you cannot say the nword"
+    desc: "thats racist, you cannot say the nword",
+    triggers: ["imgonnasaythenword", "nword"]
 }
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
@@ -41,7 +39,5 @@ module.exports.run = function (msg, client, args) {
         }
     });
 }
-
-
 
 module.exports.meta = meta;

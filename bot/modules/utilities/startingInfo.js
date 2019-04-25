@@ -5,7 +5,7 @@ const chalk = require('chalk')
 const fs = require('fs')
 const badwords = require('../../assets/misc/badwords/badwords.json').badwords
 
-let commandDir = __dirname + '/../newCommands'
+let commandDir = __dirname + '/../commands'
 let { commands } = loader.loadCommands(commandDir);
 
 let userData = fs.existsSync('./assets/misc/raha/user-data.json') 

@@ -1,17 +1,15 @@
-const sound = require('../functions/playSound.js');
-const ffmpeg = require("ffmpeg");
+const sound = require('../utilities/playSound.js');
 const Discord = require('discord.js');
 
-let embed = new Discord.RichEmbed()
-    .setColor(0xF4E542);
+let embed = new Discord.RichEmbed().setColor(0xF4E542);
 
 const meta = {
     name: "dankmeme",
     admin: false,
     syntax: "dankmeme",
-    desc: "Soittaa satunnaisen dank meme -äänen."
+    desc: "Soittaa satunnaisen dank meme -äänen.",
+    triggers: ["dankmeme"]
 }
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
