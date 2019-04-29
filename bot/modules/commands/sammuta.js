@@ -1,8 +1,9 @@
-let info = {
+const meta = {
     name: "sammuta",
     admin: true,
     syntax: "sammuta",
-    desc: "Sammuttaa botin, uudelleenkäynnistys vain komentolinjan kautta."
+    desc: "Sammuttaa botin, uudelleenkäynnistys vain komentolinjan kautta.",
+    triggers: ["sammuta", "shutdown"]
 }
 
 module.exports.run = function (msg, client, args) {
@@ -17,4 +18,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.info = info;
+module.exports.meta = meta;

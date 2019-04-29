@@ -1,20 +1,19 @@
 const Discord = require('discord.js');
 
-let embed = new Discord.RichEmbed()
-    .setColor(0xF4E542);
+let embed = new Discord.RichEmbed().setColor(0xF4E542);
 
-let info = {
+const meta = {
     name: "sudo",
     admin: true,
     syntax: "sudo <#text-kanava> <teksti>",
-    desc: "Lähettää asettamasi viestin asettamallesi tekstikanavalle."
+    desc: "Lähettää asettamasi viestin asettamallesi tekstikanavalle.",
+    triggers: ["sudo"]
 }
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        embed.setDescription(`\`${syntax}\``)
-            .setTitle(`Komento ${info.name} toimii näin:`)
+        embed.setDescription(`\`${meta.syntax}\``)
+            .setTitle(`Komento ${meta.name} toimii näin:`)
         if (args[2]) {
             let channelid = args[1].replace(/\D/g, '');
             let sudochannel = client.channels.get(channelid);
@@ -48,4 +47,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.info = info;
+module.exports.meta = meta;

@@ -1,5 +1,7 @@
-const fs = require("fs");
-const time = require("./get-time.js");
+const fs = require('fs');
+const chalk = require('chalk')
+
+const time = require('./getTime');
 
 module.exports.log = (mode, content) => {
     return new Promise((resolve, reject) => {
@@ -31,27 +33,46 @@ module.exports.log = (mode, content) => {
             },
             3: () => { /* Client Error */
                 msgtolog = `\r\n[Error @ ${todayPrecise}]\r\n${content}\r\n${content.stack ? content.stack : "no error stack"}\n[ ---------- ]`;
+                console.log(chalk.red(`|-- ${time.get(1)} > Error has happended in the ${chalk.yellow("client")}, check ${chalk.white("./log/")}`))
             },
             4: () => { /* Client Reconnecting */
                 msgtolog = `\r\n[Reconnecting @ ${todayPrecise}]`;
+                console.log(chalk.orange(`|-- ${time.get(1)} > Reconnecting to websocket..`))
             },
             5: () => { /* Client Reconnected */
                 msgtolog = `\r\n[Resumed @ ${todayPrecise}]`;
+                console.log(chalk.green(`|-- ${time.get(1)} > Reconnected successfully`))
             },
             6: () => { /* Discord Command Failure */
                 msgtolog = `\r\n[Command Failed] User: ${content.msg.author.username}: ${content.msg.author.id} Command: ${content.command} Args: ${content.args} Where: @${content.msg.channel.guild.name}#${content.msg.channel.name} When: ${content.msg.createdTimestamp}`;
             },
             7: () => { /* New Member at Server x */
                 msgtolog = `\r\n[New member] User ${content.user.username}: ${content.id} Where: ${content.guild.name}:${content.guild.id} When: ${todayPrecise}`;
+                console.info(chalk.gray("|-- New member on " + member.guild.name + ":" + member.guild.id + ", " + member.user.username + ":" + member.user.id))
             },
             8: () => { /* Member Left from Server x */
                 msgtolog = `\r\n[Member left] User ${content.user.username}: ${content.id} Where: ${content.guild.name}:${content.guild.id} When: ${todayPrecise}`;
+                console.info(chalk.gray("|-- Member left from " + member.guild.name + ":" + member.guild.id + ", " + member.user.username + ":" + member.user.id))
             },
             9: () => { /* Client joined a New Server */
                 msgtolog = `\r\n[New server] Server: ${content.name}:${content.id} When: ${todayPrecise}`;
+                console.info(chalk.gray(`|-- New guild joined: ${guild.name}:${guild.id}. This guild has ${guild.memberCount} members.`))
             },
             10: () => { /* Server Removed from Client */
                 msgtolog = `\r\n[Removed server] Server: ${content.name}:${content.id} When: ${todayPrecise}`;
+                console.log(chalk.gray(`|-- Bot removed from: ${guild.name}:${guild.id}`))
+            },
+            11: () => { /* Command Failed to Load */
+                msgtolog = `\r\n[Failed command] Command '${content}' failed to load`
+                console.log(chalk.red(`|-- Command ${chalk.yellow(content)} failed to load. Check ${chalk.white("./log/")} for more`))
+            },
+            12: () => { /* Faulty command */
+                msgtolog = `\r\n[Invalid command] Failed command: ${content.name}. Reason: ${content.reason}`
+                console.log(chalk.red(`|-- Command ${chalk.yellow(content.name)} failed to construct itself. Check ${chalk.white("./log/")} for more`))
+            },
+            13: () => { /* Command Failed with stack */
+                msgtolog = `\r\n[Faulty command file] '${content.file}' failed to load. \r\n ${content.err} \r\n ${content.stack}`
+                console.log(chalk.red(`|-- File ${chalk.yellow(content.file)} failed to load. Check ${chalk.white("./log/")} for more`))
             }
         }
 
@@ -69,5 +90,5 @@ module.exports.log = (mode, content) => {
 process.on('uncaughtException', error => {
     module.exports.log(3, error)
         .catch(error => console.log(error));
-    console.log(`|-- ${time.get(1)} > Error has happended in the process, check ./log/`);
+    console.log(chalk.red(`|-- ${time.get(1)} > Error has happended in the process, check ${chalk.white("./log/")}`));
 });

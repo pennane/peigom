@@ -2,16 +2,17 @@
 const Discord = require('discord.js');
 const animation = require('../../assets/misc/animation/animation.json');
 
-let info = {
+const meta = {
     name: "animation",
     admin: false,
     syntax: "animation <animaation nimi tai lista>",
-    desc: "Toistaa käyttäjän antaman animaation"
+    desc: "Toistaa käyttäjän antaman animaation",
+    triggers: ["animation"]
 }
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        let syntax = info.syntax;
+        let syntax = meta.syntax;
         let embed = new Discord.RichEmbed()
             .setColor(0xF4E542);
         if (args.length > 1) {
@@ -37,7 +38,7 @@ module.exports.run = function (msg, client, args) {
                 msg.channel.send(embed);
             }
         } else {
-            embed.setTitle(`Komento ${info.name} toimii näin:`)
+            embed.setTitle(`Komento ${meta.syntax} toimii näin:`)
             .setDescription(`\`${syntax}\``)
         msg.channel.send(embed)
         .catch(err => console.log(err));
@@ -48,4 +49,4 @@ module.exports.run = function (msg, client, args) {
 
 }
 
-module.exports.info = info;
+module.exports.meta = meta;

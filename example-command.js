@@ -5,14 +5,13 @@ let embed = new Discord.RichEmbed()
     .setTitle("Botin kommentti:")
     .setDescription("example");
 
-let info = {
+const meta = {
     name: "example",
     admin: false,
     syntax: "example <amount> <@who>",
-    desc: "description for ,example"
+    desc: "description for ,example",
+    triggers: ["example"]
 }
-
-let syntax = info.syntax;
 
 
 module.exports.run = function (msg, client, args) {
@@ -26,4 +25,4 @@ module.exports.run = function (msg, client, args) {
 
 }
 
-module.exports.info = info;
+module.exports.meta = meta;

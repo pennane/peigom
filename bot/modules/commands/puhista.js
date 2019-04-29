@@ -1,19 +1,17 @@
 const Discord = require('discord.js');
 
-let embed = new Discord.RichEmbed()
-    .setColor(0xF4E542);
+let embed = new Discord.RichEmbed().setColor(0xF4E542);
 
-let info = {
+const meta = {
     name: "puhista",
     admin: true,
     syntax: "puhista <määrä (2-99)>",
-    desc: "Poistaa annetun määrän viestejä kanavalta."
+    desc: "Poistaa annetun määrän viestejä kanavalta.",
+    triggers: ["puhista", "puhdista"]
 }
 
 embed.setTitle("Botin kommentti:");
 
-
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
@@ -28,8 +26,8 @@ module.exports.run = function (msg, client, args) {
                 })
                 .catch(error => console.error(error));
         } else {
-            embed.setTitle(`Komento ${info.name} toimii näin:`)
-                .setDescription(`\`${syntax}\``)
+            embed.setTitle(`Komento ${meta.name} toimii näin:`)
+                .setDescription(`\`${meta.syntax}\``)
             msg.channel.send(embed)
                 .catch(err => console.log(err))
         }
@@ -37,4 +35,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.info = info;
+module.exports.meta = meta;

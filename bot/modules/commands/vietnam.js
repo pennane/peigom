@@ -3,16 +3,15 @@ const sharp = require('sharp');
 const https = require('https');
 const Discord = require('discord.js');
 
-let embed = new Discord.RichEmbed()
-    .setColor(0xF4E542);
+let embed = new Discord.RichEmbed().setColor(0xF4E542);
 
-let info = {
+const meta = {
     name: "vietnam",
     admin: false,
     syntax: "vietnam",
-    desc: "Lähettää kanavalle vietnam fläshbäkkejä."
+    desc: "Lähettää kanavalle vietnam fläshbäkkejä.",
+    triggers: ["vietnam", "nam"]
 }
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
@@ -71,4 +70,4 @@ module.exports.run = function (msg, client, args) {
     })
 
 }
-module.exports.info = info;
+module.exports.meta = meta;

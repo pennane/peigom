@@ -5,11 +5,10 @@ const Discord = require('discord.js');
 if (!fs.existsSync('./assets/misc/raha/user-data.json')) { fs.writeFileSync('./assets/misc/raha/user-data.json', '{"users": {}}') }
 let userdata = JSON.parse(fs.readFileSync('./assets/misc/raha/user-data.json', 'utf8'))
 
-let embed = new Discord.RichEmbed()
-    .setColor(0xF4E542);
+let embed = new Discord.RichEmbed().setColor(0xF4E542);
 
 
-let info = {
+const meta = {
     name: "raha",
     admin: false,
     syntax: "raha <saldo / uhkapeli / lahjoita /  palkka>",
@@ -32,17 +31,18 @@ let info = {
             "syntax": "raha palkka",
             "desc": "Antaa sinulle päivän palkan."
         }
-    }
+    },
+    triggers: ["raha", "rahe", "money", "gamble"]
 }
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
 
         const prefix = config.discord.prefix;
-        let syntax = info.syntax;
-        let daily = info.daily;
+        let syntax = meta.syntax;
+        let daily = meta.daily;
 
-        embed.setTitle(`Komento ${info.name} toimii näin:`)
+        embed.setTitle(`Komento ${meta.name} toimii näin:`)
             .setDescription(`\`${syntax}\``);
 
         if (!msg.author.bot) {
@@ -63,14 +63,14 @@ module.exports.run = function (msg, client, args) {
                 let subsyntax;
                 switch (args[1]) {
                     case 'saldo':
-                        subsyntax = info.sub[args[1]].syntax;
+                        subsyntax = meta.sub[args[1]].syntax;
                         embed.setTitle(`${msg.member.user.username} balanssi:`)
                             .setDescription(`${usrobj.credits} kolea`)
                         msg.channel.send(embed)
                             .catch(error => console.info(error));
                         break;
                     case 'uhkapeli':
-                        subsyntax = info.sub[args[1]].syntax;
+                        subsyntax = meta.sub[args[1]].syntax;
                         if (!isNaN(parseInt(args[2])) && parseInt(args[2]) > 0) {
                             if (parseInt(args[2]) <= parseInt(usrobj.credits)) {
                                 embed.setTitle(`Käyttäjä ${msg.author.username} uhkapelaa ${args[2]} kolikolla. Lets mennään.`)
@@ -112,14 +112,14 @@ module.exports.run = function (msg, client, args) {
                                     .catch(error => console.info(error));
                             }
                         } else {
-                            embed.setTitle(`Komennon ${info.name} alakomento ${info.sub[args[1]].name} toimii näin:`)
+                            embed.setTitle(`Komennon ${meta.name} alakomento ${meta.sub[args[1]].name} toimii näin:`)
                                 .setDescription(`\`${subsyntax}\``)
                             msg.channel.send(embed)
                                 .catch(error => console.info(error));
                         }
                         break;
                     case 'lahjoita':
-                        subsyntax = info.sub[args[1]].syntax;
+                        subsyntax = meta.sub[args[1]].syntax;
                         if (!isNaN(parseInt(args[2])) && parseInt(args[2]) > 0 && args[3]) {
                             if (parseInt(args[2]) <= parseInt(usrobj.credits)) {
                                 let giftTo = '';
@@ -141,7 +141,7 @@ module.exports.run = function (msg, client, args) {
                                         .catch(error => console.info(error));
                                 } else {
                                     embed.setTitle(`${msg.member.user.username}, huomaa:`)
-                                        .setDescription(`Valitsemasi pelaaja ei ole vielä koskaan käyttänyt komentoa: \`${prefix}${info.name}\`. Et voi lahjoittaa hänelle.`)
+                                        .setDescription(`Valitsemasi pelaaja ei ole vielä koskaan käyttänyt komentoa: \`${prefix}${meta.name}\`. Et voi lahjoittaa hänelle.`)
                                     msg.channel.send(embed)
                                         .catch(error => console.info(error));
                                 }
@@ -152,14 +152,14 @@ module.exports.run = function (msg, client, args) {
                                     .catch(error => console.info(error));
                             }
                         } else {
-                            embed.setTitle(`Komennon ${info.name} alakomento ${info.sub[args[1]].name} toimii näin:`)
+                            embed.setTitle(`Komennon ${meta.name} alakomento ${meta.sub[args[1]].name} toimii näin:`)
                                 .setDescription(`\`${subsyntax}\``)
                             msg.channel.send(embed)
                                 .catch(error => console.info(error));
                         }
                         break;
                     case 'palkka':
-                        subsyntax = info.sub[args[1]].syntax;
+                        subsyntax = meta.sub[args[1]].syntax;
                         if (Date.now() - usrobj.whenclaimed > 86400000) {
                             embed.setTitle(`${msg.member.user.username}, huomaa:`)
                                 .setDescription(`Sait päivän palkan, eli ${daily} kolikkelia.`)
@@ -197,4 +197,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.info = info;
+module.exports.meta = meta;

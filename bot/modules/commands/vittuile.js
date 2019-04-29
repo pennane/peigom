@@ -1,22 +1,16 @@
 const config = require('config');
-const Discord = require('discord.js');
+const names = require('../../assets/misc/badwords/badwords.json').badwords
 
-let embed = new Discord.RichEmbed()
-    .setColor(0xF4E542);
-
-let info = {
+const meta = {
     name: "vittuile",
     admin: false,
     syntax: "vittuile",
-    desc: "Vittuile botille"
+    desc: "Vittuile botille",
+    triggers: ["vittuile"]
 }
-
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        let msgauthorname = msg.author.name;
-        let names = config.misc.badwords;
         let rand = Math.floor(Math.random() * names.length);
         if (msg.member.nickname) {
             msg.channel.send(`**${msg.member.nickname} a.ka. ${msg.author.username}**, ai rupeet vittuilee?`)
@@ -52,4 +46,4 @@ module.exports.run = function (msg, client, args) {
 
 }
 
-module.exports.info = info;
+module.exports.meta = meta;

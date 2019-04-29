@@ -1,21 +1,20 @@
 const Discord = require('discord.js');
 const config = require('config');
-let info = {
+const meta = {
     name: "äänestys",
     admin: false,
     syntax: "äänestys <Joo/ei kysymys>",
-    desc: "Luo very ez äänestyksiä"
+    desc: "Luo very ez äänestyksiä",
+    triggers: ["vote", "äänestys"]
 }
-
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         let embed = new Discord.RichEmbed()
             .setColor(0xF4E542);
         if (args.length === 1) {
-            embed.setTitle(`Komento \`${info.name}\` toimii näin:`)
-                .setDescription(`\`\`${config.discord.prefix}${syntax}\`\``)
+            embed.setTitle(`Komento \`${meta.name}\` toimii näin:`)
+                .setDescription(`\`\`${config.discord.prefix}${meta.syntax}\`\``)
             return resolve(msg.channel.send(embed).catch(err => console.error(err)));
         }
         let embedArgs = args
@@ -32,13 +31,9 @@ module.exports.run = function (msg, client, args) {
                     .then(msg.react("👎"))
             })
             .catch(err => console.log(err));
-
-
-
-
         resolve();
     })
 
 }
 
-module.exports.info = info;
+module.exports.meta = meta;

@@ -5,18 +5,17 @@ const Discord = require('discord.js');
 
 let embed = new Discord.RichEmbed()
     .setColor(0xF4E542);
-let info = {
+const meta = {
     name: "nightmare",
     admin: false,
     syntax: "nightmare",
-    desc: "Lähettää kanavalle suurta kuumotusta."
+    desc: "Lähettää kanavalle suurta kuumotusta.",
+    triggers: ["nightmare", "nitemare"]
 }
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        embed
-            .setTitle("spoky nitemare");
+        embed.setTitle("spoky nitemare");
 
         function rest() {
             let rand = Math.random().toString(36).substring(2, 9) + Math.random().toString(36).substring(2, 9);
@@ -72,4 +71,4 @@ module.exports.run = function (msg, client, args) {
         resolve();
     });
 }
-module.exports.info = info;
+module.exports.meta = meta;

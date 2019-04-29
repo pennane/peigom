@@ -1,21 +1,17 @@
-const sound = require('../functions/play-sound.js');
-const ffmpeg = require('ffmpeg');
-const fs = require('fs');
+const sound = require('../utilities/playSound.js');
 const Discord = require('discord.js');
 
 const dancemoves = require('../../assets/misc/fortnite/dancemoves')
 
-let embed = new Discord.RichEmbed()
-    .setColor(0xF4E542);
+let embed = new Discord.RichEmbed().setColor(0xF4E542);
 
-let info = {
+const meta = {
     name: "fortnite",
     admin: true,
     syntax: "fortnite",
-    desc: "tanssi eeppisiä fornite liikkeitä"
+    desc: "tanssi eeppisiä fornite liikkeitä",
+    triggers: ["fortnite","fortnight","fornite"]
 }
-
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
@@ -46,4 +42,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.info = info;
+module.exports.meta = meta;

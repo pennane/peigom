@@ -3,17 +3,16 @@ const sharp = require('sharp');
 const https = require('https');
 const Discord = require('discord.js');
 
-let info = {
+const meta = {
     name: "minime",
     admin: false,
     syntax: "minime",
-    desc: "Lähettää kanavalle mini sinut."
+    desc: "Lähettää kanavalle mini sinut.",
+    triggers: ["minime"]
 }
 
-let embed = new Discord.RichEmbed()
-    .setColor(0xF4E542);
+let embed = new Discord.RichEmbed().setColor(0xF4E542);
 
-let syntax = info.syntax;
 
 
 module.exports.run = function (msg, client, args) {
@@ -73,4 +72,4 @@ module.exports.run = function (msg, client, args) {
     })
 
 }
-module.exports.info = info;
+module.exports.meta = meta;

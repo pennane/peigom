@@ -1,13 +1,12 @@
 const Discord = require("discord.js");
 
-let info = {
+const meta = {
     name: "avatar",
     admin: false,
     syntax: "avatar {@kuka}",
-    desc: "Esittää oman, tai muun avatarin"
+    desc: "Esittää oman, tai muun avatarin",
+    triggers: ["avatar"]
 }
-
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
@@ -36,4 +35,4 @@ module.exports.run = function (msg, client, args) {
 
 }
 
-module.exports.info = info;
+module.exports.meta = meta;

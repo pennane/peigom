@@ -1,19 +1,17 @@
-const sound = require('../functions/play-sound.js');
-const ffmpeg = require('ffmpeg');
+const sound = require('../utilities/playSound.js');
 const fs = require('fs');
 const Discord = require('discord.js');
 
-let embed = new Discord.RichEmbed()
-    .setColor(0xF4E542);
+let embed = new Discord.RichEmbed().setColor(0xF4E542);
 
 
-let info = {
+const meta = {
     name: "pussukat",
     admin: false,
     syntax: "pussukat",
-    desc: "Soittaa satunnaisen kappaleen botin pussukat kansiosta"
+    desc: "Soittaa satunnaisen kappaleen botin pussukat kansiosta",
+    triggers: ["pussukat", "pussukka"]
 }
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
@@ -45,7 +43,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-
-
-
-module.exports.info = info;
+module.exports.meta = meta;

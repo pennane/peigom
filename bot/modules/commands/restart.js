@@ -1,12 +1,12 @@
 const auth = require('../../config/authorize.json');
 
-let info = {
+const meta = {
     name: "restart",
     admin: true,
     syntax: "restart",
-    desc: "Käynnistää websocketin uudelleen"
+    desc: "Käynnistää websocketin uudelleen",
+    triggers: ["restart", "reboot"]
 }
-let syntax = info.syntax;
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
@@ -21,4 +21,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.info = info;
+module.exports.meta = meta;
