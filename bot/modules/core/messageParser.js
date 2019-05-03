@@ -19,7 +19,7 @@ module.exports.parseMsg = function (msg, client) {
     if (!hasPrefix) return;
 
     let args = msg.content.trim().substr(prefix.length).split(' ')
-    let trigger = args[0]
+    let trigger = args[0].toLowerCase()
 
     if (!triggers.hasOwnProperty(trigger)) return;
 
