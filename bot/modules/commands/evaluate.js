@@ -30,7 +30,7 @@ module.exports.run = function (msg, client, args) {
         let reply = codeEval(code, msg, client)
         if (reply.length > 2000) {
             embed.addField("Evaluation", `
-        \`\`\`js\n${code}\n==> Failed to send to discord: \n Received content exceeded 2000 characters.\`\`\`
+        \`\`\`js\n${code}\n==> Failed to send to discord: \nReceived content exceeded 2000 characters.\`\`\`
         `)
         } else {
             embed.addField("Evaluation", `
