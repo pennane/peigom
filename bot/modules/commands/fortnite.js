@@ -7,7 +7,7 @@ let embed = new Discord.RichEmbed().setColor(0xF4E542);
 
 const meta = {
     name: "fortnite",
-    admin: true,
+    admin: false,
     syntax: "fortnite",
     desc: "tanssi eeppisiä fornite liikkeitä",
     triggers: ["fortnite","fortnight","fornite"]
