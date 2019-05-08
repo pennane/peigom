@@ -14,7 +14,7 @@ const meta = {
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         let embed = new Discord.RichEmbed().setColor(0xF4E542);
-        if (!args[1]) return msg.reply("Toimii näin:"+meta.syntax)
+        if (!args[1]) return msg.reply("Toimii näin: "+meta.syntax)
         let definition = [...args].splice(1).join(" ")
         let index =  0
         dictionary.term(definition).then(({entries}) => {
