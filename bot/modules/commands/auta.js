@@ -148,7 +148,7 @@ module.exports.run = function (msg, client, args) {
             embed.setDescription(`Tietoa komennosta: \`${prefix}${cmd.name}\``)
                 .addField(`:pencil: Komento toimii näin:`, `\`${cmd.syntax}\``)
                 .addField(`:gear: Komennon toiminto:`, `${cmd.description}`)
-                .addField(`:book: Komennon liipaisimet:`, `\`${prefix+[...cmd.triggers].join(", "+prefix)}\``)
+                .addField(`:book: Komennon liipaisimet:`, `\`${prefix+[...cmd.triggers].join(" "+prefix)}\``)
                 .addBlankField();
             if (cmd.admin) {
                 embed.addField(`:warning: **Huom**`, `Kyseessä on admin komento.`);
