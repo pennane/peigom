@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const {inspect} = require('util')
+const beautify = require('js-beautify').js
 
 const meta = {
     name: "evaluate",
@@ -30,11 +31,11 @@ module.exports.run = function (msg, client, args) {
         let reply = codeEval(code, msg, client)
         if (reply.length > 2000) {
             embed.addField("Evaluation", `
-        \`\`\`js\n${code}\n==> Failed to send to discord: \nReceived content exceeded 2000 characters.\`\`\`
+        \`\`\`js\nFailed to send to discord: \nReceived content exceeded 2000 characters.\`\`\`
         `)
         } else {
             embed.addField("Evaluation", `
-        \`\`\`js\n${code}\n==> ${reply}\`\`\`
+        \`\`\`js\n${beautify(reply, { indent_size: 2, space_in_empty_paren: true })}\`\`\`
         `)
         }
         
