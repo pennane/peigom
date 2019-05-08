@@ -13,12 +13,11 @@ const meta = {
 function codeEval(code, msg, client) {
     let output;
     try {
-        output = eval(code)
+        output = beautify(inspect(eval(code), { indent_size: 2, space_in_empty_paren: true }))
     } catch(err) {
-        output = `Failed to evaluate: \n ${err}`
+        output = `Failed to evaluate: \n${err}`
     }
     finally {
-        output = inspect(output);
         return output;
     }
 }
@@ -35,7 +34,7 @@ module.exports.run = function (msg, client, args) {
         `)
         } else {
             embed.addField("Evaluation", `
-        \`\`\`js\n${beautify(reply, { indent_size: 2, space_in_empty_paren: true })}\`\`\`
+        \`\`\`js\n${reply}\`\`\`
         `)
         }
         
