@@ -14,11 +14,11 @@ function isFunc(func) {
 }
 
 class Command {
-    constructor({ meta, run }) {
+    constructor({ meta, run }, filename) {
         if (!meta || !isObj(meta)) {
             logger.log(12, {
-                name: "undefined_command_name",
-                reason: "Meta is not present"
+                name: filename,
+                reason: "Meta is not present",
             })
         }
         if (!meta.triggers || !isArr(meta.triggers)) {
@@ -58,7 +58,9 @@ class Command {
         } else {
             authorized = true
         }
-        if (authorized) this.run(msg, client, args)
+        if (authorized) {
+            this.run(msg, client, args).catch(err=>console.log(err))
+        }
         else this.unauthorized(msg, args)
     }
     unauthorized(msg, args) {
