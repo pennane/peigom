@@ -25,12 +25,12 @@ module.exports.run = function (msg, client, args) {
         let url = [...args][1].replace(/<(.+)>/g, '$1')
         let video;
         try {
-            video = await yt.getVideo(url)
+            video = await yt.getVideo(url, {part:'id,fileDetails,contentDetails'})
         } catch (err) {
             video = undefined;
             try {
-                let queried = await yt.searchVideos(query, 10)
-                video = await yt.getVideoByID(queried[0].id);
+                let queried = await yt.searchVideos(query, 1, {part:'id'})
+                video = await yt.getVideoByID(queried[0].id, {part:'id,fileDetails,contentDetails'});
             } catch (err) {
                 video = undefined;
                 console.log(err)
