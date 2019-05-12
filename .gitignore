@@ -3,3 +3,4 @@ bot/config/authorize.json
 bot/config/default.json
 bot/assets/misc/raha/user-data.json
 node_modules/*
+.vscode

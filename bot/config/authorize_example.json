@@ -1,3 +1,4 @@
 {
-    "token": "your token here"
+    "token": "your token here",
+    "youtube-api-key": "your youtube api key here"
 }
