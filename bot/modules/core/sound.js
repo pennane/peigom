@@ -49,7 +49,8 @@ function play(guild) {
 
     let dispatcher = serverQueue.connection.playStream(ytdl(track.url))
 
-    dispatcher.on('end', () => {
+    dispatcher.on('end', (reason) => {
+        console.log(reason)
         serverQueue.tracks.shift()
         setTimeout(() => {
             play(guild)
@@ -83,6 +84,7 @@ module.exports = {
                     console.error("COULD NOT START CONNECTION:", err)
                     queue.delete(guild.id)
                 }
+
             } else if (track.toTop && serverQueue.tracks.length > 1) {
                 serverQueue.tracks = [serverQueue.tracks[0], track, ...[...serverQueue.tracks].splice(1)]
             } else {
