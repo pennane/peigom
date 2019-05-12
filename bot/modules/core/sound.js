@@ -8,7 +8,7 @@ const queue = new Map()
 function msToReadable(ms) {
     let min = Math.floor(ms / 60000);
     let sec = ((ms % 60000) / 1000).toFixed(0);
-    return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
+    return min + ":" + (sec < 10 ? '0' : '') + sec;
 }
 
 function buildQueue({ textChannel, voiceChannel, guild }) {
@@ -24,6 +24,10 @@ function buildQueue({ textChannel, voiceChannel, guild }) {
 
 function play(guild) {
     let serverQueue = queue.get(guild.id)
+    if (!serverQueue) {
+        return console.log("ERROR: NO SERVER QUEUE ?")
+    }
+
     let track = serverQueue.tracks[0]
     if (!track) {
         serverQueue.voiceChannel.leave()
@@ -31,7 +35,6 @@ function play(guild) {
         return;
     }
     let dispatcher = serverQueue.connection.playStream(ytdl(track.url))
-    console.log(dispatcher)
     dispatcher.on('end', () => {
         setTimeout(() => {
             serverQueue.tracks.shift()
@@ -53,13 +56,15 @@ module.exports = {
                 try {
                     let connection = voiceChannel.join()
                     serverQueue.connection = await connection;
-                    await track.toTop ? serverQueue.tracks.unShift(serverQueue.tracks[0], track) : serverQueue.tracks.push(track)
+                    serverQueue.tracks.push(track)
                     play(guild)
+
                 } catch (err) {
                     console.error("COULD NOT START CONNECTION:", err)
                     queue.delete(guild.id)
                 }
-
+            } else if (track.toTop && serverQueue.tracks.length > 1) {
+                serverQueue.tracks = [serverQueue.tracks[0], track, ...[...serverQueue.tracks].splice(1)]
             } else {
                 serverQueue.tracks.push(track)
             }
@@ -85,7 +90,6 @@ module.exports = {
                 let dpTime = msToReadable(serverQueue.connection.dispatcher.time)
                 let ytTime = serverQueue.tracks[0].duration
                 msg.channel.send(`Nyt soi: \n${serverQueue.tracks[0].title}\n${dpTime} / ${ytTime.minutes} : ${ytTime.seconds}`)
-                console.log(`Nyt soi: \n${serverQueue.tracks[0].title}\n${dpTime} / ${ytTime.minutes} : ${ytTime.seconds}`)
             } else {
                 msg.channel.send("Bro, ei täällä soi mikään.")
             }
@@ -134,16 +138,15 @@ module.exports = {
                 msg.channel.send(":x: En edes ollut kiusaamassa.")
             }
         },
-        clear : function (args) {
+        clear: function (args) {
             let { guild, msg } = args
             let serverQueue = queue.get(guild.id)
             if (serverQueue && serverQueue.connection.dispatcher) {
                 serverQueue.tracks = [serverQueue.tracks[0]]
-                serverQueue.connection.dispatcher.end()
                 msg.channel.send(":wastebasket:  Musiikkijono tyhjennetty!")
             } else {
                 msg.channel.send(":x: Ei ollut mitään mitä puhdistaa, >:^U")
             }
-        },
+        }
     }
 }

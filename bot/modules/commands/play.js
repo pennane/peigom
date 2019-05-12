@@ -25,7 +25,7 @@ module.exports.run = function (msg, client, args) {
         let url = [...args][1].replace(/<(.+)>/g, '$1')
         let video;
         if (url.match(ytRegex)) {
-            video = await yt.getVideo(url, { part: 'id,snippet2,contentDetails' })
+            video = await yt.getVideo(url, { part: 'id,snippet,contentDetails' })
         } else {
             try {
                 let queried = await yt.searchVideos(query, 1, { part: 'id' })
@@ -35,16 +35,16 @@ module.exports.run = function (msg, client, args) {
                 msg.reply("Ei löy'y tollasta vidii bro")
             }
         }
-
-        if (video) {
+        if (await video) {
             video.user = msg.member;
+            video.toTop = false;
             queue.add({
                 track: video,
                 textChannel: textChannel,
                 voiceChannel: voiceChannel,
                 guild: guild,
             })
-        }
+        } 
         resolve()
     });
 }
