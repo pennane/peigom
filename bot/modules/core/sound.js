@@ -47,7 +47,7 @@ function play(guild) {
         return;
     }
 
-    let dispatcher = serverQueue.connection.playStream(ytdl(track.url))
+    let dispatcher = serverQueue.connection.playStream(ytdl(track.url, {filter: "audioonly", quality: "lowest"}))
 
     dispatcher.on('end', (reason) => {
         console.log(reason)
