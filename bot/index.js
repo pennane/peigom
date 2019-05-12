@@ -21,16 +21,16 @@ console.info(chalk.yellow(`Starting peigom-bot v.${version}`))
 
 client.on('ready', () => {
     let i = Math.floor(Math.random() * presence.activities.length)
-    
+
     startingInfo.set(client)
     client.user.setActivity(presence.activities[i])
-    
+
     schedule.scheduleJob(`*/${presence.refreshrate} * * * *`, () => {
         client.user.setActivity(config.get('discord.presence.activities')[i])
-        if (i === presence.activities.length - 1)  i = 0;
+        if (i === presence.activities.length - 1) i = 0;
         else i++;
     })
-    
+
     console.info(chalk.yellow('| Activity: ') + client.user.localPresence.game.name)
 
     logger.log(2)
@@ -42,29 +42,22 @@ client.on('message', async (msg) => {
     parser.parseMsg(msg, client)
 })
 
-client.on("guildMemberAdd", (member) => {
-    member.send(`${config.misc.welcome.heading} \`${member.guild.name}\`${config.misc.welcome.after}`)
-        .then(() => logger.log(7, member))
-        .catch(err => {
-            logger.log(3, err)
-        })
-    l
-})
+client.on("guildMemberAdd", (member) => logger.log(7, member))
 
-client.on("guildMemberRemove", (member) => { logger.log(8, member) })
+client.on("guildMemberRemove", (member) => logger.log(8, member))
 
-client.on("guildCreate", (guild) => { logger.log(9, guild) })
+client.on("guildCreate", (guild) => logger.log(9, guild))
 
-client.on("guildDelete", (guild) => { logger.log(10, guild) })
+client.on("guildDelete", (guild) => logger.log(10, guild))
 
-client.on('reconnecting', () => { logger.log(4) })
+client.on('reconnecting', () => logger.log(4))
 
-client.on('resume', () => { logger.log(5) })
+client.on('resume', () => logger.log(5))
 
-client.on('error', (err) => { logger.log(3, err) })
+client.on('error', (err) => logger.log(3, err))
 
 client.on('warn', (warn) => console.warn(warn))
 
-process.on('uncaughtException', err => { logger.log(3, err) })
+process.on('uncaughtException', (err) => logger.log(3, err))
 
 client.login(authorize.token)
