@@ -17,9 +17,7 @@ function buildQueue({ textChannel, voiceChannel, guild }) {
         voiceChannel: voiceChannel,
         guild: guild,
         connection: null,
-        tracks: [],
-        volume: 5,
-        playing: true
+        tracks: []
     }
 
 }
@@ -35,11 +33,11 @@ function play(guild) {
     let dispatcher = serverQueue.connection.playStream(ytdl(track.url))
     console.log(dispatcher)
     dispatcher.on('end', () => {
-        setTimeout(()=>{
+        setTimeout(() => {
             serverQueue.tracks.shift()
             play(guild)
-        },1000)
-        
+        }, 1000)
+
     })
 }
 
@@ -47,7 +45,6 @@ module.exports = {
     yt: yt,
     queue: {
         add: async function (args) {
-            console.log(args.track)
             let { track, guild, voiceChannel } = args
             let serverQueue = await queue.get(guild.id)
             if (await !serverQueue) {
@@ -56,10 +53,10 @@ module.exports = {
                 try {
                     let connection = voiceChannel.join()
                     serverQueue.connection = await connection;
-                    await serverQueue.tracks.push(track)
+                    await track.toTop ? serverQueue.tracks.unShift(track) : serverQueue.tracks.push(track)
                     play(guild)
                 } catch (err) {
-                    console.error("COULD NOT START CONNECTION:",err)
+                    console.error("COULD NOT START CONNECTION:", err)
                     queue.delete(guild.id)
                 }
 
@@ -72,8 +69,8 @@ module.exports = {
             let serverQueue = queue.get(guild.id)
             if (!serverQueue) {
                 msg.channel.send("Bro, ei täällä soi mikään.")
-            } else if (serverQueue.tracks.length > 0){
-                
+            } else if (serverQueue.tracks.length > 0) {
+
                 msg.channel.send(serverQueue.tracks.map((t, i) => `${i}: ${t.title}`).join(`\n`))
             } else {
                 msg.channel.send("Bro, ei täällä soi mikään.")
@@ -84,7 +81,7 @@ module.exports = {
             let serverQueue = queue.get(guild.id)
             if (!serverQueue) {
                 msg.channel.send("Bro, ei täällä soi mikään.")
-            } else if (serverQueue.tracks.length > 0){
+            } else if (serverQueue.tracks.length > 0) {
                 let dpTime = msToReadable(serverQueue.connection.dispatcher.time)
                 let ytTime = serverQueue.tracks[0].duration
                 msg.channel.send(`Nyt soi: \n${serverQueue.tracks[0].title}\n${dpTime} / ${ytTime.minutes} : ${ytTime.seconds}`)
@@ -98,36 +95,44 @@ module.exports = {
             let serverQueue = queue.get(guild.id)
             if (!serverQueue) {
                 msg.channel.send("Bro, ei täällä soi mikään.")
-            } else if (serverQueue.tracks.length > 0){
+            } else if (serverQueue.tracks.length > 0) {
                 serverQueue.connection.dispatcher.end('skip')
             } else {
                 msg.channel.send("Bro, ei täällä soi mikään.")
             }
         },
-        pause: function (args) {// pause ei toimi toivotusti
+        pause: function (args) { // pause ei toimi toivotusti
             let { guild, msg } = args
             let serverQueue = queue.get(guild.id)
             if (!serverQueue) {
                 msg.channel.send("Bro, ei täällä soi mikään.")
-            } else if (serverQueue.connection && serverQueue.connection.dispatcher && serverQueue.connection.dispatcher.paused === false){
+            } else if (serverQueue.connection && serverQueue.connection.dispatcher && serverQueue.connection.dispatcher.paused === false) {
                 serverQueue.connection.dispatcher.pause('pause')
             } else {
                 msg.channel.send("Bro, ei pyge pausee")
             }
         },
-        resume: function (args) {// resume ei toimi toivotusti
+        resume: function (args) { // resume ei toimi toivotusti
             let { guild, msg } = args
             let serverQueue = queue.get(guild.id)
             if (!serverQueue) {
                 msg.channel.send("Bro, ei täällä soi mikään.")
-            } else if (serverQueue.connection.dispatcher.paused === true){
+            } else if (serverQueue.connection.dispatcher.paused === true) {
                 serverQueue.connection.dispatcher.resume('pause')
             } else {
                 msg.channel.send("Bro, ei pyge palaa")
             }
         },
-        disconnect: function(args) {
-
-        } 
+        disconnect: function (args) {
+            let { guild, msg } = args
+            let serverQueue = queue.get(guild.id)
+            if (serverQueue && serverQueue.connection.dispatcher) {
+                serverQueue.tracks = []
+                serverQueue.connection.dispatcher.end()
+                msg.channel.send(":wave: Ilosesti böneen!")
+            } else {
+                msg.channel.send(":x: En edes ollut kiusaamassa.")
+            }
+        }
     }
 }

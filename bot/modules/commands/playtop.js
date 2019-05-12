@@ -6,10 +6,10 @@ let embed = new Discord.RichEmbed().setColor(0xF4E542);
 let ytRegex = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/
 
 const meta = {
-    name: "play",
+    name: "playtop",
     admin: false,
     syntax: "play <hakusanat / linkki>",
-    desc: "soita musiikkia youtubesta",
+    desc: "soita musiikkia youtubesta ja viskoo sen ekaksi jonoon",
     triggers: ["play", "p", "soita"]
 }
 
@@ -38,6 +38,7 @@ module.exports.run = function (msg, client, args) {
 
         if (video) {
             video.user = msg.member;
+            video.toTop = true;
             queue.add({
                 track: video,
                 textChannel: textChannel,
