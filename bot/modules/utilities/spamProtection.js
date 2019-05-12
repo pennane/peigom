@@ -38,7 +38,6 @@ module.exports.check = (user, command) => {
             }
         }
 
-
         function test() {
             if ((userobj.command[command].lasttime) && ((now - userobj.command[command].lasttime) < (commandInterval * 1000))) {
                 allowed = false;
@@ -52,11 +51,12 @@ module.exports.check = (user, command) => {
                 waittime = ((generalInterval * 1000) - (now - userobj.lasttime)) / 1000;
                 waittime = parseInt(waittime);
                 return false;
+            } else {
+                return true;
             }
         }
 
-
-        if (test() !== false) {
+        if (test()) {
             userobj.command[command].lasttime = now;
             userobj.lasttime = now;
         }

@@ -10,9 +10,8 @@ module.exports.play = function (filename, msg, connection, client) {
                 }
             });
         } catch (err) {
-            logger.log(3, err)
+            logger.log(3, `Error while playing audio: ${err}`)
         }
-
         resolve();
     });
 }

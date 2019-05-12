@@ -1,25 +1,23 @@
 module.exports = {
-    get: function (isPrecise) {
-        let toReturn;
+    get: function (precise) {
         let today = new Date();
-        let dd = today.getDate();
-        let mm = today.getMonth() + 1; //January is 0!
-        let yyyy = today.getFullYear();
-        let hh = today.getHours();
-        let ss = today.getSeconds();
-        let m = today.getMinutes();
+        let dd = today.getDate(),
+            mm = today.getMonth() + 1,
+            yyyy = today.getFullYear(),
+            hh = today.getHours(),
+            ss = today.getSeconds(),
+            m = today.getMinutes();
+
         if (dd < 10) dd = '0' + dd;
         if (mm < 10) mm = '0' + mm;
         if (ss < 10) ss = '0' + ss;
         if (m < 10) m = '0' + m;
-        today = mm + '/' + dd + '/' + yyyy;
-        todayPrecise = today + ' ' + hh + ':' + m + ':' + ss;
-        if (!isPrecise) {
-            toReturn = today;
+
+        if (precise) {
+            return  today + ' ' + hh + ':' + m + ':' + ss
         } else {
-            toReturn = todayPrecise;
+            return  mm + '/' + dd + '/' + yyyy;
         }
-        return toReturn;
     },
     yyyy: function () {
         let today = new Date();
