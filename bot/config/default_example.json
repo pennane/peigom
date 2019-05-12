@@ -26,10 +26,6 @@
         }
     },
     "misc": {
-        "welcome" : {
-            "heading" : "Tervetuloa severiin",
-            "after": ". >:^U\nMä oon peigom-bot ja mä pirän sua silmäl"
-        },
         "spamprotection": {
             "state": false,
             "generalInterval": 5,
