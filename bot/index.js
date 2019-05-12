@@ -13,21 +13,30 @@ const logger            =   require('./modules/utilities/activityLogger')
 const client            =   new Discord.Client()
 client.timing           =   { timer: new Date(), completed: false }
 
-let presence            =   config.discord.presence
 let version             =   require(__dirname+'/../package.json').version
 
 console.info(chalk.yellow(`Starting peigom-bot v.${version}`))
 
+const shuffle = (arr) => {
+    let a = [...arr]
+    for (let i = a.length - 1; i > 0; i--) {
+        const s = Math.floor(Math.random() * (i + 1));
+        [a[i], a[s]] = [a[s], a[i]];
+    }
+    return a;
+}
 
 client.on('ready', () => {
-    let i = Math.floor(Math.random() * presence.activities.length)
+    let presence = config.discord.presence 
+    let activities = shuffle(presence.activities)
+    let i = Math.floor(Math.random() * activities.length)
 
     startingInfo.set(client)
-    client.user.setActivity(presence.activities[i])
+    client.user.setActivity(activities[i].text, {type: activities[i].type})
 
     schedule.scheduleJob(`*/${presence.refreshrate} * * * *`, () => {
-        client.user.setActivity(config.get('discord.presence.activities')[i])
-        if (i === presence.activities.length - 1) i = 0;
+        client.user.setActivity(activities[i].text, {type: activities[i].type})
+        if (i === activities.length - 1) i = 0;
         else i++;
     })
 

@@ -12,16 +12,55 @@
         ],
         "presence": {
             "activities": [
-                ",auta",
-                "my name be jeff",
-                "yo big man bom",
-                "sugondese is a funny meme",
-                "pimpeli pom, nimi o peigom",
-                ">:^V",
-                "töis mut ei töis",
-                "örörör is very bad"
+                {
+                    "name": ",auta",
+                    "type": 2
+                },
+                {
+                    "name": "my name be jeff",
+                    "type": 0
+                },
+                {
+                    "name": "yo big man bom",
+                    "type": 0
+                },
+                {
+                    "name": ">:^V",
+                    "type": 3
+                },
+                {
+                    "name": "sugondese is a funny meme",
+                    "type": 0
+                },
+                {
+                    "name": "töis mut ei töis",
+                    "type": 0
+                },
+                {
+                    "name": "big, if true",
+                    "type": 3
+                },
+                {
+                    "name": "documentaries",
+                    "type": 3
+                },
+                {
+                    "name": "smooth swing jazz",
+                    "type": 2
+                },
+                {
+                    "name": "your conversation",
+                    "type": 2
+                },
+                {
+                    "name": "pimpeli pom, nimi o peigom",
+                    "type": 0
+                },
+                {
+                    "name": "Playing",
+                    "type": 0
+                }
             ],
-            "type" : "LISTENING",
             "refreshrate" : 30
         }
     },
