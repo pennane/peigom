@@ -27,7 +27,7 @@ function play(guild) {
     if (!serverQueue) {
         return console.log("ERROR: NO SERVER QUEUE ?")
     }
-
+    serverQueue.connection.dispatcher = undefined;
     let track = serverQueue.tracks[0]
     if (!track) {
         serverQueue.voiceChannel.leave()
@@ -36,8 +36,8 @@ function play(guild) {
     }
     let dispatcher = serverQueue.connection.playStream(ytdl(track.url))
     dispatcher.on('end', () => {
+        serverQueue.tracks.shift()
         setTimeout(() => {
-            serverQueue.tracks.shift()
             play(guild)
         }, 1000)
 
@@ -89,7 +89,7 @@ module.exports = {
             } else if (serverQueue.tracks.length > 0) {
                 let dpTime = msToReadable(serverQueue.connection.dispatcher.time)
                 let ytTime = serverQueue.tracks[0].duration
-                msg.channel.send(`Nyt soi: \n${serverQueue.tracks[0].title}\n${dpTime} / ${ytTime.minutes} : ${ytTime.seconds}`)
+                msg.channel.send(`Nyt soi: \n${serverQueue.tracks[0].title}\n${dpTime} / ${ytTime.minutes}:${ytTime.seconds}`)
             } else {
                 msg.channel.send("Bro, ei täällä soi mikään.")
             }
