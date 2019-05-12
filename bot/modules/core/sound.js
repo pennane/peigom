@@ -53,7 +53,7 @@ module.exports = {
                 try {
                     let connection = voiceChannel.join()
                     serverQueue.connection = await connection;
-                    await track.toTop ? serverQueue.tracks.unShift(track) : serverQueue.tracks.push(track)
+                    await track.toTop ? serverQueue.tracks.unShift(serverQueue.tracks[0], track) : serverQueue.tracks.push(track)
                     play(guild)
                 } catch (err) {
                     console.error("COULD NOT START CONNECTION:", err)
@@ -133,6 +133,17 @@ module.exports = {
             } else {
                 msg.channel.send(":x: En edes ollut kiusaamassa.")
             }
-        }
+        },
+        clear : function (args) {
+            let { guild, msg } = args
+            let serverQueue = queue.get(guild.id)
+            if (serverQueue && serverQueue.connection.dispatcher) {
+                serverQueue.tracks = [serverQueue.tracks[0]]
+                serverQueue.connection.dispatcher.end()
+                msg.channel.send(":wastebasket:  Musiikkijono tyhjennetty!")
+            } else {
+                msg.channel.send(":x: Ei ollut mitään mitä puhdistaa, >:^U")
+            }
+        },
     }
 }
