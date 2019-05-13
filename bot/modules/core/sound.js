@@ -55,7 +55,6 @@ function play(guild) {
     let dispatcher = serverQueue.connection.playStream(ytdl(track.video_url, { filter: "audioonly", quality: "lowest" }))
 
     dispatcher.on('end', (reason) => {
-        console.log("DISPATCHER END:", reason)
         serverQueue.tracks.shift()
         setTimeout(() => {
             play(guild)
@@ -73,8 +72,6 @@ module.exports = {
     yt: yt,
     queue: {
         add: async function (args) {
-            
-
             let { track, guild, voiceChannel, msg } = args
             let serverQueue = await queue.get(guild.id)
             let ytTime = msToReadable(track.length_seconds*1000)
@@ -86,7 +83,7 @@ module.exports = {
             .setThumbnail(track.thumbnail_url || null)
             .setTimestamp();
 
-            if (!serverQueue) {
+            if (!serverQueue || (!serverQueue.connection || !serverQueue.connection.speaking)) {
                 queue.set(guild.id, buildQueue(args))
                 serverQueue = await queue.get(guild.id)
 
