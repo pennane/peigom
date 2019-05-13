@@ -73,8 +73,18 @@ module.exports = {
     yt: yt,
     queue: {
         add: async function (args) {
-            let { track, guild, voiceChannel } = args
+            
+
+            let { track, guild, voiceChannel, msg } = args
             let serverQueue = await queue.get(guild.id)
+            let ytTime = msToReadable(track.length_seconds*1000)
+            let embed = new Discord.RichEmbed()
+            .setAuthor(`Jonoon lisätty 🎵`, track.thumbnail_url, track.video_url)
+            .addField(track.title, track.author.name)
+            .setColor('RANDOM')
+            .addField('Pituus', ytTime, true)
+            .setThumbnail(track.thumbnail_url || null)
+            .setTimestamp();
 
             if (!serverQueue) {
                 queue.set(guild.id, buildQueue(args))
@@ -95,6 +105,7 @@ module.exports = {
             } else {
                 serverQueue.tracks.push(track)
             }
+            msg.channel.send(await embed)
         },
         show: function (args) {
             let { guild, msg } = args
@@ -118,11 +129,11 @@ module.exports = {
                 let embed = new Discord.RichEmbed();
                 let track = serverQueue.tracks[0];
                 let dpTime = msToReadable(serverQueue.connection.dispatcher.time)
-                let ytTime = msToReadable(serverQueue.tracks[0].length_seconds)
+                let ytTime = msToReadable(serverQueue.tracks[0].length_seconds*1000)
                 embed
-                    .setAuthor(`Ny soi: 🎵 ${track.title} 🎵`, track.thumbnail_url, track.video_url)
+                    .setAuthor(`Ny soi: 🎵`, track.thumbnail_url, track.video_url)
                     .setColor('RANDOM')
-                    .addField('Pituus', `${serverQueue.tracks[0].title}\n${dpTime} / ${ytTime}`, true)
+                    .addField(`${serverQueue.tracks[0].title}`, `${dpTime} / ${ytTime}`, true)
                     .addField('Biisiä toivo:', track.requestedBy || '?', true)
                     .setThumbnail(track.thumbnail_url || null)
                     .setTimestamp();

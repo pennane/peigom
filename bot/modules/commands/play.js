@@ -25,9 +25,12 @@ module.exports.run = function (msg, client, args) {
         let query = [...args].splice(1).join(" ")
         let url = [...args][1].replace(/<(.+)>/g, '$1')
         let video;
+        
         if (url.match(ytRegex)) {
+            msg.channel.send(`:mag: Etitään \`${url}\``)
             video = await ytdl.getBasicInfo(url)
         } else {
+            msg.channel.send(`:mag: Etitään \`${query}\``)
             try {
                 let queried = await yt.searchVideos(query, 1, { part: 'id' })
                 video = await ytdl.getBasicInfo(queried[0].id)
@@ -44,9 +47,10 @@ module.exports.run = function (msg, client, args) {
                 textChannel: textChannel,
                 voiceChannel: voiceChannel,
                 guild: guild,
+                msg: msg
             })
         } else {
-            msg.reply(":baby: Bro en voi soittaa tota, bro")
+            msg.channel.send(":baby: Bro en voi soittaa tota, bro")
         }
         resolve()
     });
