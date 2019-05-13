@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const ytdl = require('ytdl-core')
 
 const { yt, queue } = require('../core/sound.js')
 
@@ -25,19 +26,18 @@ module.exports.run = function (msg, client, args) {
         let url = [...args][1].replace(/<(.+)>/g, '$1')
         let video;
         if (url.match(ytRegex)) {
-            video = await yt.getVideo(url, { part: 'id,snippet2,contentDetails' })
+            video = await ytdl.getBasicInfo(url)
         } else {
             try {
                 let queried = await yt.searchVideos(query, 1, { part: 'id' })
-                video = await yt.getVideoByID(queried[0].id, { part: 'id,snippet,contentDetails' });
+                video = await ytdl.getBasicInfo(queried[0].id)
             } catch (err) {
                 video = null;
-                msg.reply("Ei löy'y tollasta vidii bro")
+                msg.reply(":baby: Ei löy'y tollasta vidii bro")
             }
         }
-
-        if (video) {
-            video.user = msg.member;
+        if (await video) {
+            video.requestedBy = msg.member;
             video.toTop = true;
             queue.add({
                 track: video,
@@ -45,7 +45,7 @@ module.exports.run = function (msg, client, args) {
                 voiceChannel: voiceChannel,
                 guild: guild,
             })
-        }
+        } 
         resolve()
     });
 }

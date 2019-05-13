@@ -52,7 +52,7 @@ function play(guild) {
         return;
     }
 
-    let dispatcher = serverQueue.connection.playStream(ytdl(track.url, { filter: "audioonly", quality: "lowest" }))
+    let dispatcher = serverQueue.connection.playStream(ytdl(track.video_url, { filter: "audioonly", quality: "lowest" }))
 
     dispatcher.on('end', (reason) => {
         console.log("DISPATCHER END:", reason)
@@ -76,7 +76,7 @@ module.exports = {
             let { track, guild, voiceChannel } = args
             let serverQueue = await queue.get(guild.id)
 
-            if (await !serverQueue) {
+            if (!serverQueue) {
                 queue.set(guild.id, buildQueue(args))
                 serverQueue = await queue.get(guild.id)
 
@@ -118,13 +118,13 @@ module.exports = {
                 let embed = new Discord.RichEmbed();
                 let track = serverQueue.tracks[0];
                 let dpTime = msToReadable(serverQueue.connection.dispatcher.time)
-                let ytTime = serverQueue.tracks[0].duration
+                let ytTime = msToReadable(serverQueue.tracks[0].length_seconds)
                 embed
-                    .setAuthor(`Ny soi: 🎵 ${track.title} 🎵`, track.thumbnails.default.url, track.url)
+                    .setAuthor(`Ny soi: 🎵 ${track.title} 🎵`, track.thumbnail_url, track.video_url)
                     .setColor('RANDOM')
-                    .addField('Duration', `${serverQueue.tracks[0].title}\n${dpTime} / ${ytTime.minutes}:${ytTime.seconds}`, true)
-                    .addField('Requested By', track.user || '?', true)
-                    .setThumbnail(track.thumbnails.default.url || null)
+                    .addField('Pituus', `${serverQueue.tracks[0].title}\n${dpTime} / ${ytTime}`, true)
+                    .addField('Biisiä toivo:', track.requestedBy || '?', true)
+                    .setThumbnail(track.thumbnail_url || null)
                     .setTimestamp();
 
                 msg.channel.send(embed).catch(console.log)
