@@ -45,7 +45,9 @@ module.exports.run = function (msg, client, args) {
                 voiceChannel: voiceChannel,
                 guild: guild,
             })
-        } 
+        } else {
+            msg.reply(":baby: Bro en voi soittaa tota, bro")
+        }
         resolve()
     });
 }
