@@ -38,7 +38,7 @@ function play(guild) {
 
     if (serverQueue.connection.channel.members.size === 1) {
         queue.delete(guild.id)
-        connection.disconnect();
+        serverQueue.connection.disconnect();
         return;
     }
 
