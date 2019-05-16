@@ -134,7 +134,6 @@ module.exports = {
             if (!serverQueue) {
                 msg.channel.send(":hand_splayed: Bro, ei täällä soi mikään.")
             } else if (serverQueue.tracks.length > 0) {
-                // serverQueue.tracks.map((t, i) => `${i}: ${t.title}`).join(`\n`)
                 let embed = new Discord.RichEmbed()
                     .setAuthor(`Jono kanavalla ${guild.name}`)
                     .setColor('RANDOM')
@@ -142,7 +141,7 @@ module.exports = {
                     .setTimestamp();
                 if (serverQueue.tracks.length > 1) {
                     embed.addField('Seuraavana:', `${
-                        [...serverQueue.tracks].splice(1).map((t, i) => `\`${i}\`: ${t.title}`).join(`\n`)
+                        [...serverQueue.tracks].splice(1).map((t, i) => `\`${i+1}\`: ${t.title}`).join(`\n`)
                         }`);
 
                 }
