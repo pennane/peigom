@@ -13,6 +13,8 @@ Types of commands Peigom has as of now:
 
 Peigom Bot requires [Node.js](https://nodejs.org/) and a [Discord bot account](https://discordapp.com/developers/applications/) to run.
 
+Music bot functionalities require an [YouTube Data API v3](https://developers.google.com/youtube/v3/) key.
+
 Install the dependencies and start rolling
 
 ```sh
