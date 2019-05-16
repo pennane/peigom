@@ -1,15 +1,4 @@
 {
-    "swas": {
-        "desc": "Suomen ilmavoimien merkki jada jada",
-        "delay": 450,
-        "keyframes": [
-            ":white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:\n:white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:\n:white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:\n:white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:\n:white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:",
-            ":white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:\n:white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:\n:white_large_square::white_large_square::black_large_square::white_large_square::white_large_square:\n:white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:\n:white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:",
-            ":white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:\n:white_large_square::white_large_square::black_large_square::white_large_square::white_large_square:\n:white_large_square::black_large_square::black_large_square::black_large_square::white_large_square:\n:white_large_square::white_large_square::black_large_square::white_large_square::white_large_square:\n:white_large_square::white_large_square::white_large_square::white_large_square::white_large_square:",
-            ":white_large_square::white_large_square::black_large_square::black_large_square::white_large_square:\n:black_large_square::white_large_square::black_large_square::white_large_square::white_large_square:\n:black_large_square::black_large_square::black_large_square::black_large_square::black_large_square:\n:white_large_square::white_large_square::black_large_square::white_large_square::black_large_square:\n:white_large_square::black_large_square::black_large_square::white_large_square::white_large_square:",
-            ":black_large_square::white_large_square::black_large_square::black_large_square::black_large_square:\n:black_large_square::white_large_square::black_large_square::white_large_square::white_large_square:\n:black_large_square::black_large_square::black_large_square::black_large_square::black_large_square:\n:white_large_square::white_large_square::black_large_square::white_large_square::black_large_square:\n:black_large_square::black_large_square::black_large_square::white_large_square::black_large_square:"
-        ]
-    },
     "smile": {
         "desc": "makes you thonk",
         "delay": 600,
