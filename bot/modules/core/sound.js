@@ -6,7 +6,7 @@ const YouTube = require('simple-youtube-api')
 const ytdl = require('ytdl-core');
 const yt = new YouTube(key);
 
-
+let searching = { state: false, time: new Date() };
 
 
 
@@ -15,6 +15,15 @@ function msToReadable(ms) {
     let sec = ((ms % 60000) / 1000).toFixed(0);
 
     return min + ":" + (sec < 10 ? '0' : '') + sec;
+}
+
+function shuffle(arr) {
+    let a = [...arr]
+    for (let i = a.length - 1; i > 0; i--) {
+        const s = Math.floor(Math.random() * (i + 1));
+        [a[i], a[s]] = [a[s], a[i]];
+    }
+    return a;
 }
 
 function buildQueue({ textChannel, voiceChannel, guild }) {
@@ -67,42 +76,58 @@ function play(guild) {
 }
 
 
-
 module.exports = {
     yt: yt,
     queue: {
-        add: async function (args) {
-            let { track, guild, voiceChannel, msg } = args
-            let serverQueue = await queue.get(guild.id)
-            let ytTime = msToReadable(track.length_seconds*1000)
-            let embed = new Discord.RichEmbed()
-            .setAuthor(`Jonoon lisätty 🎵`, track.thumbnail_url, track.video_url)
-            .addField(track.title, track.author.name)
-            .setColor('RANDOM')
-            .addField('Pituus', ytTime, true)
-            .setThumbnail(track.thumbnail_url || null)
-            .setTimestamp();
-
-            if (!serverQueue || (!serverQueue.connection || !serverQueue.connection.speaking)) {
-                queue.set(guild.id, buildQueue(args))
-                serverQueue = await queue.get(guild.id)
-
-                try {
-                    let connection = voiceChannel.join()
-                    serverQueue.connection = await connection;
-                    serverQueue.tracks.push(track)
-                    play(guild)
-                } catch (err) {
-                    console.error("COULD NOT START CONNECTION:", err)
-                    queue.delete(guild.id)
-                }
-
-            } else if (track.toTop && serverQueue.tracks.length > 1) {
-                serverQueue.tracks = [serverQueue.tracks[0], track, ...[...serverQueue.tracks].splice(1)]
-            } else {
-                serverQueue.tracks.push(track)
+        add: function (args) {
+            function timeout() {
+                setTimeout(function () {
+                    if (searching.state) timeout();
+                    else run(args)
+                }, 100);
             }
-            msg.channel.send(await embed)
+
+            if (searching) timeout();
+            else run(args)
+            async function run(args) {
+                console.log("searching")
+                searching = { state: true, time: new Date() };
+                let { track, guild, voiceChannel, msg } = args
+                let serverQueue = await queue.get(guild.id)
+                let ytTime = msToReadable(track.length_seconds * 1000)
+                let embed = new Discord.RichEmbed()
+                    .setAuthor(`Jonoon lisätty 🎵`, track.thumbnail_url, track.video_url)
+                    .addField(track.title, track.author.name)
+                    .setColor('RANDOM')
+                    .addField('Pituus', ytTime, true)
+                    .setThumbnail(track.thumbnail_url || null)
+                    .setTimestamp();
+
+                if (!serverQueue || (!serverQueue.connection || !serverQueue.connection.speaking)) {
+                    queue.set(guild.id, buildQueue(args))
+                    serverQueue = await queue.get(guild.id)
+
+                    try {
+                        let connection = voiceChannel.join()
+                        serverQueue.connection = await connection;
+                        serverQueue.tracks.push(track)
+                        play(guild)
+                    } catch (err) {
+                        console.error("COULD NOT START CONNECTION:", err)
+                        queue.delete(guild.id)
+                    }
+
+                } else if (track.toTop && serverQueue.tracks.length > 1) {
+                    serverQueue.tracks = [serverQueue.tracks[0], track, ...[...serverQueue.tracks].splice(1)]
+                } else {
+                    serverQueue.tracks.push(track)
+                }
+                msg.channel.send(await embed).then(() => {
+                    console.log("searching over")
+                    searching = { state: false, time: new Date() };
+                })
+
+            }
         },
         show: function (args) {
             let { guild, msg } = args
@@ -111,7 +136,20 @@ module.exports = {
             if (!serverQueue) {
                 msg.channel.send(":hand_splayed: Bro, ei täällä soi mikään.")
             } else if (serverQueue.tracks.length > 0) {
-                msg.channel.send(serverQueue.tracks.map((t, i) => `${i}: ${t.title}`).join(`\n`))
+                // serverQueue.tracks.map((t, i) => `${i}: ${t.title}`).join(`\n`)
+                let embed = new Discord.RichEmbed()
+                    .setAuthor(`Jono kanavalla ${guild.name}`)
+                    .setColor('RANDOM')
+                    .addField(`Nyt soi:`, `${serverQueue.tracks[0].title} | Biisiä pyys: ${serverQueue.tracks[0].requestedBy}`, false)
+                    .setTimestamp();
+                if (serverQueue.tracks.length > 1) {
+                    embed.addField('Seuraavana:', `${
+                        [...serverQueue.tracks].splice(1).map((t, i) => `\`${i}\`: ${t.title}`).join(`\n`)
+                        }`);
+
+                }
+                msg.channel.send(embed)
+
             } else {
                 msg.channel.send(":hand_splayed: Bro, ei täällä soi mikään.")
             }
@@ -126,7 +164,7 @@ module.exports = {
                 let embed = new Discord.RichEmbed();
                 let track = serverQueue.tracks[0];
                 let dpTime = msToReadable(serverQueue.connection.dispatcher.time)
-                let ytTime = msToReadable(serverQueue.tracks[0].length_seconds*1000)
+                let ytTime = msToReadable(serverQueue.tracks[0].length_seconds * 1000)
                 embed
                     .setAuthor(`Ny soi: 🎵`, track.thumbnail_url, track.video_url)
                     .setColor('RANDOM')
@@ -154,30 +192,6 @@ module.exports = {
                 msg.channel.send(":hand_splayed: Bro, ei täällä soi mikään.")
             }
         },
-        pause: function (args) { // pause ei toimi toivotusti
-            let { guild, msg } = args
-            let serverQueue = queue.get(guild.id)
-
-            if (!serverQueue) {
-                msg.channel.send(":hand_splayed: Bro, ei täällä soi mikään.")
-            } else if (serverQueue.connection && serverQueue.connection.dispatcher && serverQueue.connection.dispatcher.paused === false) {
-                serverQueue.connection.dispatcher.pause('pause')
-            } else {
-                msg.channel.send(":hand_splayed: Bro, ei pyge pausee")
-            }
-        },
-        resume: function (args) { // resume ei toimi toivotusti
-            let { guild, msg } = args
-            let serverQueue = queue.get(guild.id)
-
-            if (!serverQueue) {
-                msg.channel.send(":hand_splayed: Bro, ei täällä soi mikään.")
-            } else if (serverQueue.connection.dispatcher.paused === true) {
-                serverQueue.connection.dispatcher.resume('pause')
-            } else {
-                msg.channel.send(":hand_splayed: Bro, ei pyge palaa")
-            }
-        },
         disconnect: function (args) {
             let { guild, msg } = args
             let serverQueue = queue.get(guild.id)
@@ -199,6 +213,29 @@ module.exports = {
                 msg.channel.send(":wastebasket:  Musiikkijono tyhjennetty!")
             } else {
                 msg.channel.send(":x: Ei ollut mitään mitä puhdistaa, >:^U")
+            }
+        },
+        shuffle: function (args) {
+            let { guild, msg } = args
+            let serverQueue = queue.get(guild.id)
+            if (serverQueue && serverQueue.tracks && serverQueue.tracks.length > 2) {
+                console.log("before", serverQueue.tracks)
+                serverQueue.tracks = [serverQueue.tracks[0], ...shuffle([...serverQueue.tracks].splice(1))]
+                console.log("after", serverQueue.tracks)
+            } else {
+                msg.channel.send(":hand_splayed: Bro, ei oo mitään mitä sekottaa")
+            }
+        },
+        remove: function (args) {
+            let { guild, msg, toRemove } = args
+            let serverQueue = queue.get(guild.id)
+            if (serverQueue && serverQueue.tracks && serverQueue.tracks.length > 1 && toRemove && parseInt(toRemove) > 0 && serverQueue.tracks[parseInt(toRemove)]) {
+                let track = [...serverQueue.tracks][toRemove]
+                let rm = parseInt(toRemove)
+                serverQueue.tracks = serverQueue.tracks.filter((e, i) => i !== rm)
+                msg.channel.send(`:ok: Kappale \`${track.title}\` on poistettu jonosta.`)
+            } else {
+                msg.channel.send(":hand_splayed: Bro, ei voi poistaa. Duunasikko oikein?")
             }
         }
     }
