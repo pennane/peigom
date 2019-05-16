@@ -3,6 +3,9 @@ const chalk = require('chalk')
 
 const time = require('./getTime');
 
+
+
+
 module.exports.log = (mode, content) => {
     return new Promise((resolve, reject) => {
         if (!mode === parseInt(mode, 10)) throw new Error("Error: Received activity mode is not an integer!");
@@ -22,8 +25,25 @@ module.exports.log = (mode, content) => {
         if (!fs.existsSync(`./log/${yyyy}/${mm}`)) fs.mkdirSync(`./log/${yyyy}/${mm}`);
         if (!fs.existsSync(`./log/${yyyy}/${mm}/${dd}.txt`)) fs.writeFileSync(`./log/${yyyy}/${mm}/${dd}.txt`, `Logs from ${dd}.${mm}.${yyyy}`);
 
-
         let msgtolog = "";
+
+        /*
+     Table for mode numbers:
+         1: Discord Command; User used a commmand.
+         2: Client Connected; Client connected succesfully.
+         3: Client Error; Something happened at the websocket.
+         4: Client Reconnecting; Client started to reconnect.
+         5: Client Reconnected; Client reconnect succesfully.
+         6: Discord Command Failure; Command failed.
+         7: New member; a new member joined a server.
+         8: Member left; member left from a server.
+         9: New server; bot added to a new server.
+         10: Server removed; bot removed from a server.
+         11: Command load failure; command failed to initialize.
+         12: Faulty command; command does not follow the command class.
+         13: Command failure with stack; fail at command and stack exists.
+ */
+
         let modes = {
             1: () => { /* Discord Command */
                 msgtolog = `\r\n[Command] User: ${content.msg.author.username}, ${content.msg.author.id} Command: ${content.command} Args: ${content.args} Where: @${content.msg.channel.guild.name}:${content.msg.channel.guild.id}#${content.msg.channel.name} When: ${content.msg.createdTimestamp}`;
@@ -75,6 +95,9 @@ module.exports.log = (mode, content) => {
                 console.log(chalk.red(`|-- File ${chalk.yellow(content.file)} failed to load. Check ${chalk.white("./log/")} for more`))
             }
         }
+
+
+        
 
         if (modes[mode]) {
             modes[mode]();
