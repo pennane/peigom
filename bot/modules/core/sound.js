@@ -90,7 +90,6 @@ module.exports = {
             if (searching) timeout();
             else run(args)
             async function run(args) {
-                console.log("searching")
                 searching = { state: true, time: new Date() };
                 let { track, guild, voiceChannel, msg } = args
                 let serverQueue = await queue.get(guild.id)
@@ -123,7 +122,6 @@ module.exports = {
                     serverQueue.tracks.push(track)
                 }
                 msg.channel.send(await embed).then(() => {
-                    console.log("searching over")
                     searching = { state: false, time: new Date() };
                 })
 
@@ -219,9 +217,7 @@ module.exports = {
             let { guild, msg } = args
             let serverQueue = queue.get(guild.id)
             if (serverQueue && serverQueue.tracks && serverQueue.tracks.length > 2) {
-                console.log("before", serverQueue.tracks)
                 serverQueue.tracks = [serverQueue.tracks[0], ...shuffle([...serverQueue.tracks].splice(1))]
-                console.log("after", serverQueue.tracks)
             } else {
                 msg.channel.send(":hand_splayed: Bro, ei oo mitään mitä sekottaa")
             }
