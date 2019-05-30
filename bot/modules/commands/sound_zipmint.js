@@ -18,7 +18,7 @@ module.exports.run = function (msg, client, args) {
         if (voiceChannel && !(msg.guild.voiceConnection)) {
             voiceChannel.join()
                 .then(connection => {
-                    sound.play('./assets/sound/tsipmint.mp3', msg, connection, client)
+                    sound.play('./assets/sound/zipmint.mp3', msg, connection, client)
                         .then(resolve());
                 });
         } else if (!msg.member.voiceChannel) {
