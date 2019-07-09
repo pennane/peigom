@@ -62,6 +62,7 @@ class Command {
             this.run(msg, client, args).catch(err=>console.log(err))
         }
         else this.unauthorized(msg, args)
+        logger.log(1, { msg: msg, command: this.name, args: args })
     }
     unauthorized(msg, args) {
         msg.reply("Sinulla ei ole oikeutta käyttää komentoa " + this.name)
