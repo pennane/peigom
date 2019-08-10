@@ -4,7 +4,6 @@ const fs = require('fs')
 const Command = require('../core/command')
 const logger = require('../utilities/activityLogger')
 let commandDir = __dirname
-console.log(commandDir)
 
 const meta = {
     name: "auta",
