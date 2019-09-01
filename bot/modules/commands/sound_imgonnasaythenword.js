@@ -24,10 +24,10 @@ module.exports.run = function (msg, client, args) {
                 .then(connection => {
                     sound.play(dir, msg, connection, client)
                         .then(resolve())
-                        .catch(error => console.log(error));
+                        .catch(error => console.info(error));
 
                 })
-                .catch(error => console.log(error));
+                .catch(error => console.info(error));
         } else if (!msg.member.voiceChannel) {
             resolve();
             embed.setTitle(`Botin kommentti:`)

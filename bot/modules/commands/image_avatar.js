@@ -16,7 +16,7 @@ module.exports.run = function (msg, client, args) {
                 .setTitle(`Käyttäjän ${user.displayName} avatari.`)
                 .setImage(user.user.displayAvatarURL);
             msg.channel.send(embed)
-                .catch(err => console.log(err))
+                .catch(err => console.info(err))
         } else {
             if (!args[1].startsWith("<@")) {
                 return resolve(msg.reply(`Et käyttänyt \`@käyttäjä\` syntaksia.`));
@@ -27,7 +27,7 @@ module.exports.run = function (msg, client, args) {
                 .setTitle(`Käyttäjän ${user.displayName} avatari.`)
                 .setImage(user.user.displayAvatarURL);
             msg.channel.send(embed)
-                .catch(err => console.log(err))
+                .catch(err => console.info(err))
         }
 
         resolve();

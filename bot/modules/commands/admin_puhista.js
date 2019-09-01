@@ -22,14 +22,14 @@ module.exports.run = function (msg, client, args) {
                 .then(() => {
                     msg.channel.send(embed)
                         .then(msg => msg.delete(4000))
-                        .catch(err => console.log(err))
+                        .catch(err => console.info(err))
                 })
                 .catch(error => console.error(error));
         } else {
             embed.setTitle(`Komento ${meta.name} toimii näin:`)
                 .setDescription(`\`${meta.syntax}\``)
             msg.channel.send(embed)
-                .catch(err => console.log(err))
+                .catch(err => console.info(err))
         }
         resolve();
     });

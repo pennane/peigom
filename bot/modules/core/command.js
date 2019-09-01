@@ -23,20 +23,20 @@ class Command {
         }
         if (!meta.triggers || !isArr(meta.triggers)) {
             logger.log(12, {
-                name:meta.name,
+                name: meta.name,
                 reason: "Triggers are not present"
             })
         }
-        if ( !run || !isFunc(run)) {
+        if (!run || !isFunc(run)) {
             logger.log(12, {
-                name:meta.name,
+                name: meta.name,
                 reason: "Functionality not present"
             })
             throw new Error("Invalid arguments")
         }
         if (!isObj(meta) || !isArr(meta.triggers) || !isFunc(run)) {
             logger.log(12, {
-                name:meta.name,
+                name: meta.name,
                 reason: "Constructor received invalid arguments"
             })
             throw new Error("Invalid arguments")
@@ -59,7 +59,7 @@ class Command {
             authorized = true
         }
         if (authorized) {
-            this.run(msg, client, args).catch(err=>console.log(err))
+            this.run(msg, client, args).catch(err => console.info(err))
         }
         else this.unauthorized(msg, args)
         logger.log(1, { msg: msg, command: this.name, args: args })

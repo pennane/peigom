@@ -14,9 +14,9 @@ module.exports.run = function (msg, client, args) {
             .then(() => {
                 client.login(auth.token);
             })
-            .catch(error => console.log(error));
+            .catch(error => console.info(error));
         msg.delete(10000)
-            .catch(err => console.log(err))
+            .catch(err => console.info(err))
         resolve();
     });
 }

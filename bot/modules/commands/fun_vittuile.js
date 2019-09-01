@@ -14,10 +14,10 @@ module.exports.run = function (msg, client, args) {
         let rand = Math.floor(Math.random() * names.length);
         if (msg.member.nickname) {
             msg.channel.send(`**${msg.member.nickname} a.ka. ${msg.author.username}**, ai rupeet vittuilee?`)
-                .catch(error => console.log(error));
+                .catch(error => console.info(error));
         } else {
             msg.channel.send(`**${msg.author.username}**, ai rupeet vittuilee?`)
-                .catch(error => console.log(error));
+                .catch(error => console.info(error));
         }
 
         let bothier = 0;
@@ -29,16 +29,16 @@ module.exports.run = function (msg, client, args) {
             msg.reply('Jaha, no eipä mulla ollukkaa oikeuksia pistää sua turpaa.')
         } else if (msg.guild.members.get(client.user.id).hasPermission("MANAGE_NICKNAMES") && !msg.member.hasPermission("ADMINISTRATOR")) {
             msg.member.setNickname(names[rand])
-                .then(() => msg.reply(`miltäs kaunis uusi nimesi '${names[rand]}' tuntuu, hä?`).catch(err => console.log(err)))
-                .catch(error => console.log(error));
+                .then(() => msg.reply(`miltäs kaunis uusi nimesi '${names[rand]}' tuntuu, hä?`).catch(err => console.info(err)))
+                .catch(error => console.info(error));
 
         }
         else if (msg.member.hasPermission("ADMINISTRATOR")) {
             msg.reply('Oops, sori oot vissii joku admin kid.')
-                .catch(err => console.log(err));
+                .catch(err => console.info(err));
         } else {
             msg.reply('Jaha, no eipä mulla ollukkaa oikeuksia pistää sua turpaa.')
-                .catch(err => console.log(err));
+                .catch(err => console.info(err));
         }
 
         resolve();

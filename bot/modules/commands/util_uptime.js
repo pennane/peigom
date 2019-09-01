@@ -43,7 +43,7 @@ module.exports.run = function (msg, client, args) {
         uptime.msg.complete = `Tää botti o ollu hereillä jo ${uptime.msg.h}${uptime.msg.m}${uptime.msg.s} :hourglass_flowing_sand:`
         embed.setDescription(uptime.msg.complete)
         msg.channel.send(embed)
-            .catch(err => console.log(err))
+            .catch(err => console.info(err))
         resolve();
     });
 

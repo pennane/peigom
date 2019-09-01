@@ -41,10 +41,10 @@ module.exports.run = function (msg, client, args) {
                             fs.unlinkSync(imgname);
                             fs.unlinkSync(avatarfile);
                         })
-                        .catch(err => console.log(err))
+                        .catch(err => console.info(err))
 
                 })
-                .catch(err => console.log(err));
+                .catch(err => console.info(err));
         }
         let avatar = msg.author.avatarURL;
         let avatarfile = `./assets/images/avatars/avatar${msg.author.id}${Date.now()}.jpg`;

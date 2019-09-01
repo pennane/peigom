@@ -68,7 +68,7 @@ module.exports.run = function (msg, client, args) {
             embed.addField(`:thinking: Tietoa botista:`, `\`${prefix}${meta.name} ${config.app.name} \``);
             embed.addField(`:question: Tietoa tietystä komennosta:`, `\`${prefix}${meta.name} <komennon nimi> \``);
             msg.channel.send(embed)
-                .catch(error => console.log(error));
+                .catch(error => console.info(error));
         } else if (args[1] === "komennot") {
             embed.setTitle("Komennot:");
             embed.setDescription("kaikki normaalit komennot")
@@ -99,7 +99,7 @@ module.exports.run = function (msg, client, args) {
                 embed.addField("----", cmds, 1);
             }
             msg.channel.send(embed)
-                .catch(error => console.log(error));
+                .catch(error => console.info(error));
         } else if (args[1] === "admin") {
             embed.setTitle("Admin komennot:");
             embed.setDescription("kaikki admin komennot")
@@ -130,7 +130,7 @@ module.exports.run = function (msg, client, args) {
                 embed.addField("----", cmds, 1);
             }
             msg.channel.send(embed)
-                .catch(error => console.log(error));
+                .catch(error => console.info(error));
         } else if (args[1] === config.app.name) {
             embed.setThumbnail(client.user.avatarURL)
                 .setTitle(`${config.app.name}  \`tietoa\``)
@@ -141,7 +141,7 @@ module.exports.run = function (msg, client, args) {
                 .addField(`:file_cabinet: Liityttyjen serverien määrä:`, client.guilds.size)
                 .addField(`:pencil: Kehittäjä:`, `@Susse#9904`);
             msg.channel.send(embed)
-                .catch(error => console.log(error));
+                .catch(error => console.info(error));
         } else if (triggers[args[1]]) {
             let cmd = commands[triggers[args[1]]];
             embed.setDescription(`Tietoa komennosta: \`${prefix}${cmd.name}\``)
@@ -153,7 +153,7 @@ module.exports.run = function (msg, client, args) {
                 embed.addField(`:warning: **Huom**`, `Kyseessä on admin komento.`);
             }
             msg.channel.send(embed)
-                .catch(error => console.log(error));
+                .catch(error => console.info(error));
         } else {
             embed.addBlankField()
                 .setTitle(':eyes: Hupsista')
@@ -162,7 +162,7 @@ module.exports.run = function (msg, client, args) {
                 .addBlankField();
             msgtosend = `Antamaasi \`${prefix}${meta.name}\` toimintoa \`${args[1]}\` ei ole olemassa.`
             msg.channel.send(embed)
-                .catch(error => console.log(error));
+                .catch(error => console.info(error));
         }
 
         resolve();

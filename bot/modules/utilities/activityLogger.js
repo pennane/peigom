@@ -53,15 +53,15 @@ module.exports.log = (mode, content) => {
             },
             3: () => { /* Client Error */
                 msgtolog = `\r\n[Error @ ${todayPrecise}]\r\n${content}\r\n${content.stack ? content.stack : "no error stack"}\n[ ---------- ]`;
-                console.log(chalk.red(`|-- ${time.get(1)} > Error has happended in the ${chalk.yellow("client")}, check ${chalk.white("./log/")}`))
+                console.info(chalk.red(`|-- ${time.get(1)} > Error has happended in the ${chalk.yellow("client")}, check ${chalk.white("./log/")}`))
             },
             4: () => { /* Client Reconnecting */
                 msgtolog = `\r\n[Reconnecting @ ${todayPrecise}]`;
-                console.log(chalk.orange(`|-- ${time.get(1)} > Reconnecting to websocket..`))
+                console.info(chalk.orange(`|-- ${time.get(1)} > Reconnecting to websocket..`))
             },
             5: () => { /* Client Reconnected */
                 msgtolog = `\r\n[Resumed @ ${todayPrecise}]`;
-                console.log(chalk.green(`|-- ${time.get(1)} > Reconnected successfully`))
+                console.info(chalk.green(`|-- ${time.get(1)} > Reconnected successfully`))
             },
             6: () => { /* Discord Command Failure */
                 msgtolog = `\r\n[Command Failed] User: ${content.msg.author.username}: ${content.msg.author.id} Command: ${content.command} Args: ${content.args} Where: @${content.msg.channel.guild.name}#${content.msg.channel.name} When: ${content.msg.createdTimestamp}`;
@@ -80,19 +80,19 @@ module.exports.log = (mode, content) => {
             },
             10: () => { /* Server Removed from Client */
                 msgtolog = `\r\n[Removed server] Server: ${content.name}:${content.id} When: ${todayPrecise}`;
-                console.log(chalk.gray(`|-- Bot removed from: ${guild.name}:${guild.id}`))
+                console.info(chalk.gray(`|-- Bot removed from: ${guild.name}:${guild.id}`))
             },
             11: () => { /* Command Failed to Load */
                 msgtolog = `\r\n[Failed command] Command '${content}' failed to load`
-                console.log(chalk.red(`|-- Command ${chalk.yellow(content)} failed to load. Check ${chalk.white("./log/")} for more`))
+                console.info(chalk.red(`|-- Command ${chalk.yellow(content)} failed to load. Check ${chalk.white("./log/")} for more`))
             },
             12: () => { /* Faulty command */
                 msgtolog = `\r\n[Invalid command] Failed command: ${content.name}. Reason: ${content.reason}`
-                console.log(chalk.red(`|-- Command ${chalk.yellow(content.name)} failed to construct itself. Check ${chalk.white("./log/")} for more`))
+                console.info(chalk.red(`|-- Command ${chalk.yellow(content.name)} failed to construct itself. Check ${chalk.white("./log/")} for more`))
             },
             13: () => { /* Command Failed with stack */
                 msgtolog = `\r\n[Faulty command file] '${content.file}' failed to load. \r\n ${content.err} \r\n ${content.stack}`
-                console.log(chalk.red(`|-- File ${chalk.yellow(content.file)} failed to load. Check ${chalk.white("./log/")} for more`))
+                console.info(chalk.red(`|-- File ${chalk.yellow(content.file)} failed to load. Check ${chalk.white("./log/")} for more`))
             }
         }
 
@@ -112,6 +112,6 @@ module.exports.log = (mode, content) => {
 }
 process.on('uncaughtException', error => {
     module.exports.log(3, error)
-        .catch(error => console.log(error));
-    console.log(chalk.red(`|-- ${time.get(1)} > Error has happended in the process, check ${chalk.white("./log/")}`));
+        .catch(error => console.info(error));
+    console.info(chalk.red(`|-- ${time.get(1)} > Error has happended in the process, check ${chalk.white("./log/")}`));
 });

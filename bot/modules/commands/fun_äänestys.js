@@ -30,7 +30,7 @@ module.exports.run = function (msg, client, args) {
                 msg.react("👍")
                     .then(msg.react("👎"))
             })
-            .catch(err => console.log(err));
+            .catch(err => console.info(err));
         resolve();
     })
 

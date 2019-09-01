@@ -42,7 +42,7 @@ function play(guild) {
     let serverQueue = queue.get(guild.id)
 
     if (!serverQueue) {
-        return console.log("ERROR: NO SERVER QUEUE ?")
+        return console.info("ERROR: NO SERVER QUEUE ?")
     }
 
     if (serverQueue.connection.channel.members.size === 1) {
@@ -60,17 +60,20 @@ function play(guild) {
         queue.delete(guild.id)
         return;
     }
-    let dispatcher = serverQueue.connection.playStream(ytdl(track.video_url, { filter: "audioonly", quality: "lowest" }))
+    let stream = ytdl(track.video_url, { filter: "audioonly", quality: "lowest" })
+    let dispatcher = serverQueue.connection.playStream(stream)
 
     dispatcher.on('end', (reason) => {
-        serverQueue.tracks.shift()
         setTimeout(() => {
-            play(guild)
-        }, 1000)
+            serverQueue.tracks.shift()
+            setTimeout(() => {
+                play(guild)
+            }, 1000)
+        }, 200)
     })
 
     dispatcher.on('error', (err) => {
-        console.log('error in dispatcher:', err)
+        console.info('error in dispatcher:', err)
     })
 }
 
@@ -93,7 +96,6 @@ module.exports = {
                 let { track, guild, voiceChannel, msg } = args
                 let serverQueue = await queue.get(guild.id)
                 let ytTime = msToReadable(track.length_seconds * 1000)
-                console.log(track)
                 let embed = new Discord.RichEmbed()
                     .setAuthor(`Jonoon lisätty 🎵`, track.thumbnail_url, track.video_url)
                     .addField(track.title, track.author.name)
@@ -141,7 +143,7 @@ module.exports = {
                     .setTimestamp();
                 if (serverQueue.tracks.length > 1) {
                     embed.addField('Seuraavana:', `${
-                        [...serverQueue.tracks].splice(1).map((t, i) => `\`${i+1}\`: ${t.title}`).join(`\n`)
+                        [...serverQueue.tracks].splice(1).map((t, i) => `\`${i + 1}\`: ${t.title}`).join(`\n`)
                         }`);
 
                 }
@@ -170,7 +172,7 @@ module.exports = {
                     .setThumbnail(track.thumbnail_url || null)
                     .setTimestamp();
 
-                msg.channel.send(embed).catch(console.log)
+                msg.channel.send(embed).catch(console.info)
             } else {
                 msg.channel.send(":hand_splayed: Bro, ei täällä soi mikään.")
             }
