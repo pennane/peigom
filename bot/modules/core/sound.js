@@ -62,7 +62,6 @@ function play(guild) {
     }
     let stream = ytdl(track.video_url, { filter: "audioonly", quality: "lowest" })
     let dispatcher = serverQueue.connection.playStream(stream)
-
     dispatcher.on('end', (reason) => {
         setTimeout(() => {
             serverQueue.tracks.shift()
