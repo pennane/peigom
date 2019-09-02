@@ -8,8 +8,6 @@ const yt = new YouTube(key);
 
 let searching = { state: false, time: new Date() };
 
-
-
 function msToReadable(ms) {
     let min = Math.floor(ms / 60000);
     let sec = ((ms % 60000) / 1000).toFixed(0);
@@ -32,7 +30,10 @@ function buildQueue({ textChannel, voiceChannel, guild }) {
         voiceChannel: voiceChannel,
         guild: guild,
         connection: null,
-        tracks: []
+        tracks: [],
+        options: {
+            volume: 1
+        }
     }
 
 }
@@ -52,6 +53,7 @@ function play(guild) {
     }
 
     serverQueue.connection.dispatcher = undefined;
+    serverQueue.dispatcher = undefined;
 
     let track = serverQueue.tracks[0]
 
@@ -61,10 +63,15 @@ function play(guild) {
         return;
     }
     let stream = ytdl(track.video_url, { filter: "audioonly", quality: "lowest" })
-    let dispatcher = serverQueue.connection.playStream(stream)
+    let dispatcher = serverQueue.connection.playStream(stream, { volume: serverQueue.options.volume })
+    serverQueue.dispatcher = dispatcher
+
     dispatcher.on('end', (reason) => {
         setTimeout(() => {
             serverQueue.tracks.shift()
+            serverQueue.connection.dispatcher = undefined;
+            serverQueue.dispatcher = undefined;
+
             setTimeout(() => {
                 play(guild)
             }, 1000)
@@ -232,6 +239,30 @@ module.exports = {
                 msg.channel.send(`:ok: Kappale \`${track.title}\` on poistettu jonosta.`)
             } else {
                 msg.channel.send(":hand_splayed: Bro, ei voi poistaa. Duunasikko oikein?")
+            }
+        },
+        pause: function (args) {
+            let { guild } = args
+            let serverQueue = queue.get(guild.id)
+            if (serverQueue && serverQueue.dispatcher && !serverQueue.dispatcher.paused) {
+                serverQueue.dispatcher.pause()
+            }
+        },
+        resume: function (args) {
+            let { guild } = args
+            let serverQueue = queue.get(guild.id)
+            if (serverQueue && serverQueue.dispatcher && serverQueue.dispatcher.paused) {
+                serverQueue.dispatcher.resume()
+            }
+        },
+        volume: function (args) {
+            let { guild, volume } = args
+            let serverQueue = queue.get(guild.id)
+            if (serverQueue && serverQueue.dispatcher) {
+                let computedVolume = parseFloat(volume.replace(",", "."))
+                if (!computedVolume > 0) return;
+                serverQueue.dispatcher.setVolume(computedVolume)
+                serverQueue.options.volume = computedVolume
             }
         }
     }
