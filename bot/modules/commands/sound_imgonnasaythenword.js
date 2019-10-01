@@ -13,30 +13,14 @@ const meta = {
     triggers: ["imgonnasaythenword", "nword"]
 }
 
+let filearr = ["nword.mp3", "nword2.mp3"];
+
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        let filearr = ["nword.mp3", "nword2.mp3"];
-        let dir = './assets/sound/' + filearr[Math.floor(Math.random() * filearr.length)];
-        let userid = args[1] && msg.authorized ? args[1].replace(/\D/g, '') : null
-        let voiceChannel = userid ? msg.guild.members.get(userid).voiceChannel : msg.member.voiceChannel
-        if (voiceChannel && !(msg.guild.voiceConnection)) {
-            voiceChannel.join()
-                .then(connection => {
-                    sound.play(dir, msg, connection, client)
-                        .then(resolve())
-                        .catch(error => console.info(error));
-
-                })
-                .catch(error => console.info(error));
-        } else if (!msg.member.voiceChannel) {
-            resolve();
-            embed.setTitle(`Botin kommentti:`)
-                .setDescription(`${msg.member.user.username} mene eka jollekki voicechannelille, kid.`);
-            msg.channel.send(embed)
-                .catch(error => console.info(error));
-        } else {
-            resolve();
-        }
+        let soundfile = './assets/sound/' + filearr[Math.floor(Math.random() * filearr.length)];
+        sound.play({ soundfile, msg, client, args })
+        
+        resolve();
     });
 }
 

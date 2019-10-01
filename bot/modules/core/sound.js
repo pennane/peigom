@@ -264,6 +264,19 @@ module.exports = {
                 serverQueue.dispatcher.setVolume(computedVolume)
                 serverQueue.options.volume = computedVolume
             }
+        },
+        isPlaying: function (args) {
+            let { guild } = args
+            if (!guild) {
+                return false;
+            }
+            serverQueue = queue.get(guild.id)
+            if (!serverQueue) {
+                return false;
+            }
+            if (serverQueue.tracks.length > 0 && serverQueue.connection) {
+                return true;
+            }
         }
     }
 }

@@ -42,6 +42,7 @@ module.exports.log = (mode, content) => {
          11: Command load failure; command failed to initialize.
          12: Faulty command; command does not follow the command class.
          13: Command failure with stack; fail at command and stack exists.
+         14: Command failed on use
  */
 
         let modes = {
@@ -93,6 +94,11 @@ module.exports.log = (mode, content) => {
             13: () => { /* Command Failed with stack */
                 msgtolog = `\r\n[Faulty command file] '${content.file}' failed to load. \r\n ${content.err} \r\n ${content.stack}`
                 console.info(chalk.red(`|-- File ${chalk.yellow(content.file)} failed to load. Check ${chalk.white("./log/")} for more`))
+            },
+            14: () => { /* Command failed on use*/
+                msgtolog = `\r\n[Command failed on use] '${content.command}' \r\n ${content.description}`
+                console.info(chalk.red(`|-- Command ${chalk.yellow(content.command)} failed on use. Check ${chalk.white("./log/")} for more`))
+
             }
         }
 

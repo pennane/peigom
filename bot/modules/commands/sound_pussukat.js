@@ -13,34 +13,19 @@ const meta = {
     triggers: ["pussukat", "pussukka"]
 }
 
+let filearr = [];
+fs.readdirSync("./assets/sound/pussukat").forEach(file => {
+    filearr.push(file);
+});
+
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        let userid = args[1] && msg.authorized ? args[1].replace(/\D/g, '') : null
-        let voiceChannel = userid ? msg.guild.members.get(userid).voiceChannel : msg.member.voiceChannel
-        if (voiceChannel && !(msg.guild.voiceConnection)) {
-            let filearr = [];
-            fs.readdirSync("./assets/sound/pussukat").forEach(file => {
-                filearr.push(file);
-            });
-            let dir = './assets/sound/pussukat/' + filearr[Math.floor(Math.random() * filearr.length)];
-            voiceChannel.join()
-                .then(connection => {
-                    sound.play(dir, msg, connection, client)
-                        .then(resolve())
-                        .catch(error => console.info(error));
+        let soundfile = './assets/sound/pussukat/' + filearr[Math.floor(Math.random() * filearr.length)];
+        sound.play({ soundfile, msg, client, args })
 
-                })
-                .catch(error => console.info(error));
-        } else if (!msg.member.voiceChannel) {
-            resolve();
-            embed.setTitle(`Botin kommentti:`)
-                .setDescription(`${msg.member.user.username} mene eka jollekki voicechannelille, kid.`);
-            msg.channel.send(embed)
-                .catch(error => console.info(error));
-        } else {
-            resolve();
-        }
+        resolve();
     });
 }
+
 
 module.exports.meta = meta;
