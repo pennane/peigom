@@ -13,6 +13,8 @@ const meta = {
     triggers: ["fortnite","fortnight","fornite"]
 }
 
+let soundfile = './assets/sound/fortnite.mp3'
+
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         let userid = args[1] && msg.authorized ? args[1].replace(/\D/g, '') : null
@@ -20,8 +22,7 @@ module.exports.run = function (msg, client, args) {
         if (voiceChannel && !(msg.guild.voiceConnection)) {
             voiceChannel.join()
                 .then(async connection => {
-                    sound.play('./assets/sound/fortnite.mp3', msg, connection, client)
-                        .then(resolve());
+                    sound.play({ soundfile, msg, client, args })
                     dancemoves.forEach((move, i) => {
                         setTimeout(() => {
                             msg.channel.send(move)

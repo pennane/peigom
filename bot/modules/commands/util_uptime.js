@@ -13,18 +13,20 @@ const meta = {
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         embed.setTitle("Botin uptime:")
-        let uptime = {};
-        uptime.ms = (client.uptime);
-        uptime.ts = (client.uptime / 1000);
-        uptime.h = Math.trunc(uptime.ts / 3600);
-        uptime.tsr = uptime.ts % 3600;
-        uptime.m = Math.trunc(uptime.tsr / 60);
-        uptime.s = Math.trunc(uptime.tsr % 60);
-        uptime.msg = {
-            "h": "",
-            "m": "",
-            "s": ""
+        let uptime = {
+            ms: client.uptime,
+            ts: client.uptime / 1000,
+            h: Math.trunc(uptime.ts / 3600),
+            tsr: uptime.ts % 3600,
+            m: Math.trunc(uptime.tsr / 60),
+            s: Math.trunc(uptime.tsr % 60),
+            msg: {
+                h: "",
+                m: "",
+                s: ""
+            }
         };
+
         if (uptime.h > 1) {
             uptime.msg.h = `**${uptime.h}** tuntia, `;
         } else if (uptime.h === 1) {

@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const {inspect} = require('util')
+const { inspect } = require('util')
 const beautify = require('js-beautify').js
 
 const meta = {
@@ -14,7 +14,7 @@ function codeEval(code, msg, client) {
     let output;
     try {
         output = beautify(inspect(eval(code), { indent_size: 2, space_in_empty_paren: true }))
-    } catch(err) {
+    } catch (err) {
         output = `Failed to evaluate: \n${err}`
     }
     finally {
@@ -25,7 +25,7 @@ function codeEval(code, msg, client) {
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         let embed = new Discord.RichEmbed().setColor(0xF4E542);
-        if (!args[1]) return msg.reply("Toimii näin: "+meta.syntax)
+        if (!args[1]) return msg.reply("Toimii näin: " + meta.syntax)
         let code = [...args].splice(1).join(" ")
         let reply = codeEval(code, msg, client)
         if (reply.length > 2000) {
@@ -37,7 +37,7 @@ module.exports.run = function (msg, client, args) {
         \`\`\`js\n${reply}\`\`\`
         `)
         }
-        
+
         embed.setFooter("Highly dangerous evaluation performed by Peigom Bot", "https://arttu.pennanen.org/file/thonk.gif")
             .setTimestamp()
         msg.channel.send(embed)

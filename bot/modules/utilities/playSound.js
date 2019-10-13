@@ -6,6 +6,7 @@ const { queue } = require('../core/sound.js')
 
 
 module.exports.play = async function ({ soundfile, msg, client, args }) {
+
     let embed = new Discord.RichEmbed().setColor(0xF4E542);
 
     let userid = args[1] && msg.authorized ? args[1].replace(/\D/g, '') : null;
@@ -55,7 +56,7 @@ module.exports.play = async function ({ soundfile, msg, client, args }) {
         broadcast.on('error', error => {
             throw error;
         });
-
+        
 
     } catch (err) {
         logger.log(3, `Error while playing audio: ${err}`)
