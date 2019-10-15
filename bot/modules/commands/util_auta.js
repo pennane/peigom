@@ -113,8 +113,10 @@ module.exports.run = function (msg, client, args) {
 
         function commandsForTypeEmbed(type) {
             let embed = createBaseEmbed()
-            embed.setTitle(`Tyypin ${type} komennot`);
-            embed.setDescription(`Kaikki antamasi tyypin ${type} komennot`)
+            embed.setTitle(`Tyypin \`${type}\` komennot`);
+            embed.setDescription(`Kaikki antamasi tyypin \`${type}\` komennot`)
+
+            let adminAuthorized = Command.adminAuthorized(msg)
 
             let commandTypeNames = Command.commandTypes().map(type => type.name.toLowerCase())
 
@@ -123,16 +125,21 @@ module.exports.run = function (msg, client, args) {
                 return embed;
             }
 
-            if (type.toLowerCase() === "admin" && !Command.adminAuthorized(msg)) {
+            if (type.toLowerCase() === "admin" && !adminAuthorized) {
                 embed = messageEmbed(':sos: Tsot tsot, et sä saa näitä nähdä.')
                 return embed;
             }
+
+
 
             let foundCommands = [];
             Object.keys(commands).forEach(key => {
                 let command = commands[key];
                 if (command.type.indexOf(type) !== -1) {
-                    foundCommands.push(commands[key])
+                    if (command.type.indexOf('admin') !== -1 && !adminAuthorized) {
+                        return
+                    }
+                    foundCommands.push(command)
                 }
             })
 
@@ -157,20 +164,26 @@ module.exports.run = function (msg, client, args) {
 
         function commandEmbed(commandname) {
 
+            let adminAuthorized = Command.adminAuthorized(msg)
             let embed = createBaseEmbed()
             if (!triggers[commandname]) {
                 embed = messageEmbed(':angry: sinä rikkoa bot, tämä ei pitäisnä tapahtnua iknä')
                 return embed
             }
 
-            let cmd = commands[triggers[commandname]];
+            let command = commands[triggers[commandname]];
 
-            embed.setDescription(`Tietoa komennosta: \`${prefix}${cmd.name}\``)
-                .addField(`:pencil: Komento toimii näin:`, `\`${cmd.syntax}\``)
-                .addField(`:gear: Komennon toiminto:`, `${cmd.description}`)
-                .addField(`:book: Komennon liipaisimet:`, `\`${prefix + [...cmd.triggers].join(" " + prefix)}\``)
+            if (command.type.indexOf('admin') !== -1 && !adminAuthorized) {
+                embed = messageEmbed(':sos: Tsot tsot, et sä saa näitä nähdä.')
+                return embed;
+            }
+
+            embed.setDescription(`Tietoa komennosta: \`${prefix}${command.name}\``)
+                .addField(`:pencil: Komento toimii näin:`, `\`${command.syntax}\``)
+                .addField(`:gear: Komennon toiminto:`, `${command.description}`)
+                .addField(`:book: Komennon liipaisimet:`, `\`${prefix + [...command.triggers].join(" " + prefix)}\``)
                 .addBlankField();
-            if (cmd.admin) {
+            if (command.adminCommand || command.type.indexOf('admin') !== -1) {
                 embed.addField(`:warning: **Huom**`, `Kyseessä on admin komento.`);
             }
             return embed
