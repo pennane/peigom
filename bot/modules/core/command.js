@@ -89,6 +89,10 @@ class Command {
 
         this.run = run
 
+        if (this.adminCommand && this.type.indexOf('admin') === -1) {
+            this.type.push('admin')
+        }
+
 
 
     }

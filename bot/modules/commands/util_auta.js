@@ -183,7 +183,7 @@ module.exports.run = function (msg, client, args) {
                 return embed;
             }
 
-            embed.setDescription(`Tietoa komennosta: \`${prefix}${command.name}\``)
+            embed.setDescription(`Tietoa komennosta: \`${prefix}${command.name}\` (${[...command.type].join(" ")})`)
                 .addField(`:pencil: Komento toimii näin:`, `\`${prefix}${command.syntax}\``)
                 .addField(`:gear: Komennon toiminto:`, `${command.description}`)
                 .addField(`:book: Komennon liipaisimet:`, `\`${prefix + [...command.triggers].join(" " + prefix)}\``)
