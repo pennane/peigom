@@ -7,7 +7,8 @@ const meta = {
     admin: true,
     syntax: "sudo <#text-kanava> <teksti>",
     desc: "Lähettää asettamasi viestin asettamallesi tekstikanavalle.",
-    triggers: ["sudo"]
+    triggers: ["sudo"],
+    type:  ["admin"]
 }
 
 module.exports.run = function (msg, client, args) {

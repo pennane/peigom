@@ -11,7 +11,8 @@ const meta = {
     admin: false,
     syntax: "skip",
     desc: "skippaa soivan kappaleen",
-    triggers: ["skip", "s"]
+    triggers: ["skip", "s"],
+    type:  ["music"]
 }
 
 module.exports.run = function (msg, client, args) {

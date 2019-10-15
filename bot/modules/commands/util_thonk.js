@@ -3,7 +3,8 @@ const meta = {
     admin: false,
     syntax: "thonk",
     desc: "Lähettää kanavalle animoidun thonkin.",
-    triggers: ["thonk"]
+    triggers: ["thonk"],
+    type:  ["utility", "fun"]
 }
 
 module.exports.run = function (msg, client, args) {

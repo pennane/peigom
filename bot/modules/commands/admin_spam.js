@@ -7,7 +7,8 @@ const meta = {
     admin: true,
     syntax: "spam <@pelaaja> <määrä> <viesti>",
     desc: "Lähettää asettamasi viestin asettamallesi pelaajalle asettamasi monta kertaa.",
-    triggers: ["spam"]
+    triggers: ["spam"],
+    type:  ["admin"]
 }
 
 module.exports.run = function (msg, client, args) {

@@ -10,7 +10,8 @@ const meta = {
     admin: false,
     syntax: "vietnam",
     desc: "Lähettää kanavalle vietnam fläshbäkkejä.",
-    triggers: ["vietnam", "nam"]
+    triggers: ["vietnam", "nam"],
+    type:  ["image"]
 }
 
 module.exports.run = function (msg, client, args) {

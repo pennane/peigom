@@ -11,7 +11,8 @@ const meta = {
     admin: false,
     syntax: "pause",
     desc: "pysäyttää kipaleen",
-    triggers: ["pause"]
+    triggers: ["pause"],
+    type:  ["music"]
 }
 
 module.exports.run = function (msg, client, args) {

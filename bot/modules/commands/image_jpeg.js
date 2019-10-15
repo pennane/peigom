@@ -10,7 +10,8 @@ const meta = {
     admin: false,
     syntax: "jpeg",
     desc: "Luulekko et mä tiedän mikä jpeg on? Haluun vaa kuvan mun hodarista.",
-    triggers: ["jpeg", "jpg"]
+    triggers: ["jpeg", "jpg"],
+    type:  ["image"]
 }
 
 module.exports.run = function (msg, client, args) {

@@ -56,7 +56,6 @@ module.exports.play = async function ({ soundfile, msg, client, args }) {
         broadcast.on('error', error => {
             throw error;
         });
-        
 
     } catch (err) {
         logger.log(3, `Error while playing audio: ${err}`)

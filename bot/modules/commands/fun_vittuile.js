@@ -6,7 +6,8 @@ const meta = {
     admin: false,
     syntax: "vittuile",
     desc: "Vittuile botille",
-    triggers: ["vittuile"]
+    triggers: ["vittuile"],
+    type:  ["fun"]
 }
 
 module.exports.run = function (msg, client, args) {

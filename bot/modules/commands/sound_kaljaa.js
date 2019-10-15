@@ -9,7 +9,8 @@ const meta = {
     admin: false,
     syntax: "kaljaa",
     desc: "tsiubidiubi",
-    triggers: ["kalja", "kaljaa"]
+    triggers: ["kalja", "kaljaa"],
+    type:  ["sound"]
 }
 
 let soundfile = './assets/sound/kaljaa.mp3'

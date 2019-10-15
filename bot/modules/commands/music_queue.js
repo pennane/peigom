@@ -11,7 +11,9 @@ const meta = {
     admin: false,
     syntax: "queue",
     desc: "näyttää jonossa olevat kipaleet",
-    triggers: ["queue", "q", "keke", "jono"]
+    triggers: ["queue", "q", "keke", "jono"],
+    type:  ["music"],
+    type:  ["music"]
 }
 
 module.exports.run = function (msg, client, args) {

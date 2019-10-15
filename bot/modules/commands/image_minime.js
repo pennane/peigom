@@ -8,7 +8,8 @@ const meta = {
     admin: false,
     syntax: "minime",
     desc: "Lähettää kanavalle mini sinut.",
-    triggers: ["minime"]
+    triggers: ["minime"],
+    type:  ["image"]
 }
 
 let embed = new Discord.RichEmbed().setColor(0xF4E542);

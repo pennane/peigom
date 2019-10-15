@@ -14,9 +14,9 @@ module.exports = {
         if (m < 10) m = '0' + m;
 
         if (precise) {
-            return  today + ' ' + hh + ':' + m + ':' + ss
+            return today + ' ' + hh + ':' + m + ':' + ss
         } else {
-            return  mm + '/' + dd + '/' + yyyy;
+            return mm + '/' + dd + '/' + yyyy;
         }
     },
     yyyy: function () {

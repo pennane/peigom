@@ -11,7 +11,8 @@ const meta = {
     admin: false,
     syntax: "shuffle",
     desc: "sekottaa jonon järjestyksen",
-    triggers: ["suffle", "shuffle", "sekota"]
+    triggers: ["suffle", "shuffle", "sekota"],
+    type:  ["music"]
 }
 
 module.exports.run = function (msg, client, args) {

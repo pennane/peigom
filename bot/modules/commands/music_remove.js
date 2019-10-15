@@ -11,7 +11,8 @@ const meta = {
     admin: false,
     syntax: "remove <jonon numero>",
     desc: "Poistaa kipaleen jonosta",
-    triggers: ["remove", "poista", "rm"]
+    triggers: ["remove", "poista", "rm"],
+    type:  ["music"]
 }
 
 module.exports.run = function (msg, client, args) {

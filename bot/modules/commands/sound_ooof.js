@@ -8,7 +8,8 @@ const meta = {
     admin: false,
     syntax: "ooof",
     desc: "elongated oof",
-    triggers: ["ooof"]
+    triggers: ["ooof"],
+    type:  ["sound"]
 }
 
 

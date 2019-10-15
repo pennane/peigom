@@ -7,7 +7,8 @@ const meta = {
     admin: false,
     syntax: "ping",
     desc: "Kertoo botin viiveen",
-    triggers: ["ping","pong"]
+    triggers: ["ping","pong"],
+    type:  ["utility"]
 }
 
 module.exports.run = function (msg, client, args) {

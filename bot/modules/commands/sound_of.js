@@ -8,7 +8,8 @@ const meta = {
     admin: false,
     syntax: "of",
     desc: "Soittaa of äänen",
-    triggers: ["of"]
+    triggers: ["of"],
+    type:  ["sound"]
 }
 
 let soundfile = './assets/sound/of.mp3'

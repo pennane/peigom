@@ -10,7 +10,8 @@ const meta = {
     admin: false,
     syntax: "imgonnasaythenword",
     desc: "thats racist, you cannot say the nword",
-    triggers: ["imgonnasaythenword", "nword"]
+    triggers: ["imgonnasaythenword", "nword"],
+    type:  ["sound"]
 }
 
 let filearr = ["nword.mp3", "nword2.mp3"];

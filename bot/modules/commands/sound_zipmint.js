@@ -8,7 +8,8 @@ const meta = {
     admin: false,
     syntax: "zipmint",
     desc: "Soittaa tsipmint äänen",
-    triggers: ["zip", "zipmint", "tsipmint"]
+    triggers: ["zip", "zipmint", "tsipmint"],
+    type:  ["sound"]
 }
 let soundfile = './assets/sound/zipmint.mp3'
 

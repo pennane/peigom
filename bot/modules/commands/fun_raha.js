@@ -32,7 +32,8 @@ const meta = {
             "desc": "Antaa sinulle päivän palkan."
         }
     },
-    triggers: ["raha", "rahe", "money", "gamble"]
+    triggers: ["raha", "rahe", "money", "gamble"],
+    type:  ["fun"]
 }
 
 module.exports.run = function (msg, client, args) {

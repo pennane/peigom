@@ -11,7 +11,8 @@ const meta = {
     admin: false,
     syntax: "clear",
     desc: "tyhjentää musiikkijonon",
-    triggers: ["clear"]
+    triggers: ["clear"],
+    type:  ["music"]
 }
 
 module.exports.run = function (msg, client, args) {

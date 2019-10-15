@@ -3,7 +3,8 @@ const meta = {
     admin: true,
     syntax: "sammuta",
     desc: "Sammuttaa botin, uudelleenkäynnistys vain komentolinjan kautta.",
-    triggers: ["sammuta", "shutdown"]
+    triggers: ["sammuta", "shutdown"],
+    type:  ["admin"]
 }
 
 module.exports.run = function (msg, client, args) {

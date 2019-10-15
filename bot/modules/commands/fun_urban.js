@@ -8,7 +8,8 @@ const meta = {
     admin: false,
     syntax: "urban <sana>",
     desc: "Hakee selitteen sanalle",
-    triggers: ["urban", "dictionary", "define"]
+    triggers: ["urban", "dictionary", "define"],
+    type:  ["fun"]
 }
 
 module.exports.run = function (msg, client, args) {

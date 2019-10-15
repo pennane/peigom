@@ -5,7 +5,8 @@ const meta = {
     admin: false,
     syntax: "afrikka",
     desc: "tsiubidiubi",
-    triggers: ["afrikka", "africa"]
+    triggers: ["afrikka", "africa"],
+    type:  ["sound"]
 }
 
 let soundfile = './assets/sound/afrikka.mp3'

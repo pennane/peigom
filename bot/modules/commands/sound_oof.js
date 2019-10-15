@@ -8,7 +8,8 @@ const meta = {
     admin: false,
     syntax: "oof",
     desc: "Soittaa oof äänen",
-    triggers: ["oof"]
+    triggers: ["oof"],
+    type:  ["sound"]
 }
 
 let soundfile = './assets/sound/oof.mp3'

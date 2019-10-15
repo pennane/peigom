@@ -43,6 +43,7 @@ module.exports.log = (mode, content) => {
          12: Faulty command; command does not follow the command class.
          13: Command failure with stack; fail at command and stack exists.
          14: Command failed on use
+         15: Discord Command; User tried to use an unauthorized commmand.
  */
 
         let modes = {
@@ -92,18 +93,22 @@ module.exports.log = (mode, content) => {
                 console.info(chalk.red(`|-- Command ${chalk.yellow(content.name)} failed to construct itself. Check ${chalk.white("./log/")} for more`))
             },
             13: () => { /* Command Failed with stack */
-                msgtolog = `\r\n[Faulty command file] '${content.file}' failed to load. \r\n ${content.err} \r\n ${content.stack}`
+                msgtolog = `\r\n[Faulty command file] '${content.file}' failed to load. \r\n ${content.err}`
                 console.info(chalk.red(`|-- File ${chalk.yellow(content.file)} failed to load. Check ${chalk.white("./log/")} for more`))
             },
             14: () => { /* Command failed on use*/
                 msgtolog = `\r\n[Command failed on use] '${content.command}' \r\n ${content.description}`
                 console.info(chalk.red(`|-- Command ${chalk.yellow(content.command)} failed on use. Check ${chalk.white("./log/")} for more`))
 
+            },
+            15: () => { /* User unauthorized for command*/
+                msgtolog = `\r\n[Unauthorized Command] User: ${content.msg.author.username}, ${content.msg.author.id} Command: ${content.command} Args: ${content.args} Where: @${content.msg.channel.guild.name}:${content.msg.channel.guild.id}#${content.msg.channel.name} When: ${content.msg.createdTimestamp}`;
+
             }
         }
 
 
-        
+
 
         if (modes[mode]) {
             modes[mode]();

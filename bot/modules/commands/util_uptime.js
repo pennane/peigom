@@ -7,7 +7,8 @@ const meta = {
     admin: false,
     syntax: "uptime",
     desc: "Kertoo botin tähänastisen käynnissäoloajan",
-    triggers: ["uptime"]
+    triggers: ["uptime"],
+    type: ['utility']
 }
 
 module.exports.run = function (msg, client, args) {

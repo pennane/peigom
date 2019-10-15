@@ -5,7 +5,8 @@ const meta = {
     admin: false,
     syntax: "avatar {@kuka}",
     desc: "Esittää oman, tai muun avatarin",
-    triggers: ["avatar"]
+    triggers: ["avatar"],
+    type:  ["image"]
 }
 
 module.exports.run = function (msg, client, args) {

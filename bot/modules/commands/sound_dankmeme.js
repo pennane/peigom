@@ -8,7 +8,8 @@ const meta = {
     admin: false,
     syntax: "dankmeme",
     desc: "Soittaa satunnaisen dank meme -äänen.",
-    triggers: ["dankmeme"]
+    triggers: ["dankmeme"],
+    type:  ["sound"]
 }
 
 let memeSound = ['./assets/sound/meme.mp3', './assets/sound/meme2.mp3', './assets/sound/meme3.mp3']

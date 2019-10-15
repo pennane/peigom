@@ -3,7 +3,8 @@ const meta = {
     admin: false,
     syntax: "hus",
     desc: "Heittää botin pois äänikanavalta.",
-    triggers: ["hus"]
+    triggers: ["hus"],
+    type:  ["utility"]
 }
 
 module.exports.run = function (msg, client, args) {

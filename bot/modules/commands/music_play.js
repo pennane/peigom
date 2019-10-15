@@ -11,7 +11,8 @@ const meta = {
     admin: false,
     syntax: "play <hakusanat / linkki>",
     desc: "soita musiikkia youtubesta",
-    triggers: ["play", "p", "soita"]
+    triggers: ["play", "p", "soita"],
+    type: ["music"]
 }
 
 module.exports.run = function (msg, client, args) {
@@ -25,7 +26,7 @@ module.exports.run = function (msg, client, args) {
         let query = [...args].splice(1).join(" ")
         let url = [...args][1].replace(/<(.+)>/g, '$1')
         let video;
-        
+
         if (url.match(ytRegex)) {
             msg.channel.send(`:mag: Etitään \`${url}\``)
             video = await ytdl.getBasicInfo(url)

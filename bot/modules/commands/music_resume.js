@@ -11,7 +11,8 @@ const meta = {
     admin: false,
     syntax: "resume",
     desc: "palauttaa kipaleen",
-    triggers: ["resume"]
+    triggers: ["resume"],
+    type:  ["music"]
 }
 
 module.exports.run = function (msg, client, args) {

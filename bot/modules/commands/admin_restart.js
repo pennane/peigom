@@ -5,7 +5,8 @@ const meta = {
     admin: true,
     syntax: "restart",
     desc: "Käynnistää websocketin uudelleen",
-    triggers: ["restart", "reboot"]
+    triggers: ["restart", "reboot"],
+    type:  ["admin"]
 }
 
 module.exports.run = function (msg, client, args) {

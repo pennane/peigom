@@ -7,7 +7,8 @@ const meta = {
     admin: true,
     syntax: "evaluate <javascript code>",
     desc: "Juoksee iloisesti javascript koodia",
-    triggers: ["evaluate", "eval", "code", "js"]
+    triggers: ["evaluate", "eval", "code", "js"],
+    type:  ["admin"]
 }
 
 function codeEval(code, msg, client) {

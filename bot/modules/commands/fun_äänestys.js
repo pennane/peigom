@@ -5,7 +5,8 @@ const meta = {
     admin: false,
     syntax: "äänestys <Joo/ei kysymys>",
     desc: "Luo very ez äänestyksiä",
-    triggers: ["vote", "äänestys"]
+    triggers: ["vote", "äänestys"],
+    type:  ["fun"]
 }
 
 module.exports.run = function (msg, client, args) {

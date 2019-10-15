@@ -11,7 +11,8 @@ const meta = {
     admin: true,
     syntax: "volume 1-infinity",
     desc: "vaihtaa äänenpainetta",
-    triggers: ["volume", "vol"]
+    triggers: ["volume", "vol"],
+    type:  ["music"]
 }
 
 module.exports.run = function (msg, client, args) {

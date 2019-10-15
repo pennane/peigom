@@ -8,7 +8,8 @@ const meta = {
     admin: false,
     syntax: "yike",
     desc: "award yikes",
-    triggers: ["yike", "yikes", "+yike"]
+    triggers: ["yike", "yikes", "+yike"],
+    type:  ["fun", "sound"]
 }
 
 module.exports.run = function (msg, client, args) {

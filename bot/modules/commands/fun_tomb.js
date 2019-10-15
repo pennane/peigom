@@ -8,7 +8,8 @@ const meta = {
     admin: false,
     syntax: "tomb",
     desc: "Lähettää kanavalle tomb viestit.",
-    triggers: ["tomb"]
+    triggers: ["tomb"],
+    type:  ["fun"]
 }
 
 module.exports.run = function (msg, client, args) {

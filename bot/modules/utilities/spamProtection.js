@@ -5,7 +5,7 @@ module.exports.check = (user, command) => {
     return new Promise((resolve, reject) => {
         let state = config.misc.spamprotection.enabled;
         if (state === false) {
-            return resolve({allowed:true});
+            return resolve({ allowed: true });
         }
         let commandInterval = config.misc.spamprotection.commandInterval // seconds
         let generalInterval = config.misc.spamprotection.generalInterval // seconds
@@ -68,7 +68,7 @@ module.exports.check = (user, command) => {
         if (!userobj.lasttime) {
             userobj.lasttime = now
         }
-        
+
         resolve({ allowed: allowed, wait: waittime })
     });
 }

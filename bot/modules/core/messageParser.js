@@ -9,10 +9,10 @@ let spamProtection = config.get("misc.spamprotection")
 let { commands, triggers } = loader.loadCommands(commandDir);
 
 module.exports.parseMsg = function (msg, client) {
-    let bad = badWords.some(word => msg.content.includes(word))
+    let hasBadWords = badWords.some(word => msg.content.includes(word))
     let hasPrefix = msg.content.startsWith(prefix)
 
-    if (!hasPrefix && bad) {
+    if (!hasPrefix && hasBadWords) {
         msg.react(client.emojis.get("304687480471289866"))
             .catch(err => { logger.log(3, err) })
     }
@@ -29,7 +29,9 @@ module.exports.parseMsg = function (msg, client) {
         check(msg.member.user, command).then((data) => {
             if (data.allowed) {
                 command.exec(msg, client, args)
-            } else { msg.reply(`Rauhoitu komentojen kanssa, venaa ${data.wait} sekuntia.`) }
+            } else {
+                msg.reply(`Rauhoitu komentojen kanssa, venaa ${data.wait} sekuntia.`)
+            }
         })
             .catch(err => { logger.log(3, err) })
     } else {

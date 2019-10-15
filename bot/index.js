@@ -27,15 +27,15 @@ const shuffle = (arr) => {
 }
 
 client.on('ready', () => {
-    let presence = config.discord.presence 
+    let presence = config.discord.presence
     let activities = shuffle(presence.activities)
     let i = Math.floor(Math.random() * activities.length)
 
     startingInfo.set(client)
-    client.user.setActivity(activities[i].text, {type: activities[i].type})
+    client.user.setActivity(activities[i].text, { type: activities[i].type })
 
     schedule.scheduleJob(`*/${presence.refreshrate} * * * *`, () => {
-        client.user.setActivity(activities[i].text, {type: activities[i].type})
+        client.user.setActivity(activities[i].text, { type: activities[i].type })
         if (i === activities.length - 1) i = 0;
         else i++;
     })

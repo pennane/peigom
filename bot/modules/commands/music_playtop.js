@@ -11,7 +11,8 @@ const meta = {
     admin: false,
     syntax: "play <hakusanat / linkki>",
     desc: "soita musiikkia youtubesta ja viskoo sen ekaksi jonoon",
-    triggers: ["playtop", "pt"]
+    triggers: ["playtop", "pt"],
+    type:  ["music"]
 }
 
 module.exports.run = function (msg, client, args) {

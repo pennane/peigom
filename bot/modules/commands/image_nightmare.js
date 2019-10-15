@@ -10,7 +10,8 @@ const meta = {
     admin: false,
     syntax: "nightmare",
     desc: "Lähettää kanavalle suurta kuumotusta.",
-    triggers: ["nightmare", "nitemare"]
+    triggers: ["nightmare", "nitemare"],
+    type:  ["image"]
 }
 
 module.exports.run = function (msg, client, args) {

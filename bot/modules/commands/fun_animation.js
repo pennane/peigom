@@ -7,7 +7,8 @@ const meta = {
     admin: false,
     syntax: "animation <animaation nimi tai lista>",
     desc: "Toistaa käyttäjän antaman animaation",
-    triggers: ["animation"]
+    triggers: ["animation"],
+    type:  ["fun"]
 }
 
 module.exports.run = function (msg, client, args) {

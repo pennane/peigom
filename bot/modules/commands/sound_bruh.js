@@ -5,7 +5,8 @@ const meta = {
     admin: false,
     syntax: "bruh",
     desc: "bruh sound effect #2",
-    triggers: ["bruh", "bro"]
+    triggers: ["bruh", "bro"],
+    type:  ["sound"]
 }
 
 

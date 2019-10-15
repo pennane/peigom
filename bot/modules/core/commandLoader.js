@@ -1,6 +1,7 @@
 const fs = require('fs')
 const Command = require('./command')
 const logger = require('../utilities/activityLogger')
+const chalk = require('chalk')
 
 module.exports.loadCommands = function (path) {
     let files = []
@@ -13,25 +14,23 @@ module.exports.loadCommands = function (path) {
         }
     })
 
-    files.forEach(file => {
+    files.forEach((file) => {
         let command;
         command = new Command(require(path + "/" + file), file)
+
         try {
             command.triggers.forEach((trigger) => {
                 if (triggers.hasOwnProperty(trigger)) {
-                    throw new Error(`Warning! Command ${command.name} interfering with ${triggers.trigger} with trigger ${trigger}`)
+                    throw new Error(`Warning! Command "${command.name}" interfering with "${triggers[trigger]}" with trigger "${trigger}"`)
                 } else {
                     triggers[trigger] = command.name
                 }
             })
             commands[command.name] = command;
         } catch (err) {
-            logger.log(13, {file, err, stack: err.stack})
+            logger.log(13, { file, err, stack: err.stack })
         }
 
     })
-    return {
-        commands,
-        triggers
-    }
+    return { commands, triggers }
 }

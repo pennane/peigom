@@ -10,7 +10,8 @@ const meta = {
     admin: false,
     syntax: "pussukat",
     desc: "Soittaa satunnaisen kappaleen botin pussukat kansiosta",
-    triggers: ["pussukat", "pussukka"]
+    triggers: ["pussukat", "pussukka"],
+    type:  ["sound"]
 }
 
 let filearr = [];

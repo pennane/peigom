@@ -1,68 +1,119 @@
 const config = require('config')
 const logger = require('../utilities/activityLogger')
 
-function isObj(obj) {
-    return typeof obj === 'object' && obj !== null
+function isObject(o) {
+    return typeof o === 'object' && o !== null
 }
 
-function isArr(arr) {
-    return Array.isArray(arr)
+function isArray(a) {
+    return Array.isArray(a)
 }
 
-function isFunc(func) {
-    return typeof func === "function"
+function isFunction(f) {
+    return typeof f === "function"
 }
+
+let commandtypes = [
+    {
+        name: 'fun',
+        description: 'Fun gadget-esque commands',
+        emoji: ':100:'
+    },
+    {
+        name: 'utility',
+        description: 'Usefull utilites',
+        emoji: ':wrench:'
+    },
+    {
+        name: 'sound',
+        description: 'Commands that play sound files',
+        emoji: ':sound:'
+    },
+    {
+        name: 'music',
+        description: 'Musicbot commands',
+        emoji: ':notes:'
+    },
+    {
+        name: 'image',
+        description: 'Fun image processing commands',
+        emoji: ':frame_photo:'
+    },
+    {
+        name: 'admin',
+        description: 'Only for bot administrators',
+        emoji: ':crown:'
+    }
+]
 
 class Command {
     constructor({ meta, run }, filename) {
-        if (!meta || !isObj(meta)) {
-            logger.log(12, {
-                name: filename,
-                reason: "Meta is not present",
-            })
+        if (!meta || !isObject(meta)) {
+            logger.log(12, { name: filename, reason: "Meta is not present" })
         }
-        if (!meta.triggers || !isArr(meta.triggers)) {
-            logger.log(12, {
-                name: meta.name,
-                reason: "Triggers are not present"
-            })
+        if (!meta.triggers || !isArray(meta.triggers)) {
+            logger.log(12, { name: meta.name, reason: "Triggers are not present" })
         }
-        if (!run || !isFunc(run)) {
-            logger.log(12, {
-                name: meta.name,
-                reason: "Functionality not present"
-            })
+        if (!run || !isFunction(run)) {
+            logger.log(12, { name: meta.name, reason: "Functionality not present" })
             throw new Error("Invalid arguments")
         }
-        if (!isObj(meta) || !isArr(meta.triggers) || !isFunc(run)) {
-            logger.log(12, {
-                name: meta.name,
-                reason: "Constructor received invalid arguments"
-            })
-            throw new Error("Invalid arguments")
+
+        if (meta.type) {
+            let types = []
+            let typenames = commandtypes.map(type => type.name);
+            meta.type.forEach(type => {
+                if (typenames.indexOf(type.toLowerCase()) !== -1) {
+                    types.push(type.toLowerCase())
+                }
+            });
+            if (types.length !== 0) {
+                this.type = types
+            } else {
+                throw new Error("Command has to have a proper type")
+            }
+        } else {
+            throw new Error("Command has to have a proper type")
         }
+
         this.name = meta.name
         this.description = meta.desc
-        this.admin = meta.admin
+        this.adminCommand = meta.admin
         this.syntax = meta.syntax
         this.triggers = [...new Set(meta.triggers)];
 
         this.run = run
+
+
+
     }
+
+    static commandTypes() {
+        return commandtypes
+    }
+
+    static adminAuthorized(msg) {
+        return config.get('discord.authorized').indexOf(msg.author.id) > -1 | false
+    }
+
     exec(msg, client, args) {
         let authorized = false
-        if (this.admin) {
-            let authId = config.get('discord.authorized').indexOf(msg.author.id) > -1 | false
-            let authRole = msg.member.roles.find(role => role.name === config.discord.authorizedRole[0]) | false
-            authorized = (authId || authRole)
+
+        if (this.adminCommand) {
+            authorized = config.get('discord.authorized').indexOf(msg.author.id) > -1 | false
         } else {
             authorized = true
         }
+
+
         if (authorized) {
             this.run(msg, client, args).catch(err => console.info(err))
+            logger.log(1, { msg: msg, command: this.name, args: args })
         }
-        else this.unauthorized(msg, args)
-        logger.log(1, { msg: msg, command: this.name, args: args })
+        else {
+            this.unauthorized(msg, args)
+            logger.log(15, { msg: msg, command: this.name, args: args })
+        }
     }
     unauthorized(msg, args) {
         msg.reply("Sinulla ei ole oikeutta käyttää komentoa " + this.name)

@@ -11,7 +11,8 @@ const meta = {
     admin: false,
     syntax: "disconenct",
     desc: "Lopettaa soittamisen ja lähtee böneen.",
-    triggers: ["dc", "disconnect"]
+    triggers: ["dc", "disconnect"],
+    type:  ["music"]
 }
 
 module.exports.run = function (msg, client, args) {

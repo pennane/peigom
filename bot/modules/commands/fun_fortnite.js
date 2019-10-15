@@ -10,7 +10,8 @@ const meta = {
     admin: false,
     syntax: "fortnite",
     desc: "tanssi eeppisiä fornite liikkeitä",
-    triggers: ["fortnite","fortnight","fornite"]
+    triggers: ["fortnite","fortnight","fornite"],
+    type:  ["fun", "sound"]
 }
 
 let soundfile = './assets/sound/fortnite.mp3'

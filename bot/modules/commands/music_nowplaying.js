@@ -10,7 +10,8 @@ const meta = {
     admin: false,
     syntax: "np",
     desc: "näyttää tällä hetkellä soivan kipaleen",
-    triggers: ["np", "nowplaying"]
+    triggers: ["np", "nowplaying"],
+    type:  ["music"]
 }
 
 module.exports.run = function (msg, client, args) {

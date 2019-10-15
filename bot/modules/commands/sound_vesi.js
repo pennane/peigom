@@ -5,7 +5,8 @@ const meta = {
     admin: false,
     syntax: "vesi",
     desc: "nami nami",
-    triggers: ["vesi", "vettä"]
+    triggers: ["vesi", "vettä"],
+    type:  ["sound"]
 }
 
 let soundfile = './assets/sound/vesi.mp3'

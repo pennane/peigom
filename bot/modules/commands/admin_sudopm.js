@@ -7,7 +7,8 @@ const meta = {
     admin: true,
     syntax: "sudopm <@käyttäjä> <teksti>",
     desc: "Lähettää asettamasi viestin asettamallesi pelaajalle.",
-    triggers: ["sudopm"]
+    triggers: ["sudopm"],
+    type:  ["admin"]
 }
 
 module.exports.run = function (msg, client, args) {
