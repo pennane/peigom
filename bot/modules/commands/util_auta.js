@@ -21,15 +21,21 @@ const meta = {
 }
 
 function findCommandsForType(commands, type) {
-    let commandsWithType = []
-
-    return commandsWithType;
+    let foundCommands = [];
+    Object.keys(commands).forEach(key => {
+        let command = commands[key];
+        if (command.type.indexOf(type) !== -1) {
+            foundCommands.push(command)
+        }
+    })
+    return foundCommands;
 }
 
 function getCommandInfo(path) {
     let files = []
     let triggers = {}
     let commands = {}
+
 
     fs.readdirSync(path).forEach(file => {
         if (file.endsWith(".js")) {
@@ -49,20 +55,17 @@ function getCommandInfo(path) {
             commands[command.name] = command;
         } catch (err) { }
     })
-    return { commands, triggers }
+
+    let commandTypes = Command.commandTypes()
+    let foundTypes = {}
+    commandTypes.forEach(type => {
+        foundTypes[type.name.toLowerCase()] = findCommandsForType(commands, type.name.toLowerCase())
+    })
+
+    return { commands, triggers, foundTypes }
 }
 
-Object.filter = function (obj, predicate) {
-    let result = {}, key;
 
-    for (key in obj) {
-        if (obj.hasOwnProperty(key) && !predicate(obj[key])) {
-            result[key] = obj[key];
-        }
-    }
-
-    return result;
-};
 
 
 module.exports.meta = meta;
@@ -97,15 +100,20 @@ module.exports.run = function (msg, client, args) {
             embed.setTitle("Komentotyypit:");
             embed.setDescription("Kaikki eri komentotyypit listattuna")
 
+            let addedInlineFields = 0;
+
             let adminAuthorized = Command.adminAuthorized(msg)
 
             if (!adminAuthorized) {
                 commandTypes = commandTypes.filter(command => command.name !== "admin")
             }
             commandTypes.forEach(type => {
-                embed.addField(`${type.emoji} ${type.name}`, `\`${prefix}${meta.name} komennot ${type.name} \``, true)
+                if (foundTypes[type.name.toLowerCase()] && foundTypes[type.name.toLowerCase()].length !== 0) {
+                    embed.addField(`${type.emoji} ${type.name}`, `\`${prefix}${meta.name} komennot ${type.name} \``, true)
+                    addedInlineFields++;
+                }
             })
-            if (!adminAuthorized) {
+            if (addedInlineFields % 3 === 2) {
                 embed.addField('\u200b', '\u200b', true)
             }
             return embed
@@ -154,10 +162,7 @@ module.exports.run = function (msg, client, args) {
 
             if (foundCommands.length % 3 === 2) {
                 embed.addField('\u200b', '\u200b', true)
-            } else if (foundCommands.length % 3 === 1) {
-                embed.addField('\u200b', '\u200b', true)
-                embed.addField('\u200b', '\u200b', true)
-            }
+            } 
 
             return embed
         }
@@ -239,4 +244,4 @@ module.exports.run = function (msg, client, args) {
 }
 
 
-let { commands, triggers } = getCommandInfo(commandDir)
+let { commands, triggers, foundTypes } = getCommandInfo(commandDir)

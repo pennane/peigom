@@ -15,9 +15,9 @@ module.exports.loadCommands = function (path) {
     })
 
     files.forEach((file) => {
-        let command;
-        command = new Command(require(path + "/" + file), file)
 
+        let command = new Command(require(path + "/" + file), file)
+        
         try {
             command.triggers.forEach((trigger) => {
                 if (triggers.hasOwnProperty(trigger)) {

@@ -43,6 +43,11 @@ let commandtypes = [
         name: 'admin',
         description: 'Only for bot administrators',
         emoji: ':crown:'
+    }, 
+    {
+        name: "other",
+        description: "Commands with miscellaneous functionality",
+        emoji: ':grey_question:'
     }
 ]
 
@@ -56,7 +61,7 @@ class Command {
         }
         if (!run || !isFunction(run)) {
             logger.log(12, { name: meta.name, reason: "Functionality not present" })
-            throw new Error("Invalid arguments")
+            throw new Error("Command functionality is not present at command '" + meta.name + "'")
         }
 
         if (meta.type) {
@@ -70,10 +75,10 @@ class Command {
             if (types.length !== 0) {
                 this.type = types
             } else {
-                throw new Error("Command has to have a proper type")
+                this.type = ["other"]
             }
         } else {
-            throw new Error("Command has to have a proper type")
+            this.type = ["other"]
         }
 
         this.name = meta.name
