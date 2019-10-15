@@ -157,7 +157,7 @@ module.exports.run = function (msg, client, args) {
             }
 
             foundCommands.forEach(command => {
-                embed.addField(`${command.name}`, `\`${prefix}${meta.name} ${command.name} \``, true)
+                embed.addField(` ${command.type.indexOf('admin') !== -1 ? ':lock: ' : null}${command.name}`, `\`${prefix}${meta.name} ${command.name} \``, true)
             })
 
             if (foundCommands.length % 3 === 2) {
