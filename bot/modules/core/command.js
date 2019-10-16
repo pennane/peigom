@@ -93,8 +93,6 @@ class Command {
             this.type.push('admin')
         }
 
-
-
     }
 
     static commandTypes() {
