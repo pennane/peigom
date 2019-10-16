@@ -39,13 +39,14 @@ module.exports.check = (user, command) => {
             }
         }
 
+        if (userobj.answered && test()) {
+            resolve({allowed: false, alreadyAnswered: true})
+        }
+
         if (test()) {
             userobj.answered = false
         }
 
-        if (userobj.answered) {
-            resolve({allowed: false, alreadyAnswered: true})
-        }
 
         function test() {
             if ((userobj.command[command].lasttime) && ((now - userobj.command[command].lasttime) < (commandInterval * 1000))) {
