@@ -39,7 +39,7 @@ module.exports.check = (user, command) => {
             }
         }
 
-        if (userobj.answered && test()) {
+        if (userobj.answered && !test()) {
             resolve({allowed: false, alreadyAnswered: true})
         }
 
