@@ -26,7 +26,8 @@ module.exports.check = (user, command) => {
                     name: user.username,
                     id: user.id
                 },
-                lasttime: false
+                lasttime: false,
+                answered: false
             }
         }
 
@@ -38,20 +39,27 @@ module.exports.check = (user, command) => {
             }
         }
 
+        if (userobj.answered) {
+            resolve({allowed: false, alreadyAnswered: true})
+        }
+
         function test() {
             if ((userobj.command[command].lasttime) && ((now - userobj.command[command].lasttime) < (commandInterval * 1000))) {
                 allowed = false;
                 type = "command";
                 waittime = ((commandInterval * 1000) - (now - userobj.command[command].lasttime)) / 1000;
                 waittime = parseInt(waittime);
+                userobj.answered = true;
                 return false;
             } else if ((userobj.lasttime) && ((now - userobj.lasttime) < (generalInterval * 1000))) {
                 allowed = false;
                 type = "general";
                 waittime = ((generalInterval * 1000) - (now - userobj.lasttime)) / 1000;
                 waittime = parseInt(waittime);
+                userobj.answered = true;
                 return false;
             } else {
+                userobj.answered = false;
                 return true;
             }
         }
@@ -69,6 +77,6 @@ module.exports.check = (user, command) => {
             userobj.lasttime = now
         }
 
-        resolve({ allowed: allowed, wait: waittime })
+        resolve({ allowed: allowed, wait: waittime})
     });
 }

@@ -27,6 +27,9 @@ module.exports.parseMsg = function (msg, client) {
     let command = commands[triggers[trigger]]
     if (spamProtection.state) {
         check(msg.member.user, command).then((data) => {
+            if (data.alreadyAnswered) {
+                return;
+            }
             if (data.allowed) {
                 command.exec(msg, client, args)
             } else {
