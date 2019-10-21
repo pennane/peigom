@@ -1,6 +1,7 @@
 const Discord = require('discord.js');
 
-let embed = new Discord.RichEmbed().setColor(0xF4E542);
+
+
 
 const meta = {
     name: "uptime",
@@ -13,38 +14,47 @@ const meta = {
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
+        let embed = new Discord.RichEmbed().setColor(0xF4E542);
+        embed.setTitle("Botin kommentti:");
+        if (!client.uptime) {
+            embed.description = `Botti on kadonnut matriisiin, ja jostain syystä päälläoloaikaa ei ole saatavilla.`;
+            msg.channel.send(embed)
+                .catch(err => console.info(err))
+            return resolve()
+        }
+
+        let ms = client.uptime,
+            ts = client.uptime / 1000,
+            h = Math.trunc(ts / 3600),
+            tsr = ts % 3600,
+            m = Math.trunc(tsr / 60),
+            s = Math.trunc(tsr % 60)
+
+
+        let uptimeMessage = {
+            h: "",
+            m: "",
+            s: ""
+        }
+
         embed.setTitle("Botin uptime:")
-        let uptime = {
-            ms: client.uptime,
-            ts: client.uptime / 1000,
-            h: Math.trunc(uptime.ts / 3600),
-            tsr: uptime.ts % 3600,
-            m: Math.trunc(uptime.tsr / 60),
-            s: Math.trunc(uptime.tsr % 60),
-            msg: {
-                h: "",
-                m: "",
-                s: ""
-            }
-        };
 
-        if (uptime.h > 1) {
-            uptime.msg.h = `**${uptime.h}** tuntia, `;
-        } else if (uptime.h === 1) {
-            uptime.msg.h = `**${uptime.h}** tunnin `;
-        }
-        else if (uptime.m > 1) {
-            uptime.msg.m = `**${uptime.m}** minuuttia `;
-        } else if (uptime.m === 1) {
-            uptime.msg.m = `**${uptime.m}** minuutin `;
-        } else if (uptime.s > 1) {
-            uptime.msg.s = `**${uptime.s}** sekuntia`;
-        } else if (uptime.s <= 1) {
-            uptime.msg.s = `**1** sekunnin`;
-        }
 
-        uptime.msg.complete = `Tää botti o ollu hereillä jo ${uptime.msg.h}${uptime.msg.m}${uptime.msg.s} :hourglass_flowing_sand:`
-        embed.setDescription(uptime.msg.complete)
+        if (h > 1) {
+            uptimeMessage.h = `**${h}** tuntia, `;
+        } else if (h === 1) {
+            uptimeMessage.h = `**${h}** tunnin `;
+        }
+        else if (m > 1) {
+            uptimeMessage.m = `**${m}** minuuttia `;
+        } else if (m === 1) {
+            uptimeMessage.m = `**${m}** minuutin `;
+        } else if (s > 1) {
+            uptimeMessage.s = `**${s}** sekuntia`;
+        } else if (s <= 1) {
+            uptimeMessage.s = `**1** sekunnin`;
+        }
+        embed.setDescription(`Tää botti o ollu hereillä jo ${uptimeMessage.h}${uptimeMessage.m}${uptimeMessage.s} :hourglass_flowing_sand:`)
         msg.channel.send(embed)
             .catch(err => console.info(err))
         resolve();
