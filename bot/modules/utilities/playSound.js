@@ -4,7 +4,6 @@ const logger = require('./activityLogger')
 const { queue } = require('../core/sound.js')
 
 
-
 module.exports.play = async function ({ soundfile, msg, client, args }) {
 
     let embed = new Discord.RichEmbed().setColor(0xF4E542);
@@ -41,7 +40,6 @@ module.exports.play = async function ({ soundfile, msg, client, args }) {
     }
 
     try {
-
         broadcast = client.createVoiceBroadcast();
         broadcast.playFile(soundfile);
 

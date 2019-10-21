@@ -1,6 +1,5 @@
 const Discord = require('discord.js');
-
-let embed = new Discord.RichEmbed().setColor(0xF4E542);
+const syntaxEmbed = require('../utilities/syntaxEmbed')
 
 const meta = {
     name: "spam",
@@ -8,42 +7,46 @@ const meta = {
     syntax: "spam <@pelaaja> <määrä> <viesti>",
     desc: "Lähettää asettamasi viestin asettamallesi pelaajalle asettamasi monta kertaa.",
     triggers: ["spam"],
-    type:  ["admin"]
+    type: ["admin"]
 }
+
+let embed = syntaxEmbed({ meta })
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        embed.setDescription(`\`${meta.syntax}\``)
-            .setTitle(`Komento ${meta.name} toimii näin:`);
-        if (args[3]) {
-            let userid = args[1].replace(/\D/g, '');
-            if (msg.guild.members.get(userid)) {
-                if (typeof (args[2]) !== 'string') {
-                    args[2] = args[2].toString();
-                }
-                if (args[4]) {
-                    for (let i = 4; i < args.length; i++) {
-                        args[3] = args[3] + ' ' + args[i];
-                    }
-                }
-                for (let i = 0; i < args[2]; i++) {
-                    msg.guild.members.get(userid)
-                        .send(args[3]);
-                }
-            } else {
-                msg.channel.send(embed)
-                    .then(msg => {
-                        msg.delete(15001)
-                    })
-                    .catch(err => console.info(error));
-            }
-        } else {
-            msg.channel.send(embed)
-                .then(msg => {
-                    msg.delete(15001)
-                })
-                .catch(err => console.info(error));
+        
+        if (!args[3]) {
+            msg.channel.send(embed).then(msg => {
+                msg.delete(15001)
+            })
+            msg.delete(5000);
+            return resolve()
         }
+
+        let userid = args[1].replace(/\D/g, '');
+
+        if (!msg.guild.members.get(userid)) {
+            msg.channel.send(embed).then(msg => {
+                msg.delete(15001)
+            })
+            msg.delete(5000);
+            return resolve()
+        }
+
+        if (typeof (args[2]) !== 'string') {
+            args[2] = args[2].toString();
+        }
+
+        if (args[4]) {
+            for (let i = 4; i < args.length; i++) {
+                args[3] = args[3] + ' ' + args[i];
+            }
+        }
+        for (let i = 0; i < args[2]; i++) {
+            msg.guild.members.get(userid)
+                .send(args[3]);
+        }
+
         msg.delete(5000);
 
         resolve();

@@ -6,6 +6,10 @@ const YouTube = require('simple-youtube-api')
 const ytdl = require('ytdl-core');
 const yt = new YouTube(key);
 
+
+
+
+
 let searching = { state: false, time: new Date() };
 
 function msToReadable(ms) {
@@ -83,6 +87,20 @@ function play(guild) {
     })
 }
 
+const syntax = {
+    add: {},
+    show: {},
+    nowPlaying: {},
+    skip: {},
+    disconnect: {},
+    clear: {},
+    shuffle: {},
+    remove: {},
+    pause: {},
+    resume: {},
+    volume: {},
+    isPlaying: {}
+}
 
 module.exports = {
     yt: yt,

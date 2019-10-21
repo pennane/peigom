@@ -1,5 +1,6 @@
 const Discord = require('discord.js');
 const ytdl = require('ytdl-core')
+const syntaxEmbed = require('../utilities/syntaxEmbed')
 
 const { yt, queue } = require('../core/sound.js')
 
@@ -9,7 +10,7 @@ let ytRegex = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-
 const meta = {
     name: "play",
     admin: false,
-    syntax: "play <hakusanat / linkki>",
+    syntax: "play <hakusanat tai youtube-linkki>",
     desc: "soita musiikkia youtubesta",
     triggers: ["play", "p", "soita"],
     type: ["music"]
@@ -20,6 +21,13 @@ module.exports.run = function (msg, client, args) {
         let voiceChannel = msg.member.voiceChannel;
         let textChannel = msg.channel;
         let guild = msg.guild;
+        console.log(args)
+
+        if (!args[1]) {
+            let embed = syntaxEmbed({args, meta, heading: ':point_up: Missä hakusanat'})
+            msg.channel.send(embed)
+            return resolve();
+        }
 
         if (!voiceChannel) return resolve(msg.reply("Mene ensin jollekin puhekanavalle, kid."))
 

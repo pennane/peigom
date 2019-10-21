@@ -1,14 +1,15 @@
 const Discord = require('discord.js');
 const { inspect } = require('util')
 const beautify = require('js-beautify').js
+const syntaxEmbed = require('../utilities/syntaxEmbed')
 
 const meta = {
     name: "evaluate",
     admin: true,
-    syntax: "evaluate <javascript code>",
+    syntax: "evaluate <javascript koodia>",
     desc: "Juoksee iloisesti javascript koodia",
     triggers: ["evaluate", "eval", "code", "js"],
-    type:  ["admin"]
+    type: ["admin"]
 }
 
 function codeEval(code, msg, client) {
@@ -26,7 +27,10 @@ function codeEval(code, msg, client) {
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         let embed = new Discord.RichEmbed().setColor(0xF4E542);
-        if (!args[1]) return msg.reply("Toimii näin: " + meta.syntax)
+        if (!args[1]) {
+            let embed = syntaxEmbed({ meta })
+            return msg.reply(embed)
+        }
         let code = [...args].splice(1).join(" ")
         let reply = codeEval(code, msg, client)
         if (reply.length > 2000) {

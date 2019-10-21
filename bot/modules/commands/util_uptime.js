@@ -1,8 +1,5 @@
 const Discord = require('discord.js');
 
-
-
-
 const meta = {
     name: "uptime",
     admin: false,

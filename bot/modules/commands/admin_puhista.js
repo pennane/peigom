@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const syntaxEmbed = require('../utilities/syntaxEmbed')
 
 let embed = new Discord.RichEmbed().setColor(0xF4E542);
 
@@ -8,7 +9,7 @@ const meta = {
     syntax: "puhista <määrä (2-99)>",
     desc: "Poistaa annetun määrän viestejä kanavalta.",
     triggers: ["puhista", "puhdista"],
-    type:  ["admin"]
+    type: ["admin"]
 }
 
 embed.setTitle("Botin kommentti:");
@@ -27,10 +28,8 @@ module.exports = {
                     })
                     .catch(error => console.error(error));
             } else {
-                embed.setTitle(`Komento ${meta.name} toimii näin:`)
-                    .setDescription(`\`${meta.syntax}\``)
-                msg.channel.send(embed)
-                    .catch(err => console.info(err))
+                let embed = syntaxEmbed({ meta, args })
+                msg.channel.send(embed).catch(err => console.info(err))
             }
             resolve();
         });

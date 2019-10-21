@@ -1,7 +1,6 @@
 const Discord = require('discord.js');
 const dictionary = require('urban-dictionary')
-
-
+const syntaxEmbed = require('../utilities/syntaxEmbed')
 
 const meta = {
     name: "urban",
@@ -9,25 +8,31 @@ const meta = {
     syntax: "urban <sana>",
     desc: "Hakee selitteen sanalle",
     triggers: ["urban", "dictionary", "define"],
-    type:  ["fun"]
+    type: ["fun"]
 }
+
+
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        let embed = new Discord.RichEmbed().setColor(0xF4E542);
-        if (!args[1]) return msg.reply("Toimii näin: "+meta.syntax)
+        if (!args[1]) {
+            let embed = syntaxEmbed({ meta })
+            msg.channel.send(embed)
+            return resolve()
+        }
         let definition = [...args].splice(1).join(" ")
-        let index =  0
-        dictionary.term(definition).then(({entries}) => {
-            embed.addField(entries[index].word,`
+        let index = 0
+        dictionary.term(definition).then(({ entries }) => {
+            let embed = new Discord.RichEmbed().setColor(0xF4E542);
+            embed.addField(entries[index].word, `
             \`\`\`${entries[index].definition.replace(/\[|\]/g, "")}\`\`\` 
             \`\`\`${entries[index].example.replace(/\[|\]/g, "")}\`\`\`
             [Link](${entries[index].permalink})`)
-            .setFooter(entries[index].author, "https://arttu.pennanen.org/file/thonk.gif")
-            .setTimestamp()
+                .setFooter(entries[index].author, "https://arttu.pennanen.org/file/thonk.gif")
+                .setTimestamp()
             msg.channel.send(embed)
         }).catch(() => {
-            msg.channel.send(`Failed to retrieve definition for ${definition}`)
+            msg.channel.send(`Ei löytyny selitystä sanomalle ${definition}`)
         })
         resolve();
     });

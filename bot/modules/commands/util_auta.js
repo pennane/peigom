@@ -80,7 +80,7 @@ module.exports.run = function (msg, client, args) {
                 .setColor(meta.embed.color)
                 .setDescription(meta.embed.desc)
                 .setFooter(meta.embed.footer, "https://arttu.pennanen.org/file/thonk.gif")
-                .setTimestamp();
+                .setTimestamp()
 
             return embed;
         }
@@ -109,7 +109,7 @@ module.exports.run = function (msg, client, args) {
             }
             commandTypes.forEach(type => {
                 if (foundTypes[type.name.toLowerCase()] && foundTypes[type.name.toLowerCase()].length !== 0) {
-                    embed.addField(`${type.emoji} ${type.name}`, `\`${prefix}${meta.name} komennot ${type.name} \``, true)
+                    embed.addField(`${type.emoji} ${type.name}`, `\`${prefix}${meta.name} ${type.name} \``, true)
                     addedInlineFields++;
                 }
             })
@@ -124,6 +124,7 @@ module.exports.run = function (msg, client, args) {
             embed.setTitle(`Tyypin \`${type}\` komennot`);
             embed.setDescription(`Kaikki antamasi tyypin \`${type}\` komennot`)
 
+
             let adminAuthorized = Command.adminAuthorized(msg)
 
             let commandTypeNames = Command.commandTypes().map(type => type.name.toLowerCase())
@@ -137,8 +138,6 @@ module.exports.run = function (msg, client, args) {
                 embed = messageEmbed(':sos: Tsot tsot, et sä saa näitä nähdä.')
                 return embed;
             }
-
-
 
             let foundCommands = [];
             Object.keys(commands).forEach(key => {
@@ -162,7 +161,7 @@ module.exports.run = function (msg, client, args) {
 
             if (foundCommands.length % 3 === 2) {
                 embed.addField('\u200b', '\u200b', true)
-            } 
+            }
 
             return embed
         }
@@ -230,7 +229,10 @@ module.exports.run = function (msg, client, args) {
             msg.channel.send(commandTypesEmbed()).catch(error => console.info(error))
         } else if (args[1] === "komennot" && args[2]) {
             msg.channel.send(commandsForTypeEmbed(args[2])).catch(error => console.info(error))
-        } else if (args[1] === config.app.name) {
+        } else if (foundTypes.hasOwnProperty(args[1])) {
+            msg.channel.send(commandsForTypeEmbed(args[1])).catch(error => console.info(error))
+        }
+        else if (args[1] === config.app.name) {
             msg.channel.send(botInfoEmbed()).catch(error => console.info(error))
         } else if (triggers[args[1]]) {
             msg.channel.send(commandEmbed(args[1])).catch(error => console.info(error))

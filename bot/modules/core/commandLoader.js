@@ -3,6 +3,18 @@ const Command = require('./command')
 const logger = require('../utilities/activityLogger')
 const chalk = require('chalk')
 
+const reservedNames = [
+    "musci",
+    "utility",
+    "komennot",
+    "fun",
+    "sound",
+    "music",
+    "image",
+    "admin",
+    "other"
+]
+
 module.exports.loadCommands = function (path) {
     let files = []
     let triggers = {}
@@ -17,10 +29,13 @@ module.exports.loadCommands = function (path) {
     files.forEach((file) => {
 
         let command = new Command(require(path + "/" + file), file)
-        
+
         try {
+
             command.triggers.forEach((trigger) => {
-                if (triggers.hasOwnProperty(trigger)) {
+                if (reservedNames.indexOf(trigger) !== -1) {
+                    throw new Error(`Warning! Command "${command.name}" tried to use a reserved name ${trigger} as a trigger.`)
+                } else if (triggers.hasOwnProperty(trigger)) {
                     throw new Error(`Warning! Command "${command.name}" interfering with "${triggers[trigger]}" with trigger "${trigger}"`)
                 } else {
                     triggers[trigger] = command.name
