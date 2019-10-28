@@ -21,7 +21,6 @@ module.exports.run = function (msg, client, args) {
         let voiceChannel = msg.member.voiceChannel;
         let textChannel = msg.channel;
         let guild = msg.guild;
-        console.log(args)
 
         if (!args[1]) {
             let embed = syntaxEmbed({args, meta, heading: ':point_up: Missä hakusanat'})

@@ -26,7 +26,6 @@ module.exports.run = function (msg, client, args) {
             return resolve();
         }
         let channelId = args[1].match(/\d+/)[0];
-        console.log(channelId)
 
 
         if (!msg.guild.channels.has(channelId)) {
@@ -42,10 +41,6 @@ module.exports.run = function (msg, client, args) {
             disabledChannels[channelId] = "disabled";
             msg.channel.send(" Peigom ei enää kuuntele " + args[1])
         }
-
-
-
-        console.log(disabledChannels)
 
         fs.writeFile('./assets/misc/disabledChannels/channels.json', JSON.stringify(disabledChannels), function (err) {
             if (err) {

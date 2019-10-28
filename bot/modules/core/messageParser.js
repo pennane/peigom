@@ -19,17 +19,13 @@ module.exports.parseMsg = function (msg, client) {
     }
 
     let disabled = disabledChannels()
-    console.log(disabled)
     let channelId = msg.channel.id
-    console.log(channelId)
 
 
 
     if (!hasPrefix) return;
 
     let args = msg.content.trim().substr(prefix.length).split(' ')
-
-    console.log(args)
 
     let trigger = args[0].toLowerCase()
 
