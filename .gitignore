@@ -2,5 +2,6 @@
 bot/config/authorize.json
 bot/config/default.json
 bot/assets/misc/raha/user-data.json
+bot/assets/misc/disabledChannels/channels.json
 node_modules/*
 .vscode
