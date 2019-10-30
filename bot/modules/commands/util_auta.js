@@ -87,8 +87,12 @@ module.exports.run = function (msg, client, args) {
 
         function defaultResponseEmbed() {
             let embed = createBaseEmbed();
+            let adminAuthorized = Command.adminAuthorized(msg)
             embed.addField(`:mega: Tietoa komennoista:`, `\`${prefix}${meta.name} komennot\``, false);
-            embed.addField(`:loudspeaker: Tietoa admin komennoista:`, `\`${prefix}${meta.name} admin\``, false);
+            if (adminAuthorized) {
+                embed.addField(`:loudspeaker: Tietoa admin komennoista:`, `\`${prefix}${meta.name} admin\``, false);
+            }
+            
             embed.addField(`:thinking: Tietoa botista:`, `\`${prefix}${meta.name} ${config.app.name} \``, false);
             embed.addField(`:question: Tietoa tietystä komennosta:`, `\`${prefix}${meta.name} <komennon nimi> \``, false);
             return embed
@@ -104,9 +108,16 @@ module.exports.run = function (msg, client, args) {
 
             let adminAuthorized = Command.adminAuthorized(msg)
 
+            let superAdminAuthorized = Command.superAdminAuthorized(msg)
+
             if (!adminAuthorized) {
                 commandTypes = commandTypes.filter(command => command.name !== "admin")
             }
+
+            if (!superAdminAuthorized) {
+                commandTypes = commandTypes.filter(command => command.name !== "superadmin")
+            }
+
             commandTypes.forEach(type => {
                 if (foundTypes[type.name.toLowerCase()] && foundTypes[type.name.toLowerCase()].length !== 0) {
                     embed.addField(`${type.emoji} ${type.name}`, `\`${prefix}${meta.name} ${type.name} \``, true)
@@ -127,6 +138,8 @@ module.exports.run = function (msg, client, args) {
 
             let adminAuthorized = Command.adminAuthorized(msg)
 
+            let superAdminAuthorized = Command.superAdminAuthorized(msg)
+
             let commandTypeNames = Command.commandTypes().map(type => type.name.toLowerCase())
 
             if (commandTypeNames.indexOf(type.toLowerCase()) === -1) {
@@ -135,6 +148,11 @@ module.exports.run = function (msg, client, args) {
             }
 
             if (type.toLowerCase() === "admin" && !adminAuthorized) {
+                embed = messageEmbed(':sos: Tsot tsot, et sä saa näitä nähdä.')
+                return embed;
+            }
+
+            if (type.toLowerCase() === "superadmin" && !superAdminAuthorized) {
                 embed = messageEmbed(':sos: Tsot tsot, et sä saa näitä nähdä.')
                 return embed;
             }
@@ -156,7 +174,7 @@ module.exports.run = function (msg, client, args) {
             }
 
             foundCommands.forEach(command => {
-                embed.addField(` ${command.type.indexOf('admin') !== -1 ? ':lock: ' : ""}${command.name}`, `\`${prefix}${meta.name} ${command.name} \``, true)
+                embed.addField(` ${(command.type.indexOf('admin') !== -1 || command.type.indexOf('superadmin') !== -1) ? ':unlock: ' : ""}${command.name}`, `\`${prefix}${meta.name} ${command.name} \``, true)
             })
 
             if (foundCommands.length % 3 === 2) {
@@ -169,6 +187,9 @@ module.exports.run = function (msg, client, args) {
         function commandEmbed(commandname) {
 
             let adminAuthorized = Command.adminAuthorized(msg)
+
+            let superAdminAuthorized = Command.superAdminAuthorized(msg)
+
             let embed = createBaseEmbed()
             if (!triggers[commandname]) {
                 embed = messageEmbed(':angry: sinä rikkoa bot, tämä ei pitäisnä tapahtnua iknä')
@@ -182,12 +203,20 @@ module.exports.run = function (msg, client, args) {
                 return embed;
             }
 
+            if (command.type.indexOf('superadmin') !== -1 && !superAdminAuthorized) {
+                embed = messageEmbed(':sos: Tsot tsot, et sä saa näitä nähdä.')
+                return embed;
+            }
+
             embed.setDescription(`Tietoa komennosta: \`${prefix}${command.name}\` (${[...command.type].join(" ")})`)
                 .addField(`:pencil: Komento toimii näin:`, `\`${prefix}${command.syntax}\``)
                 .addField(`:gear: Komennon toiminto:`, `${command.description}`)
                 .addField(`:book: Komennon liipaisimet:`, `\`${prefix + [...command.triggers].join(" " + prefix)}\``)
                 .addBlankField();
-            if (command.adminCommand || command.type.indexOf('admin') !== -1) {
+
+            if (command.adminCommand || command.type.indexOf('superadmin') !== -1) {
+                embed.addField(`:warning::warning: **Huom**`, `Kyseessä on super admin komento.`);
+            } else if (command.adminCommand || command.type.indexOf('admin') !== -1) {
                 embed.addField(`:warning: **Huom**`, `Kyseessä on admin komento.`);
             }
             return embed

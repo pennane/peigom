@@ -4,6 +4,7 @@ const syntaxEmbed = require('../utilities/syntaxEmbed')
 const meta = {
     name: "spam",
     admin: true,
+    superadmin: true,
     syntax: "spam <@pelaaja> <määrä> <viesti>",
     desc: "Lähettää asettamasi viestin asettamallesi pelaajalle asettamasi monta kertaa.",
     triggers: ["spam"],

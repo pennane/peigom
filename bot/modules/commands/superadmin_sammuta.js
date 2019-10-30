@@ -1,6 +1,7 @@
 const meta = {
     name: "sammuta",
     admin: true,
+    superadmin: true,
     syntax: "sammuta",
     desc: "Sammuttaa botin, uudelleenkäynnistys vain komentolinjan kautta.",
     triggers: ["sammuta", "shutdown"],

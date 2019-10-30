@@ -5,11 +5,11 @@ const syntaxEmbed = require('../utilities/syntaxEmbed')
 
 const meta = {
     name: "evaluate",
-    admin: true,
+    superadmin: true,
     syntax: "evaluate <javascript koodia>",
     desc: "Juoksee iloisesti javascript koodia",
     triggers: ["evaluate", "eval", "code", "js"],
-    type: ["admin"]
+    type: ["utility"],
 }
 
 function codeEval(code, msg, client) {

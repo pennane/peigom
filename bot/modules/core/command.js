@@ -43,11 +43,16 @@ let commandtypes = [
         name: 'admin',
         description: 'Only for bot administrators',
         emoji: ':crown:'
-    }, 
+    },
     {
         name: "other",
         description: "Commands with miscellaneous functionality",
         emoji: ':grey_question:'
+    },
+    {
+        name: "superadmin",
+        description: "Only for the bot owner",
+        emoji: ':exclamation:'
     }
 ]
 
@@ -84,6 +89,7 @@ class Command {
         this.name = meta.name
         this.description = meta.desc
         this.adminCommand = meta.admin
+        this.superAdminCommand = meta.superadmin
         this.syntax = meta.syntax
         this.triggers = [...new Set(meta.triggers)];
 
@@ -93,6 +99,15 @@ class Command {
             this.type.push('admin')
         }
 
+        if (this.superAdminCommand && this.type.indexOf('superadmin') === -1) {
+            this.type.push('superadmin')
+        }
+
+        if (this.superAdminCommand && this.type.indexOf('admin') !== -1) {
+            let filteredTypes = this.type.filter(type => type !== "admin")
+            this.type = filteredTypes
+        }
+
     }
 
     static commandTypes() {
@@ -100,18 +115,23 @@ class Command {
     }
 
     static adminAuthorized(msg) {
+        return config.get('discord.authorized').indexOf(msg.author.id) > -1 || msg.member.hasPermission('ADMINISTRATOR')
+    }
+
+    static superAdminAuthorized(msg) {
         return config.get('discord.authorized').indexOf(msg.author.id) > -1 | false
     }
 
     exec(msg, client, args) {
         let authorized = false
 
-        if (this.adminCommand) {
-            authorized = config.get('discord.authorized').indexOf(msg.author.id) > -1 | false
+        if (this.superAdminCommand) {
+            authorized = Command.superAdminAuthorized(msg)
+        } else if (this.adminCommand) {
+            authorized = command.adminAuthorized(msg)
         } else {
             authorized = true
         }
-
 
         if (authorized) {
             this.run(msg, client, args).catch(err => console.info(err))

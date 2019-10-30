@@ -3,10 +3,11 @@ const auth = require('../../config/authorize.json');
 const meta = {
     name: "restart",
     admin: true,
+    superadmin: true,
     syntax: "restart",
-    desc: "Käynnistää websocketin uudelleen",
+    desc: "'Käynnistää' websocketin uudelleen",
     triggers: ["restart", "reboot"],
-    type:  ["admin"]
+    type: ["admin"]
 }
 
 module.exports.run = function (msg, client, args) {

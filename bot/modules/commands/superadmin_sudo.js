@@ -4,6 +4,7 @@ const syntaxEmbed = require('../utilities/syntaxEmbed')
 const meta = {
     name: "sudo",
     admin: true,
+    superadmin: true,
     syntax: "sudo <#text-kanava> <teksti>",
     desc: "Lähettää asettamasi viestin asettamallesi tekstikanavalle.",
     triggers: ["sudo"],

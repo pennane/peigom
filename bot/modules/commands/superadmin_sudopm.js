@@ -4,6 +4,7 @@ const syntaxEmbed = require('../utilities/syntaxEmbed')
 const meta = {
     name: "sudopm",
     admin: true,
+    superadmin: true,
     syntax: "sudopm <@käyttäjä> <teksti>",
     desc: "Lähettää asettamasi viestin asettamallesi pelaajalle.",
     triggers: ["sudopm"],
