@@ -99,7 +99,7 @@ class Command {
             this.type.push('admin')
         }
 
-        if (this.superAdminCommand && this.type.indexOf('superadmin') === -1) {
+        if (this.superAdminCommand === true && this.type.indexOf('superadmin') === -1) {
             this.type.push('superadmin')
         }
 
@@ -115,7 +115,7 @@ class Command {
     }
 
     static adminAuthorized(msg) {
-        return config.get('discord.authorized').indexOf(msg.author.id) > -1 || msg.member.hasPermission('ADMINISTRATOR')
+        return (config.get('discord.authorized').indexOf(msg.author.id) > -1 || msg.member.hasPermission('ADMINISTRATOR')) && true
     }
 
     static superAdminAuthorized(msg) {
@@ -128,7 +128,7 @@ class Command {
         if (this.superAdminCommand) {
             authorized = Command.superAdminAuthorized(msg)
         } else if (this.adminCommand) {
-            authorized = command.adminAuthorized(msg)
+            authorized = Command.adminAuthorized(msg)
         } else {
             authorized = true
         }

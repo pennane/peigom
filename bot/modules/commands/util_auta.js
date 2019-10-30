@@ -214,7 +214,7 @@ module.exports.run = function (msg, client, args) {
                 .addField(`:book: Komennon liipaisimet:`, `\`${prefix + [...command.triggers].join(" " + prefix)}\``)
                 .addBlankField();
 
-            if (command.adminCommand || command.type.indexOf('superadmin') !== -1) {
+            if (command.superAdminCommand || command.type.indexOf('superadmin') !== -1) {
                 embed.addField(`:warning::warning: **Huom**`, `Kyseessä on super admin komento.`);
             } else if (command.adminCommand || command.type.indexOf('admin') !== -1) {
                 embed.addField(`:warning: **Huom**`, `Kyseessä on admin komento.`);
