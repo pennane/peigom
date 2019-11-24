@@ -58,7 +58,6 @@ module.exports.run = function (msg, client, args) {
             text += i + ": <@&" + role.id + "> \n"
             role.usablePosition = i
         })
-        console.log(guildRoles)
 
         if (!args[2]) {
             text += "\nNyt tee `" + prefix + meta.name + " <anna/poista> <0-" + (guildRoles.length - 1) + ">`, ja kyseisen roolin bot-oikeudet päivittyvät."
@@ -97,8 +96,6 @@ module.exports.run = function (msg, client, args) {
             }
 
         }
-
-        console.log(adminUsers)
 
         fs.writeFile('./assets/misc/adminUsers/data.json', JSON.stringify(adminUsers), function (err) {
             if (err) {

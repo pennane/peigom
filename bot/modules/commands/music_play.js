@@ -23,7 +23,7 @@ module.exports.run = function (msg, client, args) {
         let guild = msg.guild;
 
         if (!args[1]) {
-            let embed = syntaxEmbed({args, meta, heading: ':point_up: Missä hakusanat'})
+            let embed = syntaxEmbed({ args, meta, heading: ':point_up: Missä hakusanat' })
             msg.channel.send(embed)
             return resolve();
         }

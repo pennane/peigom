@@ -46,6 +46,11 @@ function getCommandInfo(path) {
     files.forEach(file => {
         let command;
         command = new Command(require(path + "/" + file), file)
+
+        if (command.hidden) {
+            return;
+        }
+
         try {
             command.triggers.forEach((trigger) => {
                 if (!triggers.hasOwnProperty(trigger)) {
@@ -56,7 +61,7 @@ function getCommandInfo(path) {
         } catch (err) { }
     })
 
-    let commandTypes = Command.commandTypes()
+    let commandTypes = Command.commandTypes().filter((type) => type !== "hidden")
     let foundTypes = {}
     commandTypes.forEach(type => {
         foundTypes[type.name.toLowerCase()] = findCommandsForType(commands, type.name.toLowerCase())

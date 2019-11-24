@@ -86,6 +86,11 @@ class Command {
             this.type = ["other"]
         }
 
+        if (meta.hidden) {
+            this.type = ["hidden"]
+            this.hidden = true;
+        }
+
         this.name = meta.name
         this.description = meta.desc
         this.adminCommand = meta.admin

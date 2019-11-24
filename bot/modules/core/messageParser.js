@@ -32,7 +32,7 @@ module.exports.parseMsg = function (msg, client) {
     let command = commands[triggers[trigger]]
 
     if (disabled.hasOwnProperty(channelId) && disabled[channelId] === "disabled" && command.name !== "bottitoimiitäällä") {
-        msg.channel.send("Botti ei toimi tällä tekstikanavalla.").then((msg) => { msg.delete(10000) }).catch(console.log)
+        msg.channel.send("Botti ei toimi tällä tekstikanavalla.").then((msg) => { msg.delete(10000) }).catch(console.error)
         return;
     };
 
