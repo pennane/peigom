@@ -23,7 +23,7 @@
     "sharp": "0.20.7",
     "simple-youtube-api": "^5.1.1",
     "urban-dictionary": "^2.2.1",
-    "ytdl-core": "^0.29.1"
+    "ytdl-core": "^2.0.0"
   },
   "devDependencies": {},
   "scripts": {

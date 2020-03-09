@@ -8,8 +8,6 @@ const yt = new YouTube(key);
 
 
 
-
-
 let searching = { state: false, time: new Date() };
 
 function msToReadable(ms) {
@@ -43,7 +41,6 @@ function buildQueue({ textChannel, voiceChannel, guild }) {
 }
 
 function play(guild) {
-
     let serverQueue = queue.get(guild.id)
 
     if (!serverQueue) {
@@ -69,7 +66,6 @@ function play(guild) {
     let stream = ytdl(track.video_url, { filter: "audioonly", quality: "lowest" })
     let dispatcher = serverQueue.connection.playStream(stream, { volume: serverQueue.options.volume })
     serverQueue.dispatcher = dispatcher
-
     dispatcher.on('end', (reason) => {
         setTimeout(() => {
             serverQueue.tracks.shift()
