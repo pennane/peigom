@@ -26,7 +26,7 @@ module.exports.run = function (msg, client, args) {
         }
 
         let userid = args[1].replace(/\D/g, '');
-        let sudouser = msg.guild.members.get(userid);
+        let sudouser = msg.guild.members.cache.get(userid);
 
         if (!sudouser) {
             msg.delete(1200);

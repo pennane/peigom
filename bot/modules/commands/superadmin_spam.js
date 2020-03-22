@@ -15,7 +15,7 @@ let embed = syntaxEmbed({ meta })
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        
+
         if (!args[3]) {
             msg.channel.send(embed).then(msg => {
                 msg.delete(15001)
@@ -26,7 +26,7 @@ module.exports.run = function (msg, client, args) {
 
         let userid = args[1].replace(/\D/g, '');
 
-        if (!msg.guild.members.get(userid)) {
+        if (!msg.guild.members.cache.get(userid)) {
             msg.channel.send(embed).then(msg => {
                 msg.delete(15001)
             })
@@ -44,7 +44,7 @@ module.exports.run = function (msg, client, args) {
             }
         }
         for (let i = 0; i < args[2]; i++) {
-            msg.guild.members.get(userid)
+            msg.guild.members.cache.get(userid)
                 .send(args[3]);
         }
 

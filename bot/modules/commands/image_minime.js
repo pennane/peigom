@@ -9,10 +9,10 @@ const meta = {
     syntax: "minime",
     desc: "Lähettää kanavalle mini sinut.",
     triggers: ["minime"],
-    type:  ["image"]
+    type: ["image"]
 }
 
-let embed = new Discord.RichEmbed().setColor(0xF4E542);
+let embed = new Discord.MessageEmbed().setColor(0xF4E542);
 
 
 
@@ -47,7 +47,7 @@ module.exports.run = function (msg, client, args) {
                 })
                 .catch(err => console.info(err));
         }
-        let avatar = msg.author.avatarURL;
+        let avatar = msg.author.avatarURL();
         let avatarfile = `./assets/images/avatars/avatar${msg.author.id}${Date.now()}.jpg`;
         let i = 0;
         if (fs.existsSync(avatarfile)) {

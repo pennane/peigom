@@ -4,7 +4,7 @@ const syntaxEmbed = require('../utilities/syntaxEmbed')
 
 const { yt, queue } = require('../core/sound.js')
 
-let embed = new Discord.RichEmbed().setColor(0xF4E542);
+let embed = new Discord.MessageEmbed().setColor(0xF4E542);
 let ytRegex = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/
 
 const meta = {
@@ -18,7 +18,7 @@ const meta = {
 
 module.exports.run = function (msg, client, args) {
     return new Promise(async (resolve, reject) => {
-        let voiceChannel = msg.member.voiceChannel;
+        let voiceChannel = msg.member.voice.channel;
         let textChannel = msg.channel;
         let guild = msg.guild;
 

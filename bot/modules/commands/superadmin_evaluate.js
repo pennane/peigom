@@ -26,7 +26,7 @@ function codeEval(code, msg, client) {
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        let embed = new Discord.RichEmbed().setColor(0xF4E542);
+        let embed = new Discord.MessageEmbed().setColor(0xF4E542);
         if (!args[1]) {
             let embed = syntaxEmbed({ meta })
             return msg.reply(embed)

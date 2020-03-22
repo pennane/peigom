@@ -6,7 +6,7 @@ const syntaxEmbed = require('../utilities/syntaxEmbed')
 if (!fs.existsSync('./assets/misc/disabledChannels/channels.json')) { fs.writeFileSync('./assets/misc/disabledChannels/channels.json', '{}') }
 let disabledChannels = JSON.parse(fs.readFileSync('./assets/misc/disabledChannels/channels.json', 'utf8'))
 
-let embed = new Discord.RichEmbed().setColor(0xF4E542);
+let embed = new Discord.MessageEmbed().setColor(0xF4E542);
 
 
 const meta = {

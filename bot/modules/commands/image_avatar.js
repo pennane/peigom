@@ -6,16 +6,16 @@ const meta = {
     syntax: "avatar {@kuka}",
     desc: "Esittää oman, tai muun avatarin",
     triggers: ["avatar"],
-    type:  ["image"]
+    type: ["image"]
 }
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         if (args.length === 1) {
             let user = msg.member;
-            let embed = new Discord.RichEmbed()
+            let embed = new Discord.MessageEmbed()
                 .setTitle(`Käyttäjän ${user.displayName} avatari.`)
-                .setImage(user.user.displayAvatarURL);
+                .setImage(user.user.displayavatarURL()());
             msg.channel.send(embed)
                 .catch(err => console.info(err))
         } else {
@@ -24,9 +24,10 @@ module.exports.run = function (msg, client, args) {
             }
             let user = msg.guild.member(msg.mentions.members.first());
             if (!user) return resolve(msg.reply(`${args[1]} ei ole tällä severillä`));
-            let embed = new Discord.RichEmbed()
+
+            let embed = new Discord.MessageEmbed()
                 .setTitle(`Käyttäjän ${user.displayName} avatari.`)
-                .setImage(user.user.displayAvatarURL);
+                .setImage(user.user.displayavatarURL()());
             msg.channel.send(embed)
                 .catch(err => console.info(err))
         }

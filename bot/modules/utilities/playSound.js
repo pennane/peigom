@@ -6,12 +6,13 @@ const { queue } = require('../core/sound.js')
 
 module.exports.play = async function ({ soundfile, msg, client, args }) {
 
-    let embed = new Discord.RichEmbed().setColor(0xF4E542);
+    let embed = new Discord.MessageEmbed().setColor(0xF4E542);
 
     let userid = args[1] && msg.authorized ? args[1].replace(/\D/g, '') : null;
-    let voiceChannel = userid ? msg.guild.members.get(userid).voiceChannel : msg.member.voiceChannel
 
-    if (await !voiceChannel) {
+    let voiceChannel = userid ? msg.guild.members.cache.get(userid).voice.channel : msg.member.voice.channel
+
+    if (!voiceChannel) {
         embed.setTitle(`Botin kommentti:`)
             .setDescription(`${msg.member.user.username} mene eka jollekki voicechannelille, kid.`);
         msg.channel.send(embed)
@@ -40,18 +41,17 @@ module.exports.play = async function ({ soundfile, msg, client, args }) {
     }
 
     try {
-        broadcast = client.createVoiceBroadcast();
-        broadcast.playFile(soundfile);
 
-        const dispatcher = connection.playBroadcast(broadcast);
+        const dispatcher = connection.play(soundfile);
 
-        broadcast.on("end", reason => {
-            if (msg.guild.me.voiceChannel) {
-                msg.guild.me.voiceChannel.leave();
+        dispatcher.on('finish', reason => {
+            console.log("finished")
+            if (msg.guild.me.voice.channel) {
+                msg.guild.me.voice.channel.leave();
             }
         });
 
-        broadcast.on('error', error => {
+        dispatcher.on('error', error => {
             throw error;
         });
 

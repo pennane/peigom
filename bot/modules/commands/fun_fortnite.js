@@ -3,15 +3,15 @@ const Discord = require('discord.js');
 
 const dancemoves = require('../../assets/misc/fortnite/dancemoves')
 
-let embed = new Discord.RichEmbed().setColor(0xF4E542);
+let embed = new Discord.MessageEmbed().setColor(0xF4E542);
 
 const meta = {
     name: "fortnite",
     admin: false,
     syntax: "fortnite",
     desc: "tanssi eeppisiä fornite liikkeitä",
-    triggers: ["fortnite","fortnight","fornite"],
-    type:  ["fun", "sound"]
+    triggers: ["fortnite", "fortnight", "fornite"],
+    type: ["fun", "sound"]
 }
 
 let soundfile = './assets/sound/fortnite.mp3'
@@ -19,7 +19,7 @@ let soundfile = './assets/sound/fortnite.mp3'
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         let userid = args[1] && msg.authorized ? args[1].replace(/\D/g, '') : null
-        let voiceChannel = userid ? msg.guild.members.get(userid).voiceChannel : msg.member.voiceChannel
+        let voiceChannel = userid ? msg.guild.members.cache.get(userid).voice.channel : msg.member.voice.channel
         if (voiceChannel && !(msg.guild.voiceConnection)) {
             voiceChannel.join()
                 .then(async connection => {
@@ -31,7 +31,7 @@ module.exports.run = function (msg, client, args) {
 
                     })
                 });
-        } else if (!msg.member.voiceChannel) {
+        } else if (!msg.member.voice.channel) {
             resolve();
             embed.setTitle(`Botin kommentti:`)
                 .setDescription(`${msg.member.user.username} mene eka jollekki voicechannelille, kid.`);

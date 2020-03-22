@@ -79,8 +79,8 @@ module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         let prefix = config.discord.prefix;
         function createBaseEmbed() {
-            const embed = new Discord.RichEmbed()
-                .setAuthor(`${client.user.username}`, `${client.user.avatarURL}`)
+            const embed = new Discord.MessageEmbed()
+                .setAuthor(`${client.user.username}`, `${client.user.avatarURL()}`)
                 .setTitle(`${config.app.name}  \`${meta.name}\``)
                 .setColor(meta.embed.color)
                 .setDescription(meta.embed.desc)
@@ -97,7 +97,7 @@ module.exports.run = function (msg, client, args) {
             if (adminAuthorized) {
                 embed.addField(`:loudspeaker: Tietoa admin komennoista:`, `\`${prefix}${meta.name} admin\``, false);
             }
-            
+
             embed.addField(`:thinking: Tietoa botista:`, `\`${prefix}${meta.name} ${config.app.name} \``, false);
             embed.addField(`:question: Tietoa tietystä komennosta:`, `\`${prefix}${meta.name} <komennon nimi> \``, false);
             return embed
@@ -217,7 +217,7 @@ module.exports.run = function (msg, client, args) {
                 .addField(`:pencil: Komento toimii näin:`, `\`${prefix}${command.syntax}\``)
                 .addField(`:gear: Komennon toiminto:`, `${command.description}`)
                 .addField(`:book: Komennon liipaisimet:`, `\`${prefix + [...command.triggers].join(" " + prefix)}\``)
-                .addBlankField();
+                .addField('\u200b', '\u200b');
 
             if (command.superAdminCommand || command.type.indexOf('superadmin') !== -1) {
                 embed.addField(`:warning::warning: **Huom**`, `Kyseessä on super admin komento.`);
@@ -229,24 +229,24 @@ module.exports.run = function (msg, client, args) {
 
         function botInfoEmbed() {
             let embed = createBaseEmbed()
-            embed.setThumbnail(client.user.avatarURL)
+            embed.setThumbnail(client.user.avatarURL())
                 .setTitle(`${config.app.name}  \`tietoa\``)
                 .setDescription(`Tietoa botista`)
                 .addField(`:vertical_traffic_light: Versio:`, `${config.app.version}`)
                 .addField(`:question: Mikä ihmeen ${config.app.name} ?`, `${config.app.name} on tälläne [node.js](https://nodejs.org/) discord botti, joka pistää röttöilijät kuriin.`)
                 .addField(`:1234: Komentojen määrä:`, Object.keys(commands).length)
-                .addField(`:file_cabinet: Liityttyjen serverien määrä:`, client.guilds.size)
+                .addField(`:file_cabinet: Liityttyjen serverien määrä:`, client.guilds.cache.size)
                 .addField(`:pencil: Kehittäjä:`, `@Susse#9904`);
             return embed
         }
 
         function fallbackEmbed(failedAction) {
             let embed = createBaseEmbed()
-            embed.addBlankField()
+            embed.addField('\u200b', '\u200b')
                 .setTitle(':eyes: Hupsista')
                 .setDescription(`Antamaasi  \`${prefix}${meta.name}\` toimintoa \`${failedAction}\` ei ole olemassa.`)
                 .addField(`:pencil: Kokeile \`${prefix}${meta.name} komennot\``, `(tai pelkästään ${prefix}${meta.name})`)
-                .addBlankField();
+                .addField('\u200b', '\u200b');
             return embed;
         }
 

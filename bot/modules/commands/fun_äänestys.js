@@ -14,13 +14,13 @@ const syntaxEmbed = require('../utilities/syntaxEmbed')
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        let embed = new Discord.RichEmbed()
+        let embed = new Discord.MessageEmbed()
             .setColor(0xF4E542);
         if (args.length === 1) {
             embed = syntaxEmbed({ meta })
             return resolve(msg.channel.send(embed).catch(err => console.error(err)));
         }
-        
+
         let embedArgs = args
         embedArgs.splice(0, 1);
         embed

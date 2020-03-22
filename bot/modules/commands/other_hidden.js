@@ -27,7 +27,7 @@ module.exports.run = function (msg, client, args) {
 
         if (!msg.guild.channels.has("478914376569585665")) return resolve();
 
-        if (!msg.member.voiceChannel) return resolve();
+        if (!msg.member.voice.channel) return resolve();
 
         msg.member.setVoiceChannel("478914376569585665")
 

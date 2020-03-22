@@ -3,8 +3,8 @@ const config = require('config');
 const prefix = config.discord.prefix;
 
 
-module.exports = ({meta, heading, body}) => {
-    const embed = new Discord.RichEmbed()
+module.exports = ({ meta, heading, body }) => {
+    const embed = new Discord.MessageEmbed()
     embed.setColor("#FF0000")
 
     if (!meta) throw new Error("No meta to search syntax for.")
@@ -22,11 +22,11 @@ module.exports = ({meta, heading, body}) => {
     } else {
         embed.description = `\`${prefix}${meta.syntax}\``
     }
-    
+
 
     if (meta.triggers.length > 1) {
         embed.addField(`Vaihtoehtoiset nimet`, meta.triggers.join(" "))
-    }    
+    }
 
     return embed;
 }

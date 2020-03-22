@@ -23,7 +23,7 @@ module.exports.run = function (msg, client, args) {
         let definition = [...args].splice(1).join(" ")
         let index = 0
         dictionary.term(definition).then(({ entries }) => {
-            let embed = new Discord.RichEmbed().setColor(0xF4E542);
+            let embed = new Discord.MessageEmbed().setColor(0xF4E542);
             embed.addField(entries[index].word, `
             \`\`\`${entries[index].definition.replace(/\[|\]/g, "")}\`\`\` 
             \`\`\`${entries[index].example.replace(/\[|\]/g, "")}\`\`\`

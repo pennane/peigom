@@ -6,8 +6,6 @@ const YouTube = require('simple-youtube-api')
 const ytdl = require('ytdl-core');
 const yt = new YouTube(key);
 
-
-
 let searching = { state: false, time: new Date() };
 
 function msToReadable(ms) {
@@ -46,8 +44,7 @@ function play(guild) {
     if (!serverQueue) {
         return console.info("ERROR: NO SERVER QUEUE ?")
     }
-
-    if (serverQueue.connection.channel.members.size === 1) {
+    if (serverQueue.connection.channel.members.size <= 1) {
         queue.delete(guild.id)
         serverQueue.connection.disconnect();
         return;
@@ -59,14 +56,14 @@ function play(guild) {
     let track = serverQueue.tracks[0]
 
     if (!track) {
-        serverQueue.voiceChannel.leave()
+        serverQueue.voice.channel.leave()
         queue.delete(guild.id)
         return;
     }
     let stream = ytdl(track.video_url, { filter: "audioonly", quality: "lowest" })
-    let dispatcher = serverQueue.connection.playStream(stream, { volume: serverQueue.options.volume })
+    let dispatcher = serverQueue.connection.play(stream, { volume: serverQueue.options.volume })
     serverQueue.dispatcher = dispatcher
-    dispatcher.on('end', (reason) => {
+    dispatcher.on('finish', (reason) => {
         setTimeout(() => {
             serverQueue.tracks.shift()
             serverQueue.connection.dispatcher = undefined;
@@ -81,21 +78,6 @@ function play(guild) {
     dispatcher.on('error', (err) => {
         console.info('error in dispatcher:', err)
     })
-}
-
-const syntax = {
-    add: {},
-    show: {},
-    nowPlaying: {},
-    skip: {},
-    disconnect: {},
-    clear: {},
-    shuffle: {},
-    remove: {},
-    pause: {},
-    resume: {},
-    volume: {},
-    isPlaying: {}
 }
 
 module.exports = {
@@ -116,7 +98,7 @@ module.exports = {
                 let { track, guild, voiceChannel, msg } = args
                 let serverQueue = await queue.get(guild.id)
                 let ytTime = msToReadable(track.length_seconds * 1000)
-                let embed = new Discord.RichEmbed()
+                let embed = new Discord.MessageEmbed()
                     .setAuthor(`Jonoon lisätty 🎵`, track.thumbnail_url, track.video_url)
                     .addField(track.title, track.author.name)
                     .setColor('RANDOM')
@@ -156,7 +138,7 @@ module.exports = {
             if (!serverQueue) {
                 msg.channel.send(":hand_splayed: Bro, ei täällä soi mikään.")
             } else if (serverQueue.tracks.length > 0) {
-                let embed = new Discord.RichEmbed()
+                let embed = new Discord.MessageEmbed()
                     .setAuthor(`Jono kanavalla ${guild.name}`)
                     .setColor('RANDOM')
                     .addField(`Nyt soi:`, `${serverQueue.tracks[0].title} | Biisiä pyys: ${serverQueue.tracks[0].requestedBy}`, false)
@@ -180,7 +162,7 @@ module.exports = {
             if (!serverQueue) {
                 msg.channel.send(":hand_splayed: Bro, ei täällä soi mikään.")
             } else if (serverQueue.tracks.length > 0 && serverQueue.connection && serverQueue.connection.speaking) {
-                let embed = new Discord.RichEmbed();
+                let embed = new Discord.MessageEmbed();
                 let track = serverQueue.tracks[0];
                 let dpTime = msToReadable(serverQueue.connection.dispatcher.time)
                 let ytTime = msToReadable(serverQueue.tracks[0].length_seconds * 1000)

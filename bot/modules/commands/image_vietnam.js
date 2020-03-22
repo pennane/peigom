@@ -3,7 +3,7 @@ const sharp = require('sharp');
 const https = require('https');
 const Discord = require('discord.js');
 
-let embed = new Discord.RichEmbed().setColor(0xF4E542);
+let embed = new Discord.MessageEmbed().setColor(0xF4E542);
 
 const meta = {
     name: "vietnam",
@@ -11,13 +11,13 @@ const meta = {
     syntax: "vietnam",
     desc: "Lähettää kanavalle vietnam fläshbäkkejä.",
     triggers: ["vietnam", "nam"],
-    type:  ["image"]
+    type: ["image"]
 }
 
 module.exports.run = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         embed
-        .setTitle("Fläsbäkit");
+            .setTitle("Fläsbäkit");
         function rest() {
             let rand = Math.random().toString(36).substring(2, 9) + Math.random().toString(36).substring(2, 9);
             let flashback = './assets/images/flashback.png';
@@ -47,7 +47,7 @@ module.exports.run = function (msg, client, args) {
                 })
                 .catch(err => console.info(err))
         }
-        let avatar = msg.author.avatarURL;
+        let avatar = msg.author.avatarURL();
         let avatarfile = `./assets/images/avatars/avatar${msg.author.id}${Date.now()}.jpg`;
         let i = 0;
         if (fs.existsSync(avatarfile)) {

@@ -1,7 +1,7 @@
 const sound = require('../utilities/playSound.js');
 const Discord = require('discord.js');
 
-let embed = new Discord.RichEmbed().setColor(0xF4E542);
+let embed = new Discord.MessageEmbed().setColor(0xF4E542);
 
 const meta = {
     name: "ooof",
@@ -9,7 +9,7 @@ const meta = {
     syntax: "ooof",
     desc: "elongated oof",
     triggers: ["ooof"],
-    type:  ["sound"]
+    type: ["sound"]
 }
 
 

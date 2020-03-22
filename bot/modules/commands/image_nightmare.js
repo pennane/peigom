@@ -3,7 +3,7 @@ const sharp = require('sharp');
 const https = require('https');
 const Discord = require('discord.js');
 
-let embed = new Discord.RichEmbed()
+let embed = new Discord.MessageEmbed()
     .setColor(0xF4E542);
 const meta = {
     name: "nightmare",
@@ -11,7 +11,7 @@ const meta = {
     syntax: "nightmare",
     desc: "Lähettää kanavalle suurta kuumotusta.",
     triggers: ["nightmare", "nitemare"],
-    type:  ["image"]
+    type: ["image"]
 }
 
 module.exports.run = function (msg, client, args) {
@@ -47,7 +47,7 @@ module.exports.run = function (msg, client, args) {
                 })
                 .catch(err => console.info(err));
         }
-        let avatar = msg.author.avatarURL;
+        let avatar = msg.author.avatarURL();
         let avatarfile = `./assets/images/avatars/avatar${msg.author.id}${Date.now()}.jpg`;
         let i = 0;
         if (fs.existsSync(avatarfile)) {

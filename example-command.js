@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 
-let embed = new Discord.RichEmbed()
+let embed = new Discord.MessageEmbed()
     .setColor(0xF4E542)
     .setTitle("Botin kommentti:")
     .setDescription("example");

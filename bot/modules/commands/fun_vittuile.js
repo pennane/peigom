@@ -7,7 +7,7 @@ const meta = {
     syntax: "vittuile",
     desc: "Vittuile botille",
     triggers: ["vittuile"],
-    type:  ["fun"]
+    type: ["fun"]
 }
 
 module.exports.run = function (msg, client, args) {
@@ -22,13 +22,13 @@ module.exports.run = function (msg, client, args) {
         }
 
         let bothier = 0;
-        msg.guild.members.get(client.user.id).roles.forEach(role => {
+        msg.guild.members.cache.get(client.user.id).roles.forEach(role => {
             if (role.position > bothier) bothier = role.position;
         });
 
         if (msg.member.roles.find(role => role.position > bothier)) {
             msg.reply('Jaha, no eipä mulla ollukkaa oikeuksia pistää sua turpaa.')
-        } else if (msg.guild.members.get(client.user.id).hasPermission("MANAGE_NICKNAMES") && !msg.member.hasPermission("ADMINISTRATOR")) {
+        } else if (msg.guild.members.cache.get(client.user.id).hasPermission("MANAGE_NICKNAMES") && !msg.member.hasPermission("ADMINISTRATOR")) {
             msg.member.setNickname(names[rand])
                 .then(() => msg.reply(`miltäs kaunis uusi nimesi '${names[rand]}' tuntuu, hä?`).catch(err => console.info(err)))
                 .catch(error => console.info(error));
