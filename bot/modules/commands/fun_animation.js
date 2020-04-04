@@ -1,8 +1,8 @@
 
 const Discord = require('discord.js');
 const animation = require('../../assets/misc/animation/animation.json');
-const config = require('config')
-let prefix = config.discord.prefix;
+const CLIENT_CONFIG = require('config')
+let prefix = CLIENT_CONFIG.get('DISCORD.PREFIX');
 
 const configuration = {
     name: "animation",

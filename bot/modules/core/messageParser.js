@@ -1,4 +1,4 @@
-const config = require('config')
+const CLIENT_CONFIG = require('config')
 const loader = require('./commandLoader')
 const { check } = require('../utilities/spamProtection')
 const logger = require('../utilities/activityLogger')
@@ -7,8 +7,8 @@ const badWords = require('../../assets/misc/badwords/badwords.json').badwords
 const disabledChannels = require('../commands/admin_disable').channelData;
 
 let commandDir = __dirname + '/../commands'
-let prefix = config.get("discord.prefix")
-let COMMAND_SPAM_PROTECTION = config.get("COMMAND_SPAM_PROTECTION")
+let prefix = CLIENT_CONFIG.get('DISCORD.PREFIX')
+let COMMAND_SPAM_PROTECTION = CLIENT_CONFIG.get("COMMAND_SPAM_PROTECTION")
 let { commands, triggers } = loader.load(commandDir);
 
 module.exports.parseMsg = function (msg, client) {

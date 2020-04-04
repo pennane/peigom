@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
-const config = require('config');
-const prefix = config.discord.prefix;
+const CLIENT_CONFIG = require('config');
+const prefix = CLIENT_CONFIG.DISCORD.PREFIX;
 
 
 module.exports = ({ configuration, heading, body }) => {

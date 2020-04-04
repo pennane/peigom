@@ -1,4 +1,4 @@
-const config = require('config');
+const CLIENT_CONFIG = require('config');
 const Discord = require('discord.js');
 const fs = require('fs')
 const Command = require('../core/command')
@@ -77,11 +77,11 @@ module.exports.configuration = configuration;
 
 module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        let prefix = config.discord.prefix;
+        let prefix = CLIENT_CONFIG.get('DISCORD.PREFIX');
         function createBaseEmbed() {
             const embed = new Discord.MessageEmbed()
                 .setAuthor(`${client.user.username}`, `${client.user.avatarURL()}`)
-                .setTitle(`${config.app.name}  \`${configuration.name}\``)
+                .setTitle(`${CLIENT_CONFIG.get('APP.NAME')}  \`${configuration.name}\``)
                 .setColor(configuration.embed.color)
                 .setDescription(configuration.embed.desc)
                 .setFooter(configuration.embed.footer, "https://arttu.pennanen.org/file/thonk.gif")
@@ -98,7 +98,7 @@ module.exports.executor = function (msg, client, args) {
                 embed.addField(`:loudspeaker: Tietoa admin komennoista:`, `\`${prefix}${configuration.name} admin\``, false);
             }
 
-            embed.addField(`:thinking: Tietoa botista:`, `\`${prefix}${configuration.name} ${config.app.name} \``, false);
+            embed.addField(`:thinking: Tietoa botista:`, `\`${prefix}${configuration.name} ${CLIENT_CONFIG.get('APP.NAME')} \``, false);
             embed.addField(`:question: Tietoa tietystä komennosta:`, `\`${prefix}${configuration.name} <komennon nimi> \``, false);
             return embed
         }
@@ -230,10 +230,10 @@ module.exports.executor = function (msg, client, args) {
         function botInfoEmbed() {
             let embed = createBaseEmbed()
             embed.setThumbnail(client.user.avatarURL())
-                .setTitle(`${config.app.name}  \`tietoa\``)
+                .setTitle(`${CLIENT_CONFIG.APP.NAME}  \`tietoa\``)
                 .setDescription(`Tietoa botista`)
-                .addField(`:vertical_traffic_light: Versio:`, `${config.app.version}`)
-                .addField(`:question: Mikä ihmeen ${config.app.name} ?`, `${config.app.name} on tälläne [node.js](https://nodejs.org/) discord botti, joka pistää röttöilijät kuriin.`)
+                .addField(`:vertical_traffic_light: Versio:`, `${CLIENT_CONFIG.get('APP.VERSION')}`)
+                .addField(`:question: Mikä ihmeen ${CLIENT_CONFIG.get('APP.NAME')} ?`, `${CLIENT_CONFIG.get('APP.NAME')} on tälläne [node.js](https://nodejs.org/) discord botti, joka pistää röttöilijät kuriin.`)
                 .addField(`:1234: Komentojen määrä:`, Object.keys(commands).length)
                 .addField(`:file_cabinet: Liityttyjen serverien määrä:`, client.guilds.cache.size)
                 .addField(`:pencil: Kehittäjä:`, `@Susse#9904`);
@@ -266,7 +266,7 @@ module.exports.executor = function (msg, client, args) {
         } else if (foundTypes.hasOwnProperty(args[1])) {
             msg.channel.send(commandsForTypeEmbed(args[1])).catch(error => console.info(error))
         }
-        else if (args[1] === config.app.name) {
+        else if (args[1] === CLIENT_CONFIG.get('APP.NAME') {
             msg.channel.send(botInfoEmbed()).catch(error => console.info(error))
         } else if (triggers[args[1]]) {
             msg.channel.send(commandEmbed(args[1])).catch(error => console.info(error))

@@ -2,7 +2,7 @@ process.chdir(__dirname)
 
 const authorize = require('./config/authorize.json')
 const schedule = require('node-schedule')
-const config = require('config')
+const CLIENT_CONFIG = require('config')
 const Discord = require('discord.js')
 const chalk = require('chalk')
 
@@ -27,14 +27,14 @@ const shuffleArray = (arr) => {
 }
 
 client.on('ready', () => {
-    let presence = config.discord.presence
-    let activities = shuffleArray(presence.activities)
+    let PRESENCE = CLIENT_CONFIG.get('DISCORD.PRESENCE')
+    let activities = shuffleArray(PRESENCE.activities)
     let i = Math.floor(Math.random() * activities.length)
 
     startingInfo.set(client)
     client.user.setActivity(activities[i].text, { type: activities[i].type })
 
-    schedule.scheduleJob(`*/${presence.refreshrate} * * * *`, () => {
+    schedule.scheduleJob(`*/${PRESENCE.REFRESH_RATE} * * * *`, () => {
         client.user.setActivity(activities[i].text, { type: activities[i].type })
         if (i === activities.length - 1) i = 0;
         else i++;

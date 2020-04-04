@@ -1,4 +1,3 @@
-const config = require('config');
 const names = require('../../assets/misc/badwords/badwords.json').badwords
 
 const configuration = {

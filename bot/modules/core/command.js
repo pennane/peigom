@@ -1,4 +1,4 @@
-const config = require('config')
+const CLIENT_CONFIG = require('config')
 const logger = require('../utilities/activityLogger')
 
 function isObject(o) {
@@ -121,11 +121,11 @@ class Command {
     }
 
     static adminAuthorized(msg) {
-        return (config.get('discord.authorized').indexOf(msg.author.id) > -1 || msg.member.hasPermission('ADMINISTRATOR')) && true
+        return (CLIENT_CONFIG.get('DISCORD.AUTHORIZED').indexOf(msg.author.id) > -1 || msg.member.hasPermission('ADMINISTRATOR')) && true
     }
 
     static superAdminAuthorized(msg) {
-        return config.get('discord.authorized').indexOf(msg.author.id) > -1 | false
+        return CLIENT_CONFIG.get('DISCORD.AUTHORIZED').indexOf(msg.author.id) > -1 | false
     }
 
     exec(msg, client, args) {

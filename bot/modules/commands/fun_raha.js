@@ -1,4 +1,4 @@
-const config = require("config");
+const CLIENT_CONFIG = require("config");
 
 const fs = require("fs");
 
@@ -47,7 +47,7 @@ const configuration = {
 
 module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        const prefix = config.discord.prefix;
+        const prefix = CLIENT_CONFIG.get('DISCORD.PREFIX');
         let syntax = configuration.syntax;
         let daily = configuration.daily;
         embed

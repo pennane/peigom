@@ -1,7 +1,5 @@
-const config = require('config');
+const CLIENT_CONFIG = require('config');
 const fs = require('fs');
-const Discord = require('discord.js');
-const syntaxEmbed = require('../utilities/syntaxEmbed')
 
 if (!fs.existsSync('./assets/misc/adminUsers/data.json')) { fs.writeFileSync('./assets/misc/adminUsers/data.json', '{}') }
 let adminUsers = JSON.parse(fs.readFileSync('./assets/misc/adminUsers/data.json', 'utf8'))
@@ -17,7 +15,7 @@ const configuration = {
     hidden: true
 }
 
-let prefix = config.discord.prefix;
+let prefix = CLIENT_CONFIG.get('DISCORD.PREFIX');
 
 module.exports.executor = function (msg, client, args) {
 

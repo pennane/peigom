@@ -1,4 +1,4 @@
-const config = require('config');
+const CLIENT_CONFIG = require('config');
 const fs = require('fs');
 const Discord = require('discord.js');
 const syntaxEmbed = require('../utilities/syntaxEmbed')
@@ -16,7 +16,7 @@ const configuration = {
     type: ["admin"]
 }
 
-let prefix = config.discord.prefix;
+let prefix = CLIENT_CONFIG.get('DISCORD.PREFIX');
 
 module.exports.executor = function (msg, client, args) {
 

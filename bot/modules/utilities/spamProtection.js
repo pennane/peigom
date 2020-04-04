@@ -1,4 +1,4 @@
-const config = require('config');
+const CLIENT_CONFIG = require('config');
 let cachedMessageData = new Map()
 
 module.exports.check = (user, command) => {
@@ -9,8 +9,8 @@ module.exports.check = (user, command) => {
         }
 
         // How many commands can be sent in how many seconds
-        let AMOUNT_OF_COMMANDS = config.COMMAND_SPAM_PROTECTION.AMOUNT_OF_COMMANDS
-        let AMOUNT_OF_SECONDS = config.COMMAND_SPAM_PROTECTION.AMOUNT_OF_SECONDS
+        let AMOUNT_OF_COMMANDS = CLIENT_CONFIG.get('COMMAND_SPAM_PROTECTION.AMOUNT_OF_COMMANDS')
+        let AMOUNT_OF_SECONDS = CLIENT_CONFIG.get('COMMAND_SPAM_PROTECTION.AMOUNT_OF_SECONDS')
 
         let now = Date.now();
 
