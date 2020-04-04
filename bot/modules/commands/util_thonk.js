@@ -9,7 +9,8 @@ const configuration = {
 
 module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        if (client.emojis.has("443343009229045760") && (msg.guild.emojis.has("443343009229045760") || msg.channel.permissionsFor(msg.guild.me).has("USE_EXTERNAL_EMOJIS"))) {
+        console.log(client.emojis)
+        if (client.emojis.cache.filter(emoji => emoji === "443343009229045760") && (msg.guild.emojis.cache.filter(emoji => emoji === "443343009229045760") || msg.channel.permissionsFor(msg.guild.me).has("USE_EXTERNAL_EMOJIS"))) {
             msg.channel.send('<a:thonk:443343009229045760>')
                 .catch(err => console.info(err))
         } else {
