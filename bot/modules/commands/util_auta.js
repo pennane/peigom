@@ -266,7 +266,7 @@ module.exports.executor = function (msg, client, args) {
         } else if (foundTypes.hasOwnProperty(args[1])) {
             msg.channel.send(commandsForTypeEmbed(args[1])).catch(error => console.info(error))
         }
-        else if (args[1] === CLIENT_CONFIG.get('APP.NAME') {
+        else if (args[1] === CLIENT_CONFIG.get('APP.NAME')) {
             msg.channel.send(botInfoEmbed()).catch(error => console.info(error))
         } else if (triggers[args[1]]) {
             msg.channel.send(commandEmbed(args[1])).catch(error => console.info(error))
