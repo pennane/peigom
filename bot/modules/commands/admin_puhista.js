@@ -19,8 +19,8 @@ module.exports = {
         return new Promise((resolve, reject) => {
             if (args[1] >= 2 && args[1] <= 99) {
                 embed.setDescription(`Poistin ${args[1]} viestiä.`)
-                let todel = parseInt(args[1]) + 1;
-                msg.channel.bulkDelete(todel)
+                let amount = parseInt(args[1]) + 1;
+                msg.channel.bulkDelete(amount)
                     .then(() => {
                         msg.channel.send(embed)
                             .then(msg => msg.delete(4000))

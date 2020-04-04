@@ -56,7 +56,7 @@ function play(guild) {
     let track = serverQueue.tracks[0]
 
     if (!track) {
-        serverQueue.voice.channel.leave()
+        serverQueue.voiceChannel.leave()
         queue.delete(guild.id)
         return;
     }
@@ -110,7 +110,6 @@ module.exports = {
                 if (!serverQueue || (!serverQueue.connection || !serverQueue.connection.speaking)) {
                     queue.set(guild.id, buildQueue(args))
                     serverQueue = await queue.get(guild.id)
-
                     try {
                         let connection = voiceChannel.join()
                         serverQueue.connection = await connection;
@@ -183,11 +182,14 @@ module.exports = {
         skip: function (args) {
             let { guild, msg } = args
             let serverQueue = queue.get(guild.id)
-            let connection = serverQueue.connection
-
             if (!serverQueue) {
                 msg.channel.send(":hand_splayed: Bro, ei täällä soi mikään.")
-            } else if (serverQueue && connection && (connection.dispatcher || connection.speaking === true)) {
+                return
+            }
+
+            let connection = serverQueue.connection
+
+            if (serverQueue && connection && (connection.dispatcher || connection.speaking === true)) {
                 msg.channel.send(`:track_next: ${serverQueue.tracks[0].title} skipattu!`)
                 serverQueue.connection.dispatcher.end('skip')
             } else {
@@ -268,6 +270,7 @@ module.exports = {
                 return false;
             }
             serverQueue = queue.get(guild.id)
+            console.log(serverQueue)
             if (!serverQueue) {
                 return false;
             }
