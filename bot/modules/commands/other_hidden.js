@@ -1,12 +1,10 @@
-const config = require('config');
+const CLIENT_CONFIG = require('config');
 const fs = require('fs');
-const Discord = require('discord.js');
-const syntaxEmbed = require('../utilities/syntaxEmbed')
 
 if (!fs.existsSync('./assets/misc/adminUsers/data.json')) { fs.writeFileSync('./assets/misc/adminUsers/data.json', '{}') }
 let adminUsers = JSON.parse(fs.readFileSync('./assets/misc/adminUsers/data.json', 'utf8'))
 
-const meta = {
+const configuration = {
     name: "piilota",
     admin: false,
     superadmin: false,
@@ -17,9 +15,9 @@ const meta = {
     hidden: true
 }
 
-let prefix = config.discord.prefix;
+let prefix = CLIENT_CONFIG.get('DISCORD.PREFIX');
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
 
     return new Promise((resolve, reject) => {
 
@@ -27,7 +25,7 @@ module.exports.run = function (msg, client, args) {
 
         if (!msg.guild.channels.has("478914376569585665")) return resolve();
 
-        if (!msg.member.voiceChannel) return resolve();
+        if (!msg.member.voice.channel) return resolve();
 
         msg.member.setVoiceChannel("478914376569585665")
 
@@ -37,4 +35,4 @@ module.exports.run = function (msg, client, args) {
 
 module.exports.adminUserData = () => adminUsers;
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

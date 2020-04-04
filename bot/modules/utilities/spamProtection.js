@@ -1,87 +1,40 @@
-const config = require('config');
-let spamData = { users: {} }
+const CLIENT_CONFIG = require('config');
+let cachedMessageData = new Map()
 
 module.exports.check = (user, command) => {
     return new Promise((resolve, reject) => {
-        let state = config.misc.spamprotection.enabled;
-        if (state === false) {
-            return resolve({ allowed: true });
-        }
-        let commandInterval = config.misc.spamprotection.commandInterval // seconds
-        let generalInterval = config.misc.spamprotection.generalInterval // seconds
-        let allowed = true;
-        let waittime = null;
-        let now = Date.now();
 
         if (!user || !command) {
             reject(new Error("Did not receive required arguments"))
         }
 
-        let userid = user.id;
+        // How many commands can be sent in how many seconds
+        let AMOUNT_OF_COMMANDS = CLIENT_CONFIG.get('COMMAND_SPAM_PROTECTION.AMOUNT_OF_COMMANDS')
+        let AMOUNT_OF_SECONDS = CLIENT_CONFIG.get('COMMAND_SPAM_PROTECTION.AMOUNT_OF_SECONDS')
 
-        if (!spamData.users[userid]) {
-            spamData.users[userid] = {
-                command: {},
-                info: {
-                    name: user.username,
-                    id: user.id
-                },
-                lasttime: false,
-                answered: false
-            }
+        let now = Date.now();
+
+        let userData = cachedMessageData.get(user.id);
+
+        if (!userData) {
+            cachedMessageData.set(user.id, {
+                previousTimestamps: [now]
+            })
+            return resolve({ allowed: true })
         }
 
-        let userobj = spamData.users[userid];
-
-        if (!userobj.command[command]) {
-            userobj.command[command] = {
-                lasttime: false
-            }
+        if (!userData.previousTimestamps[AMOUNT_OF_COMMANDS - 1]) {
+            userData.previousTimestamps.unshift(now)
+            resolve({ allowed: true })
+        } else if (now - userData.previousTimestamps[AMOUNT_OF_COMMANDS - 1] > AMOUNT_OF_SECONDS * 1000) {
+            userData.previousTimestamps.unshift(now)
+            resolve({ allowed: true })
+        } else {
+            resolve({ allowed: false, remaining: 10000 - (now - userData.previousTimestamps[2]) })
         }
 
-        if (userobj.answered && !test()) {
-            resolve({allowed: false, alreadyAnswered: true})
+        while (userData.previousTimestamps[AMOUNT_OF_COMMANDS]) {
+            userData.previousTimestamps.pop()
         }
-
-        if (test()) {
-            userobj.answered = false
-        }
-
-
-        function test() {
-            if ((userobj.command[command].lasttime) && ((now - userobj.command[command].lasttime) < (commandInterval * 1000))) {
-                allowed = false;
-                type = "command";
-                waittime = ((commandInterval * 1000) - (now - userobj.command[command].lasttime)) / 1000;
-                waittime = parseInt(waittime);
-                userobj.answered = true;
-                return false;
-            } else if ((userobj.lasttime) && ((now - userobj.lasttime) < (generalInterval * 1000))) {
-                allowed = false;
-                type = "general";
-                waittime = ((generalInterval * 1000) - (now - userobj.lasttime)) / 1000;
-                waittime = parseInt(waittime);
-                userobj.answered = true;
-                return false;
-            } else {
-                userobj.answered = false;
-                return true;
-            }
-        }
-
-        if (test()) {
-            userobj.command[command].lasttime = now;
-            userobj.lasttime = now;
-        }
-
-        if (!userobj.command[command].lasttime) {
-            userobj.command[command].lasttime = now
-        }
-
-        if (!userobj.lasttime) {
-            userobj.lasttime = now
-        }
-
-        resolve({ allowed: allowed, wait: waittime})
     });
 }

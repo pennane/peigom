@@ -1,74 +1,70 @@
 {
-    "app": {
-        "name": "peigom-bot"
-    },
-    "discord": {
-        "prefix": ",",
-        "authorized": [
-            "AUTHORIZED USER ID HERE"
-        ],
-        "authorizedRole": [
-            "AUTHORIZED ROLE NAME HERE"
-        ],
-        "presence": {
-            "activities": [
-                {
-                    "name": ",auta",
-                    "type": 2
-                },
-                {
-                    "name": "my name be jeff",
-                    "type": 0
-                },
-                {
-                    "name": "yo big man bom",
-                    "type": 0
-                },
-                {
-                    "name": ">:^V",
-                    "type": 3
-                },
-                {
-                    "name": "sugondese is a funny meme",
-                    "type": 0
-                },
-                {
-                    "name": "töis mut ei töis",
-                    "type": 0
-                },
-                {
-                    "name": "big, if true",
-                    "type": 3
-                },
-                {
-                    "name": "documentaries",
-                    "type": 3
-                },
-                {
-                    "name": "smooth swing jazz",
-                    "type": 2
-                },
-                {
-                    "name": "your conversation",
-                    "type": 2
-                },
-                {
-                    "name": "pimpeli pom, nimi o peigom",
-                    "type": 0
-                },
-                {
-                    "name": "Playing",
-                    "type": 0
-                }
-            ],
-            "refreshrate" : 30
+  "APP": {
+    "VERSION": "1.2.0",
+    "NAME": "peigom-bot"
+  },
+  "DISCORD": {
+    "PREFIX": ",",
+    "AUTHORIZED": ["1234567890"],
+    "AUTHORIZED_ROLENAMES": ["peigom-admin"],
+    "PRESENCE": {
+      "activities": [
+        {
+          "text": ",auta",
+          "type": 2
+        },
+        {
+          "text": "my name be jeff",
+          "type": 0
+        },
+        {
+          "text": "yo big man bom",
+          "type": 0
+        },
+        {
+          "text": ">:^V",
+          "type": 3
+        },
+        {
+          "text": "sugondese is a funny meme",
+          "type": 0
+        },
+        {
+          "text": "töis mut ei töis",
+          "type": 0
+        },
+        {
+          "text": "big, if true",
+          "type": 3
+        },
+        {
+          "text": "documentaries",
+          "type": 3
+        },
+        {
+          "text": "smooth swing jazz",
+          "type": 2
+        },
+        {
+          "text": "your conversation",
+          "type": 2
+        },
+        {
+          "text": "pimpeli pom, nimi o peigom",
+          "type": 0
+        },
+        {
+          "text": "Playing",
+          "type": 0
         }
-    },
-    "misc": {
-        "spamprotection": {
-            "state": false,
-            "generalInterval": 5,
-            "commandInterval": 3
-        }
+      ],
+      "REFRESH_RATE": 30
     }
+  },
+  "COMMAND_SPAM_PROTECTION": {
+    "STATE": true,
+    "AMOUNT_OF_COMMANDS": 4,
+    "AMOUNT_OF_SECONDS": 12
+  },
+  "LOG_USED_COMMANDS": true
 }

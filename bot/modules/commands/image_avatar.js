@@ -1,32 +1,33 @@
 const Discord = require("discord.js");
 
-const meta = {
+const configuration = {
     name: "avatar",
     admin: false,
     syntax: "avatar {@kuka}",
     desc: "Esittää oman, tai muun avatarin",
     triggers: ["avatar"],
-    type:  ["image"]
+    type: ["image"]
 }
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         if (args.length === 1) {
-            let user = msg.member;
-            let embed = new Discord.RichEmbed()
-                .setTitle(`Käyttäjän ${user.displayName} avatari.`)
-                .setImage(user.user.displayAvatarURL);
+            let member = msg.member;
+            let embed = new Discord.MessageEmbed()
+                .setTitle(`Käyttäjän ${member.displayName} avatari.`)
+                .setImage(member.user.displayAvatarURL());
             msg.channel.send(embed)
                 .catch(err => console.info(err))
         } else {
             if (!args[1].startsWith("<@")) {
                 return resolve(msg.reply(`Et käyttänyt \`@käyttäjä\` syntaksia.`));
             }
-            let user = msg.guild.member(msg.mentions.members.first());
-            if (!user) return resolve(msg.reply(`${args[1]} ei ole tällä severillä`));
-            let embed = new Discord.RichEmbed()
-                .setTitle(`Käyttäjän ${user.displayName} avatari.`)
-                .setImage(user.user.displayAvatarURL);
+            let member = msg.guild.member(msg.mentions.members.first());
+            if (!member) return resolve(msg.reply(`${args[1]} ei ole tällä severillä`));
+
+            let embed = new Discord.MessageEmbed()
+                .setTitle(`Käyttäjän ${member.displayName} avatari.`)
+                .setImage(member.user.displayAvatarURL());
             msg.channel.send(embed)
                 .catch(err => console.info(err))
         }
@@ -36,4 +37,4 @@ module.exports.run = function (msg, client, args) {
 
 }
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

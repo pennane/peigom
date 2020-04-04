@@ -3,18 +3,18 @@ const sharp = require('sharp');
 const https = require('https');
 const Discord = require('discord.js');
 
-let embed = new Discord.RichEmbed().setColor(0xF4E542);
+let embed = new Discord.MessageEmbed().setColor(0xF4E542);
 
-const meta = {
+const configuration = {
     name: "jpeg",
     admin: false,
     syntax: "jpeg",
     desc: "Luulekko et mä tiedän mikä jpeg on? Haluun vaa kuvan mun hodarista.",
     triggers: ["jpeg", "jpg"],
-    type:  ["image"]
+    type: ["image"]
 }
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         function rest() {
             let rand = Math.random().toString(36).substring(2, 9) + Math.random().toString(36).substring(2, 9);
@@ -22,6 +22,7 @@ module.exports.run = function (msg, client, args) {
             imgname = String(imgname);
             embed
                 .setTitle("Hyper jpeg laatu");
+
             sharp(avatarfile)
                 .resize(256, 256)
                 .jpeg({ quality: 1 })
@@ -43,17 +44,24 @@ module.exports.run = function (msg, client, args) {
                 })
                 .catch(err => console.info(err));
         }
-        let avatar = msg.author.avatarURL;
-        let avatarfile = `./assets/images/avatars/avatar${msg.author.id}${Date.now()}.jpg`;
+        let targetUser = args[1] ? msg.guild.members.cache.get(args[1].replace(/\D/g, '')).user : msg.author
+        if (!targetUser) {
+            return resolve()
+        }
+        let avatar = targetUser.avatarURL();
+        let avatarfile = `./assets/images/avatars/avatar${targetUser.id}${Date.now()}.jpg`;
         let i = 0;
         if (fs.existsSync(avatarfile)) {
             rest();
         }
         if (!fs.existsSync(avatarfile)) {
+
             let file = fs.createWriteStream(avatarfile);
-            let request = https.get(avatar, function (response) {
+            https.get(avatar, function (response) {
                 response.pipe(file)
+
             });
+
             file.on('finish', function () {
                 i++;
                 if (i = 1) {
@@ -64,4 +72,4 @@ module.exports.run = function (msg, client, args) {
         resolve();
     })
 }
-module.exports.meta = meta;
+module.exports.configuration = configuration;

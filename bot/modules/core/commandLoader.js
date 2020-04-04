@@ -1,10 +1,8 @@
 const fs = require('fs')
 const Command = require('./command')
 const logger = require('../utilities/activityLogger')
-const chalk = require('chalk')
 
 const reservedNames = [
-    "musci",
     "utility",
     "komennot",
     "fun",
@@ -15,7 +13,7 @@ const reservedNames = [
     "other"
 ]
 
-module.exports.loadCommands = function (path) {
+module.exports.load = function (path) {
     let files = []
     let triggers = {}
     let commands = {}
@@ -31,7 +29,6 @@ module.exports.loadCommands = function (path) {
         let command = new Command(require(path + "/" + file), file)
 
         try {
-
             command.triggers.forEach((trigger) => {
                 if (reservedNames.indexOf(trigger) !== -1) {
                     throw new Error(`Warning! Command "${command.name}" tried to use a reserved name ${trigger} as a trigger.`)

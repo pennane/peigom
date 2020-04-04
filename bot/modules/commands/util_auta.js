@@ -1,11 +1,11 @@
-const config = require('config');
+const CLIENT_CONFIG = require('config');
 const Discord = require('discord.js');
 const fs = require('fs')
 const Command = require('../core/command')
 const logger = require('../utilities/activityLogger')
 let commandDir = __dirname
 
-const meta = {
+const configuration = {
     name: "auta",
     admin: false,
     syntax: "auta <komennon/toiminnon nimi>",
@@ -73,18 +73,18 @@ function getCommandInfo(path) {
 
 
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        let prefix = config.discord.prefix;
+        let prefix = CLIENT_CONFIG.get('DISCORD.PREFIX');
         function createBaseEmbed() {
-            const embed = new Discord.RichEmbed()
-                .setAuthor(`${client.user.username}`, `${client.user.avatarURL}`)
-                .setTitle(`${config.app.name}  \`${meta.name}\``)
-                .setColor(meta.embed.color)
-                .setDescription(meta.embed.desc)
-                .setFooter(meta.embed.footer, "https://arttu.pennanen.org/file/thonk.gif")
+            const embed = new Discord.MessageEmbed()
+                .setAuthor(`${client.user.username}`, `${client.user.avatarURL()}`)
+                .setTitle(`${CLIENT_CONFIG.get('APP.NAME')}  \`${configuration.name}\``)
+                .setColor(configuration.embed.color)
+                .setDescription(configuration.embed.desc)
+                .setFooter(configuration.embed.footer, "https://arttu.pennanen.org/file/thonk.gif")
                 .setTimestamp()
 
             return embed;
@@ -93,13 +93,13 @@ module.exports.run = function (msg, client, args) {
         function defaultResponseEmbed() {
             let embed = createBaseEmbed();
             let adminAuthorized = Command.adminAuthorized(msg)
-            embed.addField(`:mega: Tietoa komennoista:`, `\`${prefix}${meta.name} komennot\``, false);
+            embed.addField(`:mega: Tietoa komennoista:`, `\`${prefix}${configuration.name} komennot\``, false);
             if (adminAuthorized) {
-                embed.addField(`:loudspeaker: Tietoa admin komennoista:`, `\`${prefix}${meta.name} admin\``, false);
+                embed.addField(`:loudspeaker: Tietoa admin komennoista:`, `\`${prefix}${configuration.name} admin\``, false);
             }
-            
-            embed.addField(`:thinking: Tietoa botista:`, `\`${prefix}${meta.name} ${config.app.name} \``, false);
-            embed.addField(`:question: Tietoa tietystä komennosta:`, `\`${prefix}${meta.name} <komennon nimi> \``, false);
+
+            embed.addField(`:thinking: Tietoa botista:`, `\`${prefix}${configuration.name} ${CLIENT_CONFIG.get('APP.NAME')} \``, false);
+            embed.addField(`:question: Tietoa tietystä komennosta:`, `\`${prefix}${configuration.name} <komennon nimi> \``, false);
             return embed
         }
 
@@ -125,7 +125,7 @@ module.exports.run = function (msg, client, args) {
 
             commandTypes.forEach(type => {
                 if (foundTypes[type.name.toLowerCase()] && foundTypes[type.name.toLowerCase()].length !== 0) {
-                    embed.addField(`${type.emoji} ${type.name}`, `\`${prefix}${meta.name} ${type.name} \``, true)
+                    embed.addField(`${type.emoji} ${type.name}`, `\`${prefix}${configuration.name} ${type.name} \``, true)
                     addedInlineFields++;
                 }
             })
@@ -179,7 +179,7 @@ module.exports.run = function (msg, client, args) {
             }
 
             foundCommands.forEach(command => {
-                embed.addField(` ${(command.type.indexOf('admin') !== -1 || command.type.indexOf('superadmin') !== -1) ? ':unlock: ' : ""}${command.name}`, `\`${prefix}${meta.name} ${command.name} \``, true)
+                embed.addField(` ${(command.type.indexOf('admin') !== -1 || command.type.indexOf('superadmin') !== -1) ? ':unlock: ' : ""}${command.name}`, `\`${prefix}${configuration.name} ${command.name} \``, true)
             })
 
             if (foundCommands.length % 3 === 2) {
@@ -217,7 +217,7 @@ module.exports.run = function (msg, client, args) {
                 .addField(`:pencil: Komento toimii näin:`, `\`${prefix}${command.syntax}\``)
                 .addField(`:gear: Komennon toiminto:`, `${command.description}`)
                 .addField(`:book: Komennon liipaisimet:`, `\`${prefix + [...command.triggers].join(" " + prefix)}\``)
-                .addBlankField();
+                .addField('\u200b', '\u200b');
 
             if (command.superAdminCommand || command.type.indexOf('superadmin') !== -1) {
                 embed.addField(`:warning::warning: **Huom**`, `Kyseessä on super admin komento.`);
@@ -229,24 +229,24 @@ module.exports.run = function (msg, client, args) {
 
         function botInfoEmbed() {
             let embed = createBaseEmbed()
-            embed.setThumbnail(client.user.avatarURL)
-                .setTitle(`${config.app.name}  \`tietoa\``)
+            embed.setThumbnail(client.user.avatarURL())
+                .setTitle(`${CLIENT_CONFIG.APP.NAME}  \`tietoa\``)
                 .setDescription(`Tietoa botista`)
-                .addField(`:vertical_traffic_light: Versio:`, `${config.app.version}`)
-                .addField(`:question: Mikä ihmeen ${config.app.name} ?`, `${config.app.name} on tälläne [node.js](https://nodejs.org/) discord botti, joka pistää röttöilijät kuriin.`)
+                .addField(`:vertical_traffic_light: Versio:`, `${CLIENT_CONFIG.get('APP.VERSION')}`)
+                .addField(`:question: Mikä ihmeen ${CLIENT_CONFIG.get('APP.NAME')} ?`, `${CLIENT_CONFIG.get('APP.NAME')} on tälläne [node.js](https://nodejs.org/) discord botti, joka pistää röttöilijät kuriin.`)
                 .addField(`:1234: Komentojen määrä:`, Object.keys(commands).length)
-                .addField(`:file_cabinet: Liityttyjen serverien määrä:`, client.guilds.size)
+                .addField(`:file_cabinet: Liityttyjen serverien määrä:`, client.guilds.cache.size)
                 .addField(`:pencil: Kehittäjä:`, `@Susse#9904`);
             return embed
         }
 
         function fallbackEmbed(failedAction) {
             let embed = createBaseEmbed()
-            embed.addBlankField()
+            embed.addField('\u200b', '\u200b')
                 .setTitle(':eyes: Hupsista')
-                .setDescription(`Antamaasi  \`${prefix}${meta.name}\` toimintoa \`${failedAction}\` ei ole olemassa.`)
-                .addField(`:pencil: Kokeile \`${prefix}${meta.name} komennot\``, `(tai pelkästään ${prefix}${meta.name})`)
-                .addBlankField();
+                .setDescription(`Antamaasi  \`${prefix}${configuration.name}\` toimintoa \`${failedAction}\` ei ole olemassa.`)
+                .addField(`:pencil: Kokeile \`${prefix}${configuration.name} komennot\``, `(tai pelkästään ${prefix}${configuration.name})`)
+                .addField('\u200b', '\u200b');
             return embed;
         }
 
@@ -266,7 +266,7 @@ module.exports.run = function (msg, client, args) {
         } else if (foundTypes.hasOwnProperty(args[1])) {
             msg.channel.send(commandsForTypeEmbed(args[1])).catch(error => console.info(error))
         }
-        else if (args[1] === config.app.name) {
+        else if (args[1] === CLIENT_CONFIG.get('APP.NAME')) {
             msg.channel.send(botInfoEmbed()).catch(error => console.info(error))
         } else if (triggers[args[1]]) {
             msg.channel.send(commandEmbed(args[1])).catch(error => console.info(error))

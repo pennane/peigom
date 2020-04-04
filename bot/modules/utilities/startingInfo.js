@@ -1,12 +1,12 @@
 const time = require('./getTime.js');
 const loader = require('../core/commandLoader')
-const config = require('config')
+const CLIENT_CONFIG = require('config')
 const chalk = require('chalk')
 const fs = require('fs')
 const badwords = require('../../assets/misc/badwords/badwords.json').badwords
 
 let commandDir = __dirname + '/../commands'
-let { commands } = loader.loadCommands(commandDir);
+let { commands } = loader.load(commandDir);
 
 let userData = fs.existsSync('./assets/misc/raha/user-data.json')
     ? JSON.parse(fs.readFileSync('./assets/misc/raha/user-data.json', 'utf8'))
@@ -20,7 +20,9 @@ module.exports.set = (client) => {
         client.timing.completed = true
     }
     console.info(chalk.yellow('| Loaded: ') + Object.keys(commands).length + " commands")
-    console.info(chalk.yellow('| Loaded: ') + client.guilds.size + " servers")
-    console.info(chalk.yellow('| Loaded: ') + (userData ? Object.keys(userData.users).length : 0) + " users with " + config.get("discord.prefix") + "raha")
+    console.info(chalk.yellow('| Loaded: ') + client.guilds.cache.size + " servers")
+    console.info(chalk.yellow('| Loaded: ') + (userData ? Object.keys(userData.users).length : 0) + " users with " + CLIENT_CONFIG.get('DISCORD.PREFIX') + "raha")
     console.info(chalk.yellow('| Loaded: ') + badwords.length + " forbidden words")
+    console.info(chalk.yellow('| Log user used commands: ') + (CLIENT_CONFIG.get('LOG_USED_COMMANDS') ? chalk.green('true') : chalk.red('false')))
+    console.info(chalk.yellow('| Command spam protection: ') + (CLIENT_CONFIG.get('COMMAND_SPAM_PROTECTION.STATE') ? chalk.green('true') : chalk.red('false')))
 }

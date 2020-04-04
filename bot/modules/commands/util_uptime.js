@@ -1,6 +1,6 @@
 const Discord = require('discord.js');
 
-const meta = {
+const configuration = {
     name: "uptime",
     admin: false,
     syntax: "uptime",
@@ -9,9 +9,9 @@ const meta = {
     type: ['utility']
 }
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        let embed = new Discord.RichEmbed().setColor(0xF4E542);
+        let embed = new Discord.MessageEmbed().setColor(0xF4E542);
         embed.setTitle("Botin kommentti:");
         if (!client.uptime) {
             embed.description = `Botti on kadonnut matriisiin, ja jostain syystä päälläoloaikaa ei ole saatavilla.`;
@@ -59,4 +59,4 @@ module.exports.run = function (msg, client, args) {
 
 }
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

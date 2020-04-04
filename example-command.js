@@ -1,11 +1,11 @@
 const Discord = require('discord.js');
 
-let embed = new Discord.RichEmbed()
+let embed = new Discord.MessageEmbed()
     .setColor(0xF4E542)
     .setTitle("Botin kommentti:")
     .setDescription("example");
 
-const meta = {
+const configuration = {
     name: "example",
     admin: false,
     syntax: "example <amount> <@who>",
@@ -14,7 +14,7 @@ const meta = {
 }
 
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         /*
         COMMAND LOGIC HERE
@@ -25,4 +25,4 @@ module.exports.run = function (msg, client, args) {
 
 }
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

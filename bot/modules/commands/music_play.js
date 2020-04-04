@@ -4,10 +4,10 @@ const syntaxEmbed = require('../utilities/syntaxEmbed')
 
 const { yt, queue } = require('../core/sound.js')
 
-let embed = new Discord.RichEmbed().setColor(0xF4E542);
+let embed = new Discord.MessageEmbed().setColor(0xF4E542);
 let ytRegex = /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/
 
-const meta = {
+const configuration = {
     name: "play",
     admin: false,
     syntax: "play <hakusanat tai youtube-linkki>",
@@ -16,14 +16,14 @@ const meta = {
     type: ["music"]
 }
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise(async (resolve, reject) => {
-        let voiceChannel = msg.member.voiceChannel;
+        let voiceChannel = msg.member.voice.channel;
         let textChannel = msg.channel;
         let guild = msg.guild;
 
         if (!args[1]) {
-            let embed = syntaxEmbed({ args, meta, heading: ':point_up: Missä hakusanat' })
+            let embed = syntaxEmbed({ args, configuration, heading: ':point_up: Missä hakusanat' })
             msg.channel.send(embed)
             return resolve();
         }
@@ -63,4 +63,4 @@ module.exports.run = function (msg, client, args) {
         resolve()
     });
 }
-module.exports.meta = meta;
+module.exports.configuration = configuration;

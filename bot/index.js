@@ -1,23 +1,23 @@
 process.chdir(__dirname)
 
-const authorize         =   require('./config/authorize.json')
-const schedule          =   require('node-schedule')
-const config            =   require('config')
-const Discord           =   require('discord.js')
-const chalk             =   require('chalk')
+const authorize = require('./config/authorize.json')
+const schedule = require('node-schedule')
+const CLIENT_CONFIG = require('config')
+const Discord = require('discord.js')
+const chalk = require('chalk')
 
-const parser            =   require('./modules/core/messageParser')
-const startingInfo      =   require('./modules/utilities/startingInfo')
-const logger            =   require('./modules/utilities/activityLogger')
+const parser = require('./modules/core/messageParser')
+const startingInfo = require('./modules/utilities/startingInfo')
+const logger = require('./modules/utilities/activityLogger')
 
-const client            =   new Discord.Client()
-client.timing           =   { timer: new Date(), completed: false }
+const client = new Discord.Client()
+client.timing = { timer: new Date(), completed: false }
 
-let version             =   require(__dirname+'/../package.json').version
+let version = require(__dirname + '/../package.json').version
 
 console.info(chalk.yellow(`Starting peigom-bot v.${version}`))
 
-const shuffle = (arr) => {
+const shuffleArray = (arr) => {
     let a = [...arr]
     for (let i = a.length - 1; i > 0; i--) {
         const s = Math.floor(Math.random() * (i + 1));
@@ -27,28 +27,26 @@ const shuffle = (arr) => {
 }
 
 client.on('ready', () => {
-    let presence = config.discord.presence
-    let activities = shuffle(presence.activities)
+    let PRESENCE = CLIENT_CONFIG.get('DISCORD.PRESENCE')
+    let activities = shuffleArray(PRESENCE.activities)
     let i = Math.floor(Math.random() * activities.length)
 
     startingInfo.set(client)
     client.user.setActivity(activities[i].text, { type: activities[i].type })
 
-    schedule.scheduleJob(`*/${presence.refreshrate} * * * *`, () => {
+    schedule.scheduleJob(`*/${PRESENCE.REFRESH_RATE} * * * *`, () => {
         client.user.setActivity(activities[i].text, { type: activities[i].type })
         if (i === activities.length - 1) i = 0;
         else i++;
     })
 
-    console.info(chalk.yellow('| Activity: ') + client.user.localPresence.game.name)
-
     logger.log(2)
 })
 
 client.on('message', async (msg) => {
-    const isBot = msg.author.bot || msg.guild === null
-    if (await isBot) return;
-    parser.parseMsg(msg, client)
+    const ignoreMessage = msg.author.bot || msg.guild === null;
+    if (ignoreMessage) return;
+    parser.parseMsg(msg, client);
 })
 
 client.on("guildMemberAdd", (member) => logger.log(7, member))

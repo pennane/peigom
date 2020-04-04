@@ -2,16 +2,16 @@ const sound = require('../utilities/playSound.js');
 const fs = require('fs');
 const Discord = require('discord.js');
 
-let embed = new Discord.RichEmbed().setColor(0xF4E542);
+let embed = new Discord.MessageEmbed().setColor(0xF4E542);
 
 
-const meta = {
+const configuration = {
     name: "pussukat",
     admin: false,
     syntax: "pussukat",
     desc: "Soittaa satunnaisen kappaleen botin pussukat kansiosta",
     triggers: ["pussukat", "pussukka"],
-    type:  ["sound"]
+    type: ["sound"]
 }
 
 let filearr = [];
@@ -19,7 +19,7 @@ fs.readdirSync("./assets/sound/pussukat").forEach(file => {
     filearr.push(file);
 });
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         let soundfile = './assets/sound/pussukat/' + filearr[Math.floor(Math.random() * filearr.length)];
         sound.play({ soundfile, msg, client, args })
@@ -29,4 +29,4 @@ module.exports.run = function (msg, client, args) {
 }
 
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

@@ -1,9 +1,9 @@
 const Discord = require('discord.js');
 const syntaxEmbed = require('../utilities/syntaxEmbed')
 
-let embed = new Discord.RichEmbed().setColor(0xF4E542);
+let embed = new Discord.MessageEmbed().setColor(0xF4E542);
 
-const meta = {
+const configuration = {
     name: "puhista",
     admin: true,
     syntax: "puhista <määrä (2-99)>",
@@ -15,12 +15,12 @@ const meta = {
 embed.setTitle("Botin kommentti:");
 
 module.exports = {
-    run: (msg, client, args) => {
+    executor: (msg, client, args) => {
         return new Promise((resolve, reject) => {
             if (args[1] >= 2 && args[1] <= 99) {
                 embed.setDescription(`Poistin ${args[1]} viestiä.`)
-                let todel = parseInt(args[1]) + 1;
-                msg.channel.bulkDelete(todel)
+                let amount = parseInt(args[1]) + 1;
+                msg.channel.bulkDelete(amount)
                     .then(() => {
                         msg.channel.send(embed)
                             .then(msg => msg.delete(4000))
@@ -28,11 +28,11 @@ module.exports = {
                     })
                     .catch(error => console.error(error));
             } else {
-                let embed = syntaxEmbed({ meta, args })
+                let embed = syntaxEmbed({ configuration, args })
                 msg.channel.send(embed).catch(err => console.info(err))
             }
             resolve();
         });
     },
-    meta: meta
+    configuration: configuration
 }

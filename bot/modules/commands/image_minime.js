@@ -3,20 +3,20 @@ const sharp = require('sharp');
 const https = require('https');
 const Discord = require('discord.js');
 
-const meta = {
+const configuration = {
     name: "minime",
     admin: false,
     syntax: "minime",
     desc: "Lähettää kanavalle mini sinut.",
     triggers: ["minime"],
-    type:  ["image"]
+    type: ["image"]
 }
 
-let embed = new Discord.RichEmbed().setColor(0xF4E542);
+let embed = new Discord.MessageEmbed().setColor(0xF4E542);
 
 
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         function rest() {
             let rand = Math.random().toString(36).substring(2, 9) + Math.random().toString(36).substring(2, 9);
@@ -47,8 +47,12 @@ module.exports.run = function (msg, client, args) {
                 })
                 .catch(err => console.info(err));
         }
-        let avatar = msg.author.avatarURL;
-        let avatarfile = `./assets/images/avatars/avatar${msg.author.id}${Date.now()}.jpg`;
+        let targetUser = args[1] ? msg.guild.members.cache.get(args[1].replace(/\D/g, '')).user : msg.author
+        if (!targetUser) {
+            return resolve()
+        }
+        let avatar = targetUser.avatarURL();
+        let avatarfile = `./assets/images/avatars/avatar${targetUser.id}${Date.now()}.jpg`;
         let i = 0;
         if (fs.existsSync(avatarfile)) {
             rest();
@@ -73,4 +77,4 @@ module.exports.run = function (msg, client, args) {
     })
 
 }
-module.exports.meta = meta;
+module.exports.configuration = configuration;
