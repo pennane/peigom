@@ -1,13 +1,13 @@
-const meta = {
+const configuration = {
     name: "thonk",
     admin: false,
     syntax: "thonk",
     desc: "Lähettää kanavalle animoidun thonkin.",
     triggers: ["thonk"],
-    type:  ["utility", "fun"]
+    type: ["utility", "fun"]
 }
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         if (client.emojis.has("443343009229045760") && (msg.guild.emojis.has("443343009229045760") || msg.channel.permissionsFor(msg.guild.me).has("USE_EXTERNAL_EMOJIS"))) {
             msg.channel.send('<a:thonk:443343009229045760>')
@@ -20,4 +20,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

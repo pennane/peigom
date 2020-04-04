@@ -5,7 +5,7 @@ let embed = new Discord.MessageEmbed()
     .setColor(0xF4E542);
 
 
-const meta = {
+const configuration = {
     name: "imgonnasaythenword",
     admin: false,
     syntax: "imgonnasaythenword",
@@ -16,7 +16,7 @@ const meta = {
 
 let filearr = ["nword.mp3", "nword2.mp3"];
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         let soundfile = './assets/sound/' + filearr[Math.floor(Math.random() * filearr.length)];
         sound.play({ soundfile, msg, client, args })
@@ -25,4 +25,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

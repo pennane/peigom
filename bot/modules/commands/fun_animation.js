@@ -4,7 +4,7 @@ const animation = require('../../assets/misc/animation/animation.json');
 const config = require('config')
 let prefix = config.discord.prefix;
 
-const meta = {
+const configuration = {
     name: "animation",
     admin: false,
     syntax: "animation <nimi tai lista>",
@@ -13,7 +13,7 @@ const meta = {
     type: ["fun"]
 }
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         let embed = new Discord.MessageEmbed().setColor(0xF4E542);
 
@@ -28,7 +28,7 @@ module.exports.run = function (msg, client, args) {
             let str = Object.keys(animation);
             embed.setTitle(`Lista saatavailla olevista animaatioista:`)
                 .setDescription(`\`${str}\``)
-                .setFooter('Esim: ' + prefix + meta.name + " " + str[0]);
+                .setFooter('Esim: ' + prefix + configuration.name + " " + str[0]);
             msg.channel.send(embed);
             return resolve()
         }
@@ -55,4 +55,4 @@ module.exports.run = function (msg, client, args) {
 
 }
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

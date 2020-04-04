@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 
 let embed = new Discord.MessageEmbed().setColor(0xF4E542);
 
-const meta = {
+const configuration = {
     name: "yike",
     admin: false,
     syntax: "yike",
@@ -14,7 +14,7 @@ const meta = {
 
 let soundfile = './assets/misc/yike/yike.mp3';
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         let userid = args[1] ? msg.guild.members.cache.get(args[1].replace(/\D/g, '')) : false
         let voiceChannel = userid.voice.channel
@@ -42,4 +42,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

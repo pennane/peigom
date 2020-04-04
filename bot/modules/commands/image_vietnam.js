@@ -5,7 +5,7 @@ const Discord = require('discord.js');
 
 let embed = new Discord.MessageEmbed().setColor(0xF4E542);
 
-const meta = {
+const configuration = {
     name: "vietnam",
     admin: false,
     syntax: "vietnam",
@@ -14,7 +14,7 @@ const meta = {
     type: ["image"]
 }
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         embed
             .setTitle("Fläsbäkit");
@@ -71,4 +71,4 @@ module.exports.run = function (msg, client, args) {
     })
 
 }
-module.exports.meta = meta;
+module.exports.configuration = configuration;

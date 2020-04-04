@@ -3,7 +3,7 @@ const { inspect } = require('util')
 const beautify = require('js-beautify').js
 const syntaxEmbed = require('../utilities/syntaxEmbed')
 
-const meta = {
+const configuration = {
     name: "evaluate",
     superadmin: true,
     syntax: "evaluate <javascript koodia>",
@@ -24,11 +24,11 @@ function codeEval(code, msg, client) {
     }
 }
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         let embed = new Discord.MessageEmbed().setColor(0xF4E542);
         if (!args[1]) {
-            let embed = syntaxEmbed({ meta })
+            let embed = syntaxEmbed({ configuration })
             return msg.reply(embed)
         }
         let code = [...args].splice(1).join(" ")
@@ -50,4 +50,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

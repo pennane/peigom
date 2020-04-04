@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 
-const meta = {
+const configuration = {
     name: "avatar",
     admin: false,
     syntax: "avatar {@kuka}",
@@ -9,7 +9,7 @@ const meta = {
     type: ["image"]
 }
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         if (args.length === 1) {
             let user = msg.member;
@@ -37,4 +37,4 @@ module.exports.run = function (msg, client, args) {
 
 }
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

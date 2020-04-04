@@ -2,7 +2,7 @@ const Discord = require('discord.js');
 const dictionary = require('urban-dictionary')
 const syntaxEmbed = require('../utilities/syntaxEmbed')
 
-const meta = {
+const configuration = {
     name: "urban",
     admin: false,
     syntax: "urban <sana>",
@@ -13,10 +13,10 @@ const meta = {
 
 
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         if (!args[1]) {
-            let embed = syntaxEmbed({ meta })
+            let embed = syntaxEmbed({ configuration })
             msg.channel.send(embed)
             return resolve()
         }
@@ -38,4 +38,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

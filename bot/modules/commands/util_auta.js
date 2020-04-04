@@ -5,7 +5,7 @@ const Command = require('../core/command')
 const logger = require('../utilities/activityLogger')
 let commandDir = __dirname
 
-const meta = {
+const configuration = {
     name: "auta",
     admin: false,
     syntax: "auta <komennon/toiminnon nimi>",
@@ -73,18 +73,18 @@ function getCommandInfo(path) {
 
 
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         let prefix = config.discord.prefix;
         function createBaseEmbed() {
             const embed = new Discord.MessageEmbed()
                 .setAuthor(`${client.user.username}`, `${client.user.avatarURL()}`)
-                .setTitle(`${config.app.name}  \`${meta.name}\``)
-                .setColor(meta.embed.color)
-                .setDescription(meta.embed.desc)
-                .setFooter(meta.embed.footer, "https://arttu.pennanen.org/file/thonk.gif")
+                .setTitle(`${config.app.name}  \`${configuration.name}\``)
+                .setColor(configuration.embed.color)
+                .setDescription(configuration.embed.desc)
+                .setFooter(configuration.embed.footer, "https://arttu.pennanen.org/file/thonk.gif")
                 .setTimestamp()
 
             return embed;
@@ -93,13 +93,13 @@ module.exports.run = function (msg, client, args) {
         function defaultResponseEmbed() {
             let embed = createBaseEmbed();
             let adminAuthorized = Command.adminAuthorized(msg)
-            embed.addField(`:mega: Tietoa komennoista:`, `\`${prefix}${meta.name} komennot\``, false);
+            embed.addField(`:mega: Tietoa komennoista:`, `\`${prefix}${configuration.name} komennot\``, false);
             if (adminAuthorized) {
-                embed.addField(`:loudspeaker: Tietoa admin komennoista:`, `\`${prefix}${meta.name} admin\``, false);
+                embed.addField(`:loudspeaker: Tietoa admin komennoista:`, `\`${prefix}${configuration.name} admin\``, false);
             }
 
-            embed.addField(`:thinking: Tietoa botista:`, `\`${prefix}${meta.name} ${config.app.name} \``, false);
-            embed.addField(`:question: Tietoa tietystä komennosta:`, `\`${prefix}${meta.name} <komennon nimi> \``, false);
+            embed.addField(`:thinking: Tietoa botista:`, `\`${prefix}${configuration.name} ${config.app.name} \``, false);
+            embed.addField(`:question: Tietoa tietystä komennosta:`, `\`${prefix}${configuration.name} <komennon nimi> \``, false);
             return embed
         }
 
@@ -125,7 +125,7 @@ module.exports.run = function (msg, client, args) {
 
             commandTypes.forEach(type => {
                 if (foundTypes[type.name.toLowerCase()] && foundTypes[type.name.toLowerCase()].length !== 0) {
-                    embed.addField(`${type.emoji} ${type.name}`, `\`${prefix}${meta.name} ${type.name} \``, true)
+                    embed.addField(`${type.emoji} ${type.name}`, `\`${prefix}${configuration.name} ${type.name} \``, true)
                     addedInlineFields++;
                 }
             })
@@ -179,7 +179,7 @@ module.exports.run = function (msg, client, args) {
             }
 
             foundCommands.forEach(command => {
-                embed.addField(` ${(command.type.indexOf('admin') !== -1 || command.type.indexOf('superadmin') !== -1) ? ':unlock: ' : ""}${command.name}`, `\`${prefix}${meta.name} ${command.name} \``, true)
+                embed.addField(` ${(command.type.indexOf('admin') !== -1 || command.type.indexOf('superadmin') !== -1) ? ':unlock: ' : ""}${command.name}`, `\`${prefix}${configuration.name} ${command.name} \``, true)
             })
 
             if (foundCommands.length % 3 === 2) {
@@ -244,8 +244,8 @@ module.exports.run = function (msg, client, args) {
             let embed = createBaseEmbed()
             embed.addField('\u200b', '\u200b')
                 .setTitle(':eyes: Hupsista')
-                .setDescription(`Antamaasi  \`${prefix}${meta.name}\` toimintoa \`${failedAction}\` ei ole olemassa.`)
-                .addField(`:pencil: Kokeile \`${prefix}${meta.name} komennot\``, `(tai pelkästään ${prefix}${meta.name})`)
+                .setDescription(`Antamaasi  \`${prefix}${configuration.name}\` toimintoa \`${failedAction}\` ei ole olemassa.`)
+                .addField(`:pencil: Kokeile \`${prefix}${configuration.name} komennot\``, `(tai pelkästään ${prefix}${configuration.name})`)
                 .addField('\u200b', '\u200b');
             return embed;
         }

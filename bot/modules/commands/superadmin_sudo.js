@@ -1,7 +1,7 @@
 const Discord = require('discord.js');
 const syntaxEmbed = require('../utilities/syntaxEmbed')
 
-const meta = {
+const configuration = {
     name: "sudo",
     admin: true,
     superadmin: true,
@@ -11,9 +11,9 @@ const meta = {
     type: ["admin"]
 }
 
-let embed = syntaxEmbed({ meta })
+let embed = syntaxEmbed({ configuration })
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
 
         if (!args[2]) {
@@ -55,4 +55,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

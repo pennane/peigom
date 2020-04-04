@@ -1,6 +1,6 @@
 const auth = require('../../config/authorize.json');
 
-const meta = {
+const configuration = {
     name: "restart",
     admin: true,
     superadmin: true,
@@ -10,7 +10,7 @@ const meta = {
     type: ["admin"]
 }
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         client.destroy()
             .then(() => {
@@ -23,4 +23,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

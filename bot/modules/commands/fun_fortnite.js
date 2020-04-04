@@ -5,7 +5,7 @@ const dancemoves = require('../../assets/misc/fortnite/dancemoves')
 
 let embed = new Discord.MessageEmbed().setColor(0xF4E542);
 
-const meta = {
+const configuration = {
     name: "fortnite",
     admin: false,
     syntax: "fortnite",
@@ -16,7 +16,7 @@ const meta = {
 
 let soundfile = './assets/sound/fortnite.mp3'
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         let userid = args[1] && msg.authorized ? args[1].replace(/\D/g, '') : null
         let voiceChannel = userid ? msg.guild.members.cache.get(userid).voice.channel : msg.member.voice.channel
@@ -44,4 +44,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

@@ -3,7 +3,7 @@ const Discord = require('discord.js');
 let embed = new Discord.MessageEmbed().setColor(0xF4E542);
 
 
-const meta = {
+const configuration = {
     name: "tomb",
     admin: false,
     syntax: "tomb",
@@ -12,7 +12,7 @@ const meta = {
     type: ["fun"]
 }
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         embed.setTitle(`OLET TEHNYT TUHMUUKSIA!`)
             .setDescription('NYT RIITTAEAE VANDALISOINTI')
@@ -34,4 +34,4 @@ module.exports.run = function (msg, client, args) {
         resolve();
     });
 }
-module.exports.meta = meta;
+module.exports.configuration = configuration;

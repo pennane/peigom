@@ -12,7 +12,7 @@ let userdata = JSON.parse(
     fs.readFileSync("./assets/misc/raha/user-data.json", "utf8")
 );
 let embed = new Discord.MessageEmbed().setColor(0xf4e542);
-const meta = {
+const configuration = {
     name: "raha",
     admin: false,
     syntax: "raha <saldo / uhkapeli / lahjoita /  palkka>",
@@ -45,13 +45,13 @@ const meta = {
     type: ["fun"]
 };
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         const prefix = config.discord.prefix;
-        let syntax = meta.syntax;
-        let daily = meta.daily;
+        let syntax = configuration.syntax;
+        let daily = configuration.daily;
         embed
-            .setTitle(`Komento ${meta.name} toimii näin:`)
+            .setTitle(`Komento ${configuration.name} toimii näin:`)
             .setDescription(`\`${syntax}\``);
 
         if (!msg.author.bot) {
@@ -74,7 +74,7 @@ module.exports.run = function (msg, client, args) {
 
                 switch (args[1]) {
                     case "saldo":
-                        subsyntax = meta.sub[args[1]].syntax;
+                        subsyntax = configuration.sub[args[1]].syntax;
                         embed
                             .setTitle(`${msg.member.user.username} balanssi:`)
                             .setDescription(`${usrobj.credits} kolea`);
@@ -82,7 +82,7 @@ module.exports.run = function (msg, client, args) {
                         break;
 
                     case "uhkapeli":
-                        subsyntax = meta.sub[args[1]].syntax;
+                        subsyntax = configuration.sub[args[1]].syntax;
 
                         if (!isNaN(parseInt(args[2])) && parseInt(args[2]) > 0) {
                             if (parseInt(args[2]) <= parseInt(usrobj.credits)) {
@@ -130,8 +130,8 @@ module.exports.run = function (msg, client, args) {
                         } else {
                             embed
                                 .setTitle(
-                                    `Komennon ${meta.name} alakomento ${
-                                    meta.sub[args[1]].name
+                                    `Komennon ${configuration.name} alakomento ${
+                                    configuration.sub[args[1]].name
                                     } toimii näin:`
                                 )
                                 .setDescription(`\`${subsyntax}\``);
@@ -141,7 +141,7 @@ module.exports.run = function (msg, client, args) {
                         break;
 
                     case "lahjoita":
-                        subsyntax = meta.sub[args[1]].syntax;
+                        subsyntax = configuration.sub[args[1]].syntax;
 
                         if (!isNaN(parseInt(args[2])) && parseInt(args[2]) > 0 && args[3]) {
                             if (parseInt(args[2]) <= parseInt(usrobj.credits)) {
@@ -170,7 +170,7 @@ module.exports.run = function (msg, client, args) {
                                         .setTitle(`${msg.member.user.username}, huomaa:`)
                                         .setDescription(
                                             `Valitsemasi pelaaja ei ole vielä koskaan käyttänyt komentoa: \`${prefix}${
-                                            meta.name
+                                            configuration.name
                                             }\`. Et voi lahjoittaa hänelle.`
                                         );
                                     msg.channel.send(embed).catch(error => console.info(error));
@@ -184,8 +184,8 @@ module.exports.run = function (msg, client, args) {
                         } else {
                             embed
                                 .setTitle(
-                                    `Komennon ${meta.name} alakomento ${
-                                    meta.sub[args[1]].name
+                                    `Komennon ${configuration.name} alakomento ${
+                                    configuration.sub[args[1]].name
                                     } toimii näin:`
                                 )
                                 .setDescription(`\`${subsyntax}\``);
@@ -195,7 +195,7 @@ module.exports.run = function (msg, client, args) {
                         break;
 
                     case "palkka":
-                        subsyntax = meta.sub[args[1]].syntax;
+                        subsyntax = configuration.sub[args[1]].syntax;
 
                         if (Date.now() - usrobj.whenclaimed > 86400000) {
                             embed
@@ -241,4 +241,4 @@ module.exports.run = function (msg, client, args) {
     });
 };
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

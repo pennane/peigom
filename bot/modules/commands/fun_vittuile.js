@@ -1,7 +1,7 @@
 const config = require('config');
 const names = require('../../assets/misc/badwords/badwords.json').badwords
 
-const meta = {
+const configuration = {
     name: "vittuile",
     admin: false,
     syntax: "vittuile",
@@ -10,7 +10,7 @@ const meta = {
     type: ["fun"]
 }
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         let rand = Math.floor(Math.random() * names.length);
         if (msg.member.nickname) {
@@ -47,4 +47,4 @@ module.exports.run = function (msg, client, args) {
 
 }
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

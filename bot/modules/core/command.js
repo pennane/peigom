@@ -59,21 +59,21 @@ let commandtypes = [
 let typenames = commandtypes.map(type => type.name);
 
 class Command {
-    constructor({ meta, run }, filename) {
-        if (!meta || !isObject(meta)) {
-            logger.log(12, { name: filename, reason: "Meta is not present" })
+    constructor({ configuration, executor }, filename) {
+        if (!configuration || !isObject(configuration)) {
+            logger.log(12, { name: filename, reason: "configuration is not present" })
         }
-        if (!meta.triggers || !isArray(meta.triggers)) {
-            logger.log(12, { name: meta.name, reason: "Triggers are not present" })
+        if (!configuration.triggers || !isArray(configuration.triggers)) {
+            logger.log(12, { name: configuration.name, reason: "Triggers are not present" })
         }
-        if (!run || !isFunction(run)) {
-            logger.log(12, { name: meta.name, reason: "Functionality not present" })
-            throw new Error("Command functionality is not present at command '" + meta.name + "'")
+        if (!executor || !isFunction(executor)) {
+            logger.log(12, { name: configuration.name, reason: "Functionality not present" })
+            throw new Error("Command functionality is not present at command '" + configuration.name + "'")
         }
 
-        if (meta.type) {
+        if (configuration.type) {
             let types = []
-            meta.type.forEach(type => {
+            configuration.type.forEach(type => {
                 if (typenames.indexOf(type.toLowerCase()) !== -1) {
                     types.push(type.toLowerCase())
                 }
@@ -87,19 +87,19 @@ class Command {
             this.type = ["other"]
         }
 
-        if (meta.hidden) {
+        if (configuration.hidden) {
             this.type = ["hidden"]
             this.hidden = true;
         }
 
-        this.name = meta.name
-        this.description = meta.desc
-        this.adminCommand = meta.admin
-        this.superAdminCommand = meta.superadmin
-        this.syntax = meta.syntax
-        this.triggers = [...new Set(meta.triggers)];
+        this.name = configuration.name
+        this.description = configuration.desc
+        this.adminCommand = configuration.admin
+        this.superAdminCommand = configuration.superadmin
+        this.syntax = configuration.syntax
+        this.triggers = [...new Set(configuration.triggers)];
 
-        this.run = run
+        this.executor = executor
 
         if (this.adminCommand && this.type.indexOf('admin') === -1) {
             this.type.push('admin')
@@ -140,7 +140,7 @@ class Command {
         }
 
         if (authorized) {
-            this.run(msg, client, args).catch(err => console.info(err))
+            this.executor(msg, client, args).catch(err => console.info(err))
             logger.log(1, { msg: msg, command: this.name, args: args })
         }
         else {

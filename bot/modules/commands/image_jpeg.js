@@ -5,7 +5,7 @@ const Discord = require('discord.js');
 
 let embed = new Discord.MessageEmbed().setColor(0xF4E542);
 
-const meta = {
+const configuration = {
     name: "jpeg",
     admin: false,
     syntax: "jpeg",
@@ -14,7 +14,7 @@ const meta = {
     type: ["image"]
 }
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         function rest() {
             let rand = Math.random().toString(36).substring(2, 9) + Math.random().toString(36).substring(2, 9);
@@ -68,4 +68,4 @@ module.exports.run = function (msg, client, args) {
         resolve();
     })
 }
-module.exports.meta = meta;
+module.exports.configuration = configuration;

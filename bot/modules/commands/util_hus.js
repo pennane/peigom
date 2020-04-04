@@ -1,4 +1,4 @@
-const meta = {
+const configuration = {
     name: "hus",
     admin: false,
     syntax: "hus",
@@ -7,7 +7,7 @@ const meta = {
     type: ["utility"]
 }
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         if (msg.guild.voiceConnection) {
             if (msg.guild.voiceConnection.dispatcher) {
@@ -22,4 +22,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

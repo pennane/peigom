@@ -6,7 +6,7 @@ const syntaxEmbed = require('../utilities/syntaxEmbed')
 if (!fs.existsSync('./assets/misc/adminUsers/data.json')) { fs.writeFileSync('./assets/misc/adminUsers/data.json', '{}') }
 let adminUsers = JSON.parse(fs.readFileSync('./assets/misc/adminUsers/data.json', 'utf8'))
 
-const meta = {
+const configuration = {
     name: "adminoikeudet",
     admin: true,
     superadmin: true,
@@ -18,7 +18,7 @@ const meta = {
 
 let prefix = config.discord.prefix;
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
 
     return new Promise((resolve, reject) => {
 
@@ -60,7 +60,7 @@ module.exports.run = function (msg, client, args) {
         })
 
         if (!args[2]) {
-            text += "\nNyt tee `" + prefix + meta.name + " <anna/poista> <0-" + (guildRoles.length - 1) + ">`, ja kyseisen roolin bot-oikeudet päivittyvät."
+            text += "\nNyt tee `" + prefix + configuration.name + " <anna/poista> <0-" + (guildRoles.length - 1) + ">`, ja kyseisen roolin bot-oikeudet päivittyvät."
 
             msg.channel.send(text)
 
@@ -79,7 +79,7 @@ module.exports.run = function (msg, client, args) {
             } else {
                 let roleToAdd = requestedRole.id
                 guildInData.roles.push(roleToAdd)
-                msg.channel.send("Roolilla "+ requestedRole.name +" on nyt oikeudet käyttää admin komentoja.")
+                msg.channel.send("Roolilla " + requestedRole.name + " on nyt oikeudet käyttää admin komentoja.")
             }
 
         } else if (args[1].toLowerCase() === "poista" && args[2] && !isNaN(parseInt(args[2]))) {
@@ -90,9 +90,9 @@ module.exports.run = function (msg, client, args) {
                 msg.channel.send("Liian pieni numero !")
                 return resolve()
             } else {
-                
+
                 guildInData.roles = guildInData.roles.filter(role => role !== requestedRole.id)
-                msg.channel.send("Roolilla "+ requestedRole.name +" ei ole nää oikeutta käyttää admin komentoja.")
+                msg.channel.send("Roolilla " + requestedRole.name + " ei ole nää oikeutta käyttää admin komentoja.")
             }
 
         }
@@ -108,4 +108,4 @@ module.exports.run = function (msg, client, args) {
 
 module.exports.adminUserData = () => adminUsers;
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

@@ -6,7 +6,7 @@ const syntaxEmbed = require('../utilities/syntaxEmbed')
 if (!fs.existsSync('./assets/misc/adminUsers/data.json')) { fs.writeFileSync('./assets/misc/adminUsers/data.json', '{}') }
 let adminUsers = JSON.parse(fs.readFileSync('./assets/misc/adminUsers/data.json', 'utf8'))
 
-const meta = {
+const configuration = {
     name: "piilota",
     admin: false,
     superadmin: false,
@@ -19,7 +19,7 @@ const meta = {
 
 let prefix = config.discord.prefix;
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
 
     return new Promise((resolve, reject) => {
 
@@ -37,4 +37,4 @@ module.exports.run = function (msg, client, args) {
 
 module.exports.adminUserData = () => adminUsers;
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

@@ -1,14 +1,14 @@
-const meta = {
+const configuration = {
     name: "sammuta",
     admin: true,
     superadmin: true,
     syntax: "sammuta",
     desc: "Sammuttaa botin, uudelleenkäynnistys vain komentolinjan kautta.",
     triggers: ["sammuta", "shutdown"],
-    type:  ["admin"]
+    type: ["admin"]
 }
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         msg.delete(1000)
             .catch(err => console.info(err))
@@ -20,4 +20,4 @@ module.exports.run = function (msg, client, args) {
     });
 }
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

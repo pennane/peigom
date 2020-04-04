@@ -9,7 +9,7 @@ let disabledChannels = JSON.parse(fs.readFileSync('./assets/misc/disabledChannel
 let embed = new Discord.MessageEmbed().setColor(0xF4E542);
 
 
-const meta = {
+const configuration = {
     name: "bottitoimiitäällä",
     admin: false,
     syntax: "bottitoimiitäällä #channel <ei/joo>",
@@ -18,10 +18,10 @@ const meta = {
     type: ["admin", "utility"]
 }
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         if (!args[1]) {
-            let embed = syntaxEmbed({ meta, args })
+            let embed = syntaxEmbed({ configuration, args })
             msg.channel.send(embed).catch(err => console.info(err))
             return resolve();
         }
@@ -29,7 +29,7 @@ module.exports.run = function (msg, client, args) {
 
 
         if (!msg.guild.channels.has(channelId)) {
-            let embed = syntaxEmbed({ meta, args })
+            let embed = syntaxEmbed({ configuration, args })
             msg.channel.send(embed).catch(err => console.info(err))
             return resolve();
         }
@@ -53,4 +53,4 @@ module.exports.run = function (msg, client, args) {
 
 module.exports.channelData = () => disabledChannels;
 
-module.exports.meta = meta;
+module.exports.configuration = configuration;

@@ -3,7 +3,7 @@ const sharp = require('sharp');
 const https = require('https');
 const Discord = require('discord.js');
 
-const meta = {
+const configuration = {
     name: "minime",
     admin: false,
     syntax: "minime",
@@ -16,7 +16,7 @@ let embed = new Discord.MessageEmbed().setColor(0xF4E542);
 
 
 
-module.exports.run = function (msg, client, args) {
+module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         function rest() {
             let rand = Math.random().toString(36).substring(2, 9) + Math.random().toString(36).substring(2, 9);
@@ -73,4 +73,4 @@ module.exports.run = function (msg, client, args) {
     })
 
 }
-module.exports.meta = meta;
+module.exports.configuration = configuration;
