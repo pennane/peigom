@@ -1,13 +1,15 @@
 const config = require('config')
 const loader = require('./commandLoader')
 const { check } = require('../utilities/spamProtection')
+const logger = require('../utilities/activityLogger')
+
 const badWords = require('../../assets/misc/badwords/badwords.json').badwords
 const disabledChannels = require('../commands/admin_disable').channelData;
 
 let commandDir = __dirname + '/../commands'
 let prefix = config.get("discord.prefix")
-let spamProtection = config.get("misc.spamprotection")
-let { commands, triggers } = loader.loadCommands(commandDir);
+let COMMAND_SPAM_PROTECTION = config.get("COMMAND_SPAM_PROTECTION")
+let { commands, triggers } = loader.load(commandDir);
 
 module.exports.parseMsg = function (msg, client) {
     let hasBadWords = badWords.some(word => msg.content.includes(word))
@@ -36,20 +38,17 @@ module.exports.parseMsg = function (msg, client) {
         return;
     };
 
-
-    if (spamProtection.state) {
-        check(msg.member.user, command).then((data) => {
-            if (data.alreadyAnswered) {
-                return;
-            }
-            if (data.allowed) {
-                command.exec(msg, client, args)
-            } else {
-                msg.reply(`Rauhoitu komentojen kanssa, venaa ${data.wait} sekuntia.`)
-            }
-        })
-            .catch(err => { logger.log(3, err) })
-    } else {
+    if (!COMMAND_SPAM_PROTECTION.STATE) {
         command.exec(msg, client, args)
+    } else {
+        check(msg.member.user, command)
+            .then(({ allowed, remaining }) => {
+                if (allowed) {
+                    command.exec(msg, client, args)
+                } else {
+                    msg.reply(`Rauhoitu komentojen kanssa, venaa ${parseInt(remaining / 1000)} sekuntia.`)
+                }
+            })
+            .catch(err => { logger.log(3, err) })
     }
 }

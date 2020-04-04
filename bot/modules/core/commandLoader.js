@@ -1,10 +1,8 @@
 const fs = require('fs')
 const Command = require('./command')
 const logger = require('../utilities/activityLogger')
-const chalk = require('chalk')
 
 const reservedNames = [
-    "musci",
     "utility",
     "komennot",
     "fun",
@@ -15,7 +13,7 @@ const reservedNames = [
     "other"
 ]
 
-module.exports.loadCommands = function (path) {
+module.exports.load = function (path) {
     let files = []
     let triggers = {}
     let commands = {}

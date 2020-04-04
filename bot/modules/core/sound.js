@@ -84,6 +84,7 @@ module.exports = {
     yt: yt,
     queue: {
         add: function (args) {
+
             function timeout() {
                 setTimeout(function () {
                     if (searching.state) timeout();

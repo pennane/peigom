@@ -45,7 +45,6 @@ module.exports.play = async function ({ soundfile, msg, client, args }) {
         const dispatcher = connection.play(soundfile);
 
         dispatcher.on('finish', reason => {
-            console.log("finished")
             if (msg.guild.me.voice.channel) {
                 msg.guild.me.voice.channel.leave();
             }

@@ -56,6 +56,8 @@ let commandtypes = [
     }
 ]
 
+let typenames = commandtypes.map(type => type.name);
+
 class Command {
     constructor({ meta, run }, filename) {
         if (!meta || !isObject(meta)) {
@@ -71,7 +73,6 @@ class Command {
 
         if (meta.type) {
             let types = []
-            let typenames = commandtypes.map(type => type.name);
             meta.type.forEach(type => {
                 if (typenames.indexOf(type.toLowerCase()) !== -1) {
                     types.push(type.toLowerCase())

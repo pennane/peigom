@@ -40,15 +40,13 @@ client.on('ready', () => {
         else i++;
     })
 
-    console.info(chalk.yellow('| Activity: ') + client.user.localPresence.game.name)
-
     logger.log(2)
 })
 
 client.on('message', async (msg) => {
-    const ignoreMessage = msg.author.bot || msg.guild === null
-    if (await ignoreMessage) return;
-    parser.parseMsg(msg, client)
+    const ignoreMessage = msg.author.bot || msg.guild === null;
+    if (ignoreMessage) return;
+    parser.parseMsg(msg, client);
 })
 
 client.on("guildMemberAdd", (member) => logger.log(7, member))
