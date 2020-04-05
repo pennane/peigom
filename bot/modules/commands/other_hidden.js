@@ -23,11 +23,11 @@ module.exports.executor = function (msg, client, args) {
 
         if (!msg.guild.available) return resolve()
 
-        if (!msg.guild.channels.has("478914376569585665")) return resolve();
+        if (!msg.guild.channels.cache.find(channel => channel.id === "478914376569585665")) return resolve();
 
         if (!msg.member.voice.channel) return resolve();
 
-        msg.member.setVoiceChannel("478914376569585665")
+        msg.member.voice.setChannel("478914376569585665")
 
         resolve();
     });

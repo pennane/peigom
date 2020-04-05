@@ -17,7 +17,7 @@ module.exports.executor = function (msg, client, args) {
                 client.login(auth.token);
             })
             .catch(error => console.info(error));
-        msg.delete(10000)
+        msg.delete({ timeout: 10000 })
             .catch(err => console.info(err))
         resolve();
     });

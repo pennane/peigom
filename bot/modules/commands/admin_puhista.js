@@ -23,7 +23,7 @@ module.exports = {
                 msg.channel.bulkDelete(amount)
                     .then(() => {
                         msg.channel.send(embed)
-                            .then(msg => msg.delete(4000))
+                            .then(msg => msg.delete({ timeout: 4000 }))
                             .catch(err => console.info(err))
                     })
                     .catch(error => console.error(error));

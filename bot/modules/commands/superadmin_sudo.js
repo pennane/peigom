@@ -17,9 +17,9 @@ module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
 
         if (!args[2]) {
-            msg.delete(10000);
+            msg.delete({ timeout: 10000 })
             msg.channel.send(embed)
-                .then(msg => msg.delete(15001))
+                .then(msg => msg.delete({ timeout: 15000 }))
                 .catch(err => console.info(error));
 
             return resolve();
@@ -30,9 +30,9 @@ module.exports.executor = function (msg, client, args) {
         let sudochannel = client.channels.get(channelid);
 
         if (!sudochannel) {
-            msg.delete(10000);
+            msg.delete({ timeout: 10000 })
             msg.channel.send(embed)
-                .then(msg => msg.delete(15001))
+                .then(msg => msg.delete({ timeout: 15000 }))
                 .catch(err => console.info(error));
             return resolve();
         }
@@ -49,7 +49,7 @@ module.exports.executor = function (msg, client, args) {
 
         sudochannel.send(args[2])
             .catch(err => console.info(error));
-        msg.delete(10000);
+        msg.delete({ timeout: 10000 })
 
         resolve()
     });
