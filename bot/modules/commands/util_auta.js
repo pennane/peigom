@@ -2,7 +2,7 @@ const CLIENT_CONFIG = require('config');
 const Discord = require('discord.js');
 const fs = require('fs')
 const Command = require('../core/command')
-const logger = require('../utilities/activityLogger')
+const youtubeApiKey = require('../../config/authorize.json')['youtube-api-key']
 let commandDir = __dirname
 
 const configuration = {
@@ -46,6 +46,10 @@ function getCommandInfo(path) {
     files.forEach(file => {
         let command;
         command = new Command(require(path + "/" + file), file)
+
+        if (!youtubeApiKey && command.type.some(type => type === "music")) {
+            return;
+        }
 
         if (command.hidden) {
             return;
@@ -266,7 +270,7 @@ module.exports.executor = function (msg, client, args) {
         } else if (foundTypes.hasOwnProperty(args[1])) {
             msg.channel.send(commandsForTypeEmbed(args[1])).catch(error => console.info(error))
         }
-        else if (args[1] === CLIENT_CONFIG.get('APP.NAME')) {
+        else if (args[1].toLowerCase() === CLIENT_CONFIG.get('APP.NAME').toLowerCase()) {
             msg.channel.send(botInfoEmbed()).catch(error => console.info(error))
         } else if (triggers[args[1]]) {
             msg.channel.send(commandEmbed(args[1])).catch(error => console.info(error))

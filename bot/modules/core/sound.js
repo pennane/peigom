@@ -269,11 +269,13 @@ module.exports = {
             if (!guild) {
                 return false;
             }
+
             serverQueue = queue.get(guild.id)
-            console.log(serverQueue)
+
             if (!serverQueue) {
                 return false;
             }
+
             if (serverQueue.tracks.length > 0 && serverQueue.connection) {
                 return true;
             }

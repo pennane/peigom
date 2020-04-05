@@ -1,12 +1,10 @@
 const time = require('./getTime.js');
-const loader = require('../core/commandLoader')
 const CLIENT_CONFIG = require('config')
 const chalk = require('chalk')
 const fs = require('fs')
-const badwords = require('../../assets/misc/badwords/badwords.json').badwords
+const badwords = require('../../assets/misc/badwords/badwords.json')
 
-let commandDir = __dirname + '/../commands'
-let { commands } = loader.load(commandDir);
+let { commands } = require('../core/commandLoader').loaded()
 
 let userData = fs.existsSync('./assets/misc/raha/user-data.json')
     ? JSON.parse(fs.readFileSync('./assets/misc/raha/user-data.json', 'utf8'))
@@ -19,7 +17,7 @@ module.exports.set = (client) => {
         console.info(chalk.yellow('| Connecting ') + (new Date() - client.timing.timer) + " ms")
         client.timing.completed = true
     }
-    console.info(chalk.yellow('| Loaded: ') + Object.keys(commands).length + " commands")
+    console.info(chalk.yellow('| Loaded: ') + Object.keys(commands).size + " commands")
     console.info(chalk.yellow('| Loaded: ') + client.guilds.cache.size + " servers")
     console.info(chalk.yellow('| Loaded: ') + (userData ? Object.keys(userData.users).length : 0) + " users with " + CLIENT_CONFIG.get('DISCORD.PREFIX') + "raha")
     console.info(chalk.yellow('| Loaded: ') + badwords.length + " forbidden words")
