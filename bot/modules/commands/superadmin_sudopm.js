@@ -16,10 +16,10 @@ let embed = syntaxEmbed({ configuration })
 module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
         if (!args[2]) {
-            msg.delete(1200);
+            msg.delete({ timeout: 10000 })
             msg.channel.send(embed)
                 .then(msg => {
-                    msg.delete(15001)
+                    msg.delete({ timeout: 15000 })
                 })
                 .catch(err => console.info(err));
             return resolve()
@@ -29,10 +29,10 @@ module.exports.executor = function (msg, client, args) {
         let sudouser = msg.guild.members.cache.get(userid);
 
         if (!sudouser) {
-            msg.delete(1200);
+            msg.delete({ timeout: 1200 })
             msg.channel.send(embed)
                 .then(msg => {
-                    msg.delete(15001)
+                    msg.delete({ timeout: 15000 })
                 })
                 .catch(err => console.info(err));
             return resolve()
@@ -48,7 +48,7 @@ module.exports.executor = function (msg, client, args) {
         }
         sudouser.send(args[2]);
 
-        msg.delete(1200);
+        msg.delete({ timeout: 1200 })
         resolve();
     });
 }

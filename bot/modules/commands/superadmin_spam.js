@@ -18,9 +18,9 @@ module.exports.executor = function (msg, client, args) {
 
         if (!args[3]) {
             msg.channel.send(embed).then(msg => {
-                msg.delete(15001)
+                msg.delete({ timeout: 15000 })
             })
-            msg.delete(5000);
+            msg.delete({ timeout: 5000 })
             return resolve()
         }
 
@@ -28,9 +28,9 @@ module.exports.executor = function (msg, client, args) {
 
         if (!msg.guild.members.cache.get(userid)) {
             msg.channel.send(embed).then(msg => {
-                msg.delete(15001)
+                msg.delete({ timeout: 15000 })
             })
-            msg.delete(5000);
+            msg.delete({ timeout: 15000 })
             return resolve()
         }
 
@@ -48,7 +48,7 @@ module.exports.executor = function (msg, client, args) {
                 .send(args[3]);
         }
 
-        msg.delete(5000);
+        msg.delete({ timeout: 5000 })
 
         resolve();
     });

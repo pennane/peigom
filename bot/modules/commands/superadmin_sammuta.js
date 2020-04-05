@@ -10,7 +10,7 @@ const configuration = {
 
 module.exports.executor = function (msg, client, args) {
     return new Promise((resolve, reject) => {
-        msg.delete(1000)
+        msg.delete({ timeout: 1000 })
             .catch(err => console.info(err))
         setTimeout(function () {
             client.destroy();

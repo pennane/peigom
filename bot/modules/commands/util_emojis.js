@@ -16,7 +16,7 @@ module.exports.executor = function (msg, client, args) {
             message += emoji.toString() + " ";
 
         })
-        console.log(message)
+
         msg.channel.send(message)
             .catch(err => console.info(err));
         resolve();
