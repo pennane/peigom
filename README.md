@@ -1,48 +1,42 @@
 # Peigom Bot
 
-Peigom Bot is a bot for discord with features for managing servers and emitting entartainment.
-
-Types of commands Peigom has as of now:
+Peigom Bot is a bot for discord with various features including but not limited to:
 * Image manipulation
 * Voiceclip playback
+* Music bot functionalities
 * Chat management
-* Other fun shenanigans
 
 
-### Installation
+## Installation
 
-Peigom Bot requires [Node.js](https://nodejs.org/) and a [Discord bot account](https://discordapp.com/developers/applications/) to run.
+Peigom Bot requires [Node.js](https://nodejs.org/) (version 12.x.x+) and a [Discord bot account](https://discordapp.com/developers/applications/) to be run.
 
 Music bot functionalities require an [YouTube Data API v3](https://developers.google.com/youtube/v3/) key.
 
-Install the dependencies and start rolling
+You need to setup a config file and an authorization file.
+`bot/config/` has example files in it.
+Duplicate the `default_example.json` and `default_authorization.json` and remove the `default_` prefix from the new files.
+Then configure the files with necessary information.
+
+### Install the dependencies and start rolling.
 
 ```sh
 $ git clone https://github.com/Pennane/peigom-bot/
 $ cd peigom-bot
 $ npm install
-```
-If `sharp` throws error, force download its older version: 
-```sh
-$ npm install sharp@0.20.7
-```
-Download ffmpeg and make sure you can access it at your directory
-```sh
-$ ffmpeg 
-==> should output good stuff
+$ npm run start
+=> epic
 ```
 
-For Peigom bot to work you need to setup config at `bot/config`
 
 ### Development
 
 There is a template command in the root called `example-command.js`.
-You can edit it and then move it to `bot/modules/commands/` for it to work.
-
+You can edit it and then move it to `bot/modules/commands/` to add new commands.
 
 
 ### Other
-An outdated Finnish guide on how to use the bot [here](https://arttu.pennanen.org/sub/peigom-bot_opas/)
+An outdated Finnish guide on how to use the bot can be found [here](https://arttu.pennanen.org/sub/peigom-bot_opas/)
 
 License
 ----
