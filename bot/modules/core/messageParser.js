@@ -20,9 +20,7 @@ module.exports.parseMsg = function (msg, client) {
 
     let disabled = disabledChannels()
     let channelId = msg.channel.id
-
-    console.log(msg.content)
-
+    
     if (msg.content.includes('bad bot')) {
         msg.channel.send('no u')
         return 
