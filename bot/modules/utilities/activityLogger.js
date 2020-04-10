@@ -11,7 +11,7 @@ module.exports.log = (activityId, content) => {
         if (!activityId === parseInt(activityId, 10)) throw new Error("Error: Received activity id is not an integer!");
 
         // If config has been set to not log used commands, return
-        if (!CLIENT_CONFIG.get('LOG_USED_COMMANDS') && mode === 1) return;
+        if (!CLIENT_CONFIG.get('LOG_USED_COMMANDS') && activityId === 1) return;
 
         let today = time.get(),
             todayPrecise = time.get(1),
