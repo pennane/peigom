@@ -46,10 +46,17 @@ module.exports.executor = function (msg, client, args) {
                 video = null;
                 msg.reply(":baby: Ei löy'y tollasta vidii bro")
             }
+
         }
         if (await video) {
             video.requestedBy = msg.member;
             video.toTop = false;
+            if (!video.thumbnail_url) {
+                if (video.player_response && video.player_response.videoDetails && video.player_response.videoDetails.thumbnail) {
+                    video.thumbnail_url = video.player_response.videoDetails.thumbnail.thumbnails[0].url
+                }
+
+            }
             queue.add({
                 track: video,
                 textChannel: textChannel,
