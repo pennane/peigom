@@ -58,7 +58,7 @@ function play(guild) {
     if (!track) {
         queue.delete(guild.id)
         setTimeout(() => {
-            if (queue.isPlaying({ guild: guild })) {
+            if (queueMethods.isPlaying({ guild: guild })) {
                 return;
             }
             serverQueue.voiceChannel.leave()
@@ -94,7 +94,7 @@ function play(guild) {
     })
 }
 
-const queue = {
+const queueMethods = {
     add: function (args) {
 
         async function run(args) {
@@ -309,5 +309,5 @@ const queue = {
 
 module.exports = {
     yt: yt,
-    queue: queue
+    queue: queueMethods
 }
