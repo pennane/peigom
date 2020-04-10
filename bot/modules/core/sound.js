@@ -56,8 +56,13 @@ function play(guild) {
     let track = serverQueue.tracks[0]
 
     if (!track) {
-        serverQueue.voiceChannel.leave()
         queue.delete(guild.id)
+        setTimeout(() => {
+            if (isPlaying({guild: guild})) {
+                return;
+            }
+            serverQueue.voiceChannel.leave()
+        }, 5 * 1000 * 60)
         return;
     }
     let stream = ytdl(track.video_url, { filter: "audioonly", quality: "lowest" })
