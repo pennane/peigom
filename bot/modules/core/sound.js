@@ -158,7 +158,7 @@ const queueMethods = {
                 .setTimestamp();
             if (serverQueue.tracks.length > 1) {
                 embed.addField('Seuraavana:', `${
-                    [...serverQueue.tracks].splice(1).map((t, i) => `\`${i + 1}\`: [${t.title}](${track.video_url})`).join(`\n`)
+                    [...serverQueue.tracks].splice(1).map((t, i) => `\`${i + 1}\`: [${t.title}](${t.video_url})`).join(`\n`)
                     }`);
 
             }
