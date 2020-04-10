@@ -58,7 +58,7 @@ function play(guild) {
     if (!track) {
         queue.delete(guild.id)
         setTimeout(() => {
-            if (isPlaying({guild: guild})) {
+            if (isPlaying({ guild: guild })) {
                 return;
             }
             serverQueue.voiceChannel.leave()
@@ -77,6 +77,7 @@ function play(guild) {
             setTimeout(() => {
                 play(guild)
             }, 1000)
+
         }, 200)
     })
 
@@ -90,15 +91,6 @@ module.exports = {
     queue: {
         add: function (args) {
 
-            function timeout() {
-                setTimeout(function () {
-                    if (searching.state) timeout();
-                    else run(args)
-                }, 100);
-            }
-
-            if (searching) timeout();
-            else run(args)
             async function run(args) {
                 searching = { state: true, time: new Date() };
                 let { track, guild, voiceChannel, msg } = args
@@ -124,17 +116,28 @@ module.exports = {
                         console.error("COULD NOT START CONNECTION:", err)
                         queue.delete(guild.id)
                     }
-
                 } else if (track.toTop && serverQueue.tracks.length > 1) {
                     serverQueue.tracks = [serverQueue.tracks[0], track, ...[...serverQueue.tracks].splice(1)]
                 } else {
                     serverQueue.tracks.push(track)
                 }
+
                 msg.channel.send(await embed).then(() => {
                     searching = { state: false, time: new Date() };
                 })
 
             }
+
+            function timeout() {
+                setTimeout(function () {
+                    if (searching.state) timeout();
+                    else run(args)
+                }, 100);
+            }
+
+            if (searching) timeout();
+            else run(args)
+
         },
         show: function (args) {
             let { guild, msg } = args
@@ -205,13 +208,21 @@ module.exports = {
             let { guild, msg } = args
             let serverQueue = queue.get(guild.id)
 
-            if (serverQueue && serverQueue.connection.dispatcher) {
+            if (serverQueue) {
                 serverQueue.tracks = []
                 serverQueue.connection.dispatcher.end("disconnect command")
+                
+            }
+            
+            if (guild.me.voice.channel) {
+                guild.me.voice.channel.leave()
                 msg.channel.send(":wave: Ilosesti böneen!")
-            } else {
+            }
+            else {
                 msg.channel.send(":x: En edes ollut kiusaamassa.")
             }
+
+            
         },
         clear: function (args) {
             let { guild, msg } = args
@@ -271,6 +282,7 @@ module.exports = {
         },
         isPlaying: function (args) {
             let { guild } = args
+
             if (!guild) {
                 return false;
             }
@@ -283,6 +295,8 @@ module.exports = {
 
             if (serverQueue.tracks.length > 0 && serverQueue.connection) {
                 return true;
+            } else {
+                return false;
             }
         }
     }

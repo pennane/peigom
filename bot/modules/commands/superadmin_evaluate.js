@@ -44,7 +44,7 @@ module.exports.executor = function (msg, client, args) {
 
         if (beautified.length < 1024) {
             embed.addField("Evaluation", `
-            \`\`\`js\n${reply}\`\`\`
+            \`\`\`js\n${beautified}\`\`\`
             `)
         } else if (beautified.length < 10000) {
             let dividedCode = beautify(evaluated).match(/(.|[\r\n]){1,1024}/g)
