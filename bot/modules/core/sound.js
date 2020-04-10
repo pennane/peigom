@@ -69,7 +69,6 @@ function play(guild) {
     let dispatcher = serverQueue.connection.play(stream, { volume: serverQueue.options.volume })
     serverQueue.dispatcher = dispatcher
     dispatcher.on('finish', (reason) => {
-        console.log("finished")
         setTimeout(() => {
             serverQueue.tracks.shift()
             serverQueue.connection.dispatcher = undefined;
@@ -159,7 +158,7 @@ const queueMethods = {
                 .setTimestamp();
             if (serverQueue.tracks.length > 1) {
                 embed.addField('Seuraavana:', `${
-                    [...serverQueue.tracks].splice(1).map((t, i) => `\`${i + 1}\`: ${t.title}`).join(`\n`)
+                    [...serverQueue.tracks].splice(1).map((t, i) => `\`${i + 1}\`: [${t.title}](${track.video_url})`).join(`\n`)
                     }`);
 
             }
@@ -178,7 +177,7 @@ const queueMethods = {
         } else if (serverQueue.tracks.length > 0 && serverQueue.connection && serverQueue.connection.speaking) {
             let embed = new Discord.MessageEmbed();
             let track = serverQueue.tracks[0];
-            let dpTime = msToReadable(serverQueue.connection.dispatcher.time)
+            let dpTime = msToReadable(serverQueue.connection.dispatcher.streamTime)
             let ytTime = msToReadable(serverQueue.tracks[0].length_seconds * 1000)
             embed
                 .setAuthor(`Ny soi: 🎵`, track.thumbnail_url, track.video_url)
@@ -246,6 +245,7 @@ const queueMethods = {
         let serverQueue = queue.get(guild.id)
         if (serverQueue && serverQueue.tracks && serverQueue.tracks.length > 2) {
             serverQueue.tracks = [serverQueue.tracks[0], ...shuffle([...serverQueue.tracks].splice(1))]
+            msg.channel.send(":ok_hand: Sekotettu niinku tehosekoti")
         } else {
             msg.channel.send(":hand_splayed: Bro, ei oo mitään mitä sekottaa")
         }
