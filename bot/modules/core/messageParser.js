@@ -21,6 +21,14 @@ module.exports.parseMsg = function (msg, client) {
     let disabled = disabledChannels()
     let channelId = msg.channel.id
 
+    if (msg.content.includes('bad bot')) {
+        return msg.channel.send('no u')
+    }
+
+    if (msg.content.includes('good bot')) {
+        return msg.channel.send('no u')
+    }
+
     if (!hasPrefix) return;
 
     let args = msg.content.trim().substr(prefix.length).split(' ')
