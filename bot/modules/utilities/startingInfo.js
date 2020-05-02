@@ -17,7 +17,7 @@ module.exports.set = (client) => {
         console.info(chalk.yellow('| Connecting ') + (new Date() - client.timing.timer) + " ms")
         client.timing.completed = true
     }
-    console.info(chalk.yellow('| Loaded: ') + Object.keys(commands).size + " commands")
+    console.info(chalk.yellow('| Loaded: ') + commands.size + " commands")
     console.info(chalk.yellow('| Loaded: ') + client.guilds.cache.size + " servers")
     console.info(chalk.yellow('| Loaded: ') + (userData ? Object.keys(userData.users).length : 0) + " users with " + CLIENT_CONFIG.get('DISCORD.PREFIX') + "raha")
     console.info(chalk.yellow('| Loaded: ') + badwords.length + " forbidden words")

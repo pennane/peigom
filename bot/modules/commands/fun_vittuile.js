@@ -1,4 +1,4 @@
-const names = require('../../assets/misc/badwords/badwords.json').badwords
+const names = require('../../assets/misc/badwords/badwords.json');
 
 const configuration = {
     name: "vittuile",
