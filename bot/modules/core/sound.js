@@ -101,6 +101,7 @@ const queueMethods = {
             let { track, guild, voiceChannel, msg } = args
             let serverQueue = await queue.get(guild.id)
             let ytTime = msToReadable(track.length_seconds * 1000)
+
             let embed = new Discord.MessageEmbed()
                 .setAuthor(`Jonoon lisätty 🎵`, track.thumbnail_url, track.video_url)
                 .addField(track.title, track.author.name)

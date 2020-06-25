@@ -17,6 +17,24 @@ let version = require(__dirname + '/../package.json').version
 
 console.info(chalk.yellow(`Starting peigom-bot v.${version}`))
 
+
+const fs = require('fs')
+const path = require('path');
+const scriptName = path.basename(__filename);
+const targetFolder = __dirname + '/modules/commands';
+
+let commands = fs.readdirSync(targetFolder).filter(file => file !== scriptName && file.endsWith(".js"));
+if (!commands) throw new Error('faulty targetfolder')
+
+let commandMetaMap = []
+
+commands.forEach(commandFile => {
+    let command = require(__dirname + `/modules/commands/${commandFile}`);
+    commandMetaMap.push(command.configuration);
+})
+
+fs.writeFileSync(__dirname + '/../commandMetaMap.json', JSON.stringify(commandMetaMap))
+
 const shuffleArray = (arr) => {
     let a = [...arr]
     for (let i = a.length - 1; i > 0; i--) {
