@@ -21,7 +21,7 @@ let commandtypes = [
     },
     {
         name: 'utility',
-        description: 'Usefull utilites',
+        description: 'Useful utilites',
         emoji: ':wrench:'
     },
     {
