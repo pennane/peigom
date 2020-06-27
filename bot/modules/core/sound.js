@@ -282,7 +282,7 @@ const queueMethods = {
         let serverQueue = queue.get(guild.id)
         if (serverQueue && serverQueue.dispatcher) {
             if (!volume) {
-                msg.- channel.send('Tän hetkinen volyymi on ' + serverQueue.options.volume)
+                msg.channel.send('Tän hetkinen volyymi on ' + serverQueue.options.volume)
                 return;
             }
             let computedVolume = parseFloat(volume.replace(",", "."))
