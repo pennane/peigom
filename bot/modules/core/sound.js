@@ -65,6 +65,7 @@ function play(guild) {
         }, 5 * 1000 * 60)
         return;
     }
+
     let stream = ytdl(track.video_url, { filter: "audioonly", quality: "lowest" })
     let dispatcher = serverQueue.connection.play(stream, { volume: serverQueue.options.volume })
     serverQueue.dispatcher = dispatcher
@@ -227,8 +228,6 @@ const queueMethods = {
         else {
             msg.channel.send(":x: En edes ollut kiusaamassa.")
         }
-
-
     },
     clear: function (args) {
         let { guild, msg } = args

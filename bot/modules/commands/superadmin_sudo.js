@@ -27,7 +27,7 @@ module.exports.executor = function (msg, client, args) {
 
 
         let channelid = args[1].replace(/\D/g, '');
-        let sudochannel = client.channels.get(channelid);
+        let sudochannel = client.channels.cache.get(channelid);
 
         if (!sudochannel) {
             msg.delete({ timeout: 10000 })
