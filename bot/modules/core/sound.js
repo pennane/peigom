@@ -96,7 +96,6 @@ function play(guild) {
 
 const queueMethods = {
     add: function (args) {
-
         async function run(args) {
             searching = { state: true, time: new Date() };
             let { track, guild, voiceChannel, msg } = args
@@ -171,12 +170,15 @@ const queueMethods = {
         }
     },
     nowPlaying: function (args) {
-        let { guild, msg } = args
+        let { guild, msg, dataOnly } = args
         let serverQueue = queue.get(guild.id)
 
         if (!serverQueue) {
             msg.channel.send(":hand_splayed: Bro, ei täällä soi mikään.")
-        } else if (serverQueue.tracks.length > 0 && serverQueue.connection && serverQueue.connection.speaking) {
+            return;
+        }
+
+        if (serverQueue.tracks.length > 0 && serverQueue.connection && serverQueue.connection.speaking) {
             let embed = new Discord.MessageEmbed();
             let track = serverQueue.tracks[0];
             let dpTime = msToReadable(serverQueue.connection.dispatcher.streamTime)
@@ -189,7 +191,8 @@ const queueMethods = {
                 .setThumbnail(track.thumbnail_url || null)
                 .setTimestamp();
 
-            msg.channel.send(embed).catch(console.info)
+            msg.channel.send(embed)
+                .catch(console.info);
         } else {
             msg.channel.send(":hand_splayed: Bro, ei täällä soi mikään.")
         }
@@ -315,6 +318,15 @@ const queueMethods = {
         } else {
             return false;
         }
+    },
+    queueReadOnly: function (args) {
+        let { guild } = args;
+
+        serverQueue = queue.get(guild.id)
+
+        if (!serverQueue) return null;
+
+        return serverQueue;
     }
 }
 
