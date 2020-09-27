@@ -17,6 +17,11 @@ function editZimmerChannel(channel) {
     let remaining = timeDiff(zimmerDate, Date.now())
     if (!remaining.days) return console.log("could not resolve tj")
     if (!channel.editable) return console.log('zimmer channel not editable')
+
+    let oldTJ = parseInt(channel.name.replace('Hans Zimmer TJ: ', ''))
+
+    if (oldTJ >= remaining.days) return;
+
     channel.edit({
         name: "Hans Zimmer TJ: " + remaining.days
     })
