@@ -10,6 +10,8 @@ const parser = require('./modules/core/messageParser')
 const startingInfo = require('./modules/utilities/startingInfo')
 const logger = require('./modules/utilities/activityLogger')
 
+const zimmerTj = require('./modules/utilities/zimmerTJ')
+
 const client = new Discord.Client()
 client.timing = { timer: new Date(), completed: false }
 
@@ -52,6 +54,8 @@ client.on('ready', () => {
     startingInfo.set(client)
     client.user.setActivity(activities[i].text, { type: activities[i].type })
 
+    zimmerTj(client)
+
     schedule.scheduleJob(`*/${PRESENCE.REFRESH_RATE} * * * *`, () => {
         client.user.setActivity(activities[i].text, { type: activities[i].type })
         if (i === activities.length - 1) i = 0;
@@ -82,6 +86,8 @@ client.on('resume', () => logger.log(5))
 client.on('error', (err) => logger.log(3, err))
 
 client.on('warn', (warn) => console.warn(warn))
+
+client.on('rateLimit', (reason) => console.log('Client being ratelimited:', reason))
 
 process.on('uncaughtException', (err) => logger.log(3, err))
 
