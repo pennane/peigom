@@ -20,7 +20,7 @@ function editZimmerChannel(channel) {
 
     let oldTJ = parseInt(channel.name.replace('Hans Zimmer TJ: ', ''))
 
-    if (oldTJ >= remaining.days) return;
+    if (remaining.days >= oldTJ) return;
 
     channel.edit({
         name: "Hans Zimmer TJ: " + remaining.days
@@ -30,7 +30,8 @@ function editZimmerChannel(channel) {
 module.exports = async (client) => {
     let channel = await client.channels.fetch(zimmerChannelId);
     editZimmerChannel(channel)
-    zimmerTimer = schedule.scheduleJob('* * 1 * *', function () {
+    zimmerTimer = schedule.scheduleJob('* */2 * * *', function () {
+        console.log('yes zimmer')
         editZimmerChannel(channel)
     });
 }
