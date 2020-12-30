@@ -13,10 +13,10 @@ function timeDiff(d, ad) {
 }
 
 function editZimmerChannel(channel) {
-    if (!channel) return console.log('zimmer channel not available')
+    if (!channel) return console.info('zimmer channel not available')
     let remaining = timeDiff(zimmerDate, Date.now())
-    if (!remaining.days) return console.log("could not resolve tj")
-    if (!channel.editable) return console.log('zimmer channel not editable')
+    if (!remaining.days) return console.info("could not resolve tj")
+    if (!channel.editable) return console.info('zimmer channel not editable')
 
     let oldTJ = parseInt(channel.name.replace('Hans Zimmer TJ: ', ''))
 
@@ -31,7 +31,6 @@ module.exports = async (client) => {
     let channel = await client.channels.fetch(zimmerChannelId);
     editZimmerChannel(channel)
     zimmerTimer = schedule.scheduleJob('* */2 * * *', function () {
-        console.log('yes zimmer')
         editZimmerChannel(channel)
     });
 }

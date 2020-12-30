@@ -66,6 +66,9 @@ client.on('ready', () => {
 })
 
 client.on('message', async (msg) => {
+    if (msg.guild === null) {
+        console.info(`A private message from ${msg.author.username+"#"+msg.author.discriminator}:\n ${msg.content}\n`)
+    }
     const ignoreMessage = msg.author.bot || msg.guild === null;
     if (ignoreMessage) return;
     parser.parseMsg(msg, client);
@@ -87,7 +90,7 @@ client.on('error', (err) => logger.log(3, err))
 
 client.on('warn', (warn) => console.warn(warn))
 
-client.on('rateLimit', (reason) => console.log('Client being ratelimited:', reason))
+client.on('rateLimit', (reason) => console.info('Client being ratelimited:', reason))
 
 process.on('uncaughtException', (err) => logger.log(3, err))
 

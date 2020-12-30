@@ -86,11 +86,11 @@ module.exports.executor = function (msg, client, args) {
         let parsedHtmlText = parseSongHTML(await geniusHtml.text())
 
         let lyrics = parsedHtmlText.lyrics
-        console.log("lyrics length", lyrics.length)
+
         if (lyrics.length < 10) return didNotFindLyrics()
 
         if (lyrics.length < 1900) {
-            return msg.channel.send(lyrics.trim()).catch(err => console.log(err))
+            return msg.channel.send(lyrics.trim()).catch(err => console.error(err))
         }
 
         let chunks = divideStringToChunks(lyrics, 1900)
@@ -101,7 +101,7 @@ module.exports.executor = function (msg, client, args) {
 
         chunks.forEach(chunk => {
             let part = chunk.trim()
-            msg.channel.send(`\`\`\`${part}\`\`\``).catch(err => console.log(err))
+            msg.channel.send(`\`\`\`${part}\`\`\``).catch(err => console.error(err))
         })
 
         resolve()

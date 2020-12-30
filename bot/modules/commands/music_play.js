@@ -1,5 +1,5 @@
 const Discord = require('discord.js');
-const ytdl = require('ytdl-core')
+const ytdl = require('ytdl-core');
 const syntaxEmbed = require('../utilities/syntaxEmbed')
 
 const { yt, queue } = require('../core/sound.js')
@@ -41,9 +41,10 @@ module.exports.executor = function (msg, client, args) {
             msg.channel.send(`:mag: Etitään \`${query}\``)
             try {
                 let queried = await yt.searchVideos(query, 1, { part: 'id' })
-                video = await ytdl.getBasicInfo(queried[0].id)
+                video = await ytdl.getBasicInfo(queried[0].url)
             } catch (err) {
                 video = null;
+                console.error(err)
                 msg.reply(":baby: Ei löy'y tollasta vidii bro")
             }
 
