@@ -331,6 +331,23 @@ const queueMethods = {
         if (!serverQueue) return null;
 
         return serverQueue;
+    },
+    changeChannel: function (args) {
+        let { guild, message } = args;
+
+        serverQueue = queue.get(guild.id)
+
+        if (!serverQueue) return null;
+
+        let newChannel = message.member.voice.channel;
+
+        if (!newChannel) return
+    
+        if (serverQueue.voiceChannel.id === newChannel.id) return;
+
+        newChannel.join()
+
+        serverQueue.voiceChannel = newChannel
     }
 }
 
