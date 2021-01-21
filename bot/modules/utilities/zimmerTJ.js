@@ -29,8 +29,8 @@ function editZimmerChannel(channel) {
 
 module.exports = async (client) => {
   let channel = await client.channels.fetch(zimmerChannelId)
-  editZimmerChannel(channel)
-  zimmerTimer = schedule.scheduleJob('* */2 * * *', function () {
-    editZimmerChannel(channel)
-  })
+  //editZimmerChannel(channel)
+  // zimmerTimer = schedule.scheduleJob('* */2 * * *', function () {
+  //   editZimmerChannel(channel)
+  //})
 }
