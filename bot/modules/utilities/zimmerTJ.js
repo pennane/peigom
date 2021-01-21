@@ -1,5 +1,5 @@
 const zimmerChannelId = '759808413877796966'
-const zimmerDate = new Date(`Sep 26, 2021 19:00:00`).getTime()
+const zimmerDate = new Date(`Sep 27, 2021 19:00:00`).getTime()
 
 const schedule = require('node-schedule')
 
