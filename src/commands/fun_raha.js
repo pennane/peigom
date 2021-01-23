@@ -82,7 +82,7 @@ module.exports.executor = function (message, client, args) {
     let userObject = userData.find((user) => user.id === userId)
 
     if (!userObject) {
-      let newUserObject = createUserObject({ id: message.author.id, username: username })
+      let newUserObject = createUserObject({ id: message.author.id, username: message.author.username })
       userData.push(newUserObject)
       userObject = userData.find((user) => user.id === userId)
     }

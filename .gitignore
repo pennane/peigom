@@ -5,3 +5,4 @@ src/data/adminUsers/data.json
 node_modules/*
 .vscode
 .env
+commandMetaMap.json

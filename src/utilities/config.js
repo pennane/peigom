@@ -75,10 +75,11 @@ let COMMAND_SPAM_PROTECTION = {
   AMOUNT_OF_SECONDS: 12
 }
 
-let LOG_USED_COMMANDS = true
+let LOG_USED_COMMANDS = false
 
 if (process.env.NODE_ENV === 'development') {
   PREFIX = '-'
+  LOG_USED_COMMANDS = true
 }
 
 module.exports = {
