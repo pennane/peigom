@@ -9,7 +9,7 @@ if (!fs.existsSync('./data/raha/user-data.json')) {
 }
 
 let userData = JSON.parse(fs.readFileSync('./data/raha/user-data.json', 'utf8'))
-console.log(userData)
+
 const configuration = {
   name: 'raha',
   admin: false,
@@ -58,8 +58,6 @@ module.exports.executor = function (message, client, args) {
     }
 
     const updateData = (userObject) => {
-      console.log(userObject)
-      console.log(userData[0])
       userData = userData.map((user) => (user.id == userObject.id ? userObject : user))
 
       fs.writeFile('./data/raha/user-data.json', JSON.stringify(userData), function (err) {
