@@ -1,8 +1,7 @@
 process.chdir(__dirname)
 
-const authorize = require('./config/authorize.json')
 const schedule = require('node-schedule')
-const CLIENT_CONFIG = require('config')
+const config = require('./modules/utilities/config')
 const Discord = require('discord.js')
 const chalk = require('chalk')
 
@@ -19,68 +18,67 @@ let version = require(__dirname + '/../package.json').version
 
 console.info(chalk.yellow(`Starting peigom-bot v.${version}`))
 
-
 const fs = require('fs')
-const path = require('path');
-const scriptName = path.basename(__filename);
-const targetFolder = __dirname + '/modules/commands';
+const path = require('path')
+const scriptName = path.basename(__filename)
+const targetFolder = __dirname + '/modules/commands'
 
-let commands = fs.readdirSync(targetFolder).filter(file => file !== scriptName && file.endsWith(".js"));
+let commands = fs.readdirSync(targetFolder).filter((file) => file !== scriptName && file.endsWith('.js'))
 if (!commands) throw new Error('faulty targetfolder')
 
 let commandMetaMap = []
 
-commands.forEach(commandFile => {
-    let command = require(__dirname + `/modules/commands/${commandFile}`);
-    commandMetaMap.push(command.configuration);
+commands.forEach((commandFile) => {
+  let command = require(__dirname + `/modules/commands/${commandFile}`)
+  commandMetaMap.push(command.configuration)
 })
 
 fs.writeFileSync(__dirname + '/../commandMetaMap.json', JSON.stringify(commandMetaMap))
 
 const shuffleArray = (arr) => {
-    let a = [...arr]
-    for (let i = a.length - 1; i > 0; i--) {
-        const s = Math.floor(Math.random() * (i + 1));
-        [a[i], a[s]] = [a[s], a[i]];
-    }
-    return a;
+  let a = [...arr]
+  for (let i = a.length - 1; i > 0; i--) {
+    const s = Math.floor(Math.random() * (i + 1))
+    ;[a[i], a[s]] = [a[s], a[i]]
+  }
+  return a
 }
 
 client.on('ready', () => {
-    let PRESENCE = CLIENT_CONFIG.get('DISCORD.PRESENCE')
-    let activities = shuffleArray(PRESENCE.activities)
-    let i = Math.floor(Math.random() * activities.length)
+  let PRESENCE = config.discord.presence
+  let activities = shuffleArray(PRESENCE.activities)
+  let i = Math.floor(Math.random() * activities.length)
 
-    startingInfo.set(client)
+  startingInfo.set(client)
+  client.user.setActivity(activities[i].text, { type: activities[i].type })
+
+  zimmerTj(client)
+
+  schedule.scheduleJob(`*/${PRESENCE.REFRESH_RATE} * * * *`, () => {
     client.user.setActivity(activities[i].text, { type: activities[i].type })
+    if (i === activities.length - 1) i = 0
+    else i++
+  })
 
-    zimmerTj(client)
-
-    schedule.scheduleJob(`*/${PRESENCE.REFRESH_RATE} * * * *`, () => {
-        client.user.setActivity(activities[i].text, { type: activities[i].type })
-        if (i === activities.length - 1) i = 0;
-        else i++;
-    })
-
-    logger.log(2)
+  logger.log(2)
 })
 
 client.on('message', async (msg) => {
-    if (msg.guild === null) {
-        console.info(`A private message from ${msg.author.username+"#"+msg.author.discriminator}:\n ${msg.content}\n`)
-    }
-    const ignoreMessage = msg.author.bot || msg.guild === null;
-    if (ignoreMessage) return;
-    parser.parseMsg(msg, client);
+  if (msg.guild === null) {
+    console.info(`A private message from ${msg.author.username + '#' + msg.author.discriminator}:\n ${msg.content}\n`)
+  }
+  const ignoreMessage = msg.author.bot || msg.guild === null
+  if (ignoreMessage) return
+  parser.parseMsg(msg, client)
 })
 
-client.on("guildMemberAdd", (member) => logger.log(7, member))
+client.on('guildMemberAdd', (member) => logger.log(7, member))
 
-client.on("guildMemberRemove", (member) => logger.log(8, member))
+client.on('guildMemberRemove', (member) => logger.log(8, member))
 
-client.on("guildCreate", (guild) => logger.log(9, guild))
+client.on('guildCreate', (guild) => logger.log(9, guild))
 
-client.on("guildDelete", (guild) => logger.log(10, guild))
+client.on('guildDelete', (guild) => logger.log(10, guild))
 
 client.on('reconnecting', () => logger.log(4))
 
@@ -94,4 +92,4 @@ client.on('rateLimit', (reason) => console.info('Client being ratelimited:', rea
 
 process.on('uncaughtException', (err) => logger.log(3, err))
 
-client.login(authorize.token)
+client.login(config.DISCORD_TOKEN)

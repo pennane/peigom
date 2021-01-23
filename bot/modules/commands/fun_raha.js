@@ -1,244 +1,240 @@
-const CLIENT_CONFIG = require("config");
+const CLIENT_CONFIG = require('../utilities/config')
 
-const fs = require("fs");
+const fs = require('fs')
 
-const Discord = require("discord.js");
+const Discord = require('discord.js')
 
-if (!fs.existsSync("./assets/misc/raha/user-data.json")) {
-    fs.writeFileSync("./assets/misc/raha/user-data.json", '{"users": {}}');
+if (!fs.existsSync('./assets/misc/raha/user-data.json')) {
+  fs.writeFileSync('./assets/misc/raha/user-data.json', '[]')
 }
 
-let userdata = JSON.parse(
-    fs.readFileSync("./assets/misc/raha/user-data.json", "utf8")
-);
-let embed = new Discord.MessageEmbed().setColor(0xf4e542);
+let userData = JSON.parse(fs.readFileSync('./assets/misc/raha/user-data.json', 'utf8'))
+
 const configuration = {
-    name: "raha",
-    admin: false,
-    syntax: "raha <saldo / uhkapeli / lahjoita /  palkka>",
-    desc: "Kosmeettisen virtuaalivaluutan pyörittelyyn",
-    daily: 250,
-    sub: {
-        saldo: {
-            syntax: "raha saldo",
-            desc: "Näyttää oman rahatilanteen.",
-            name: "saldo"
-        },
-        uhkapeli: {
-            syntax: "raha uhkapeli <määrä>",
-            desc:
-                "Heittää asettamallasi määrällä kolikkoa. Voitolla tuplaat panoksen, ja häviöllä menetät.",
-            name: "uhkapeli"
-        },
-        lahjoita: {
-            syntax: "raha lahjoita <määrä> <@kenelle>",
-            desc: "Lahjoittaa asettamasi määrän haluamallesi käyttäjälle.",
-            name: "lahjoita"
-        },
-        palkka: {
-            syntax: "raha palkka",
-            desc: "Antaa sinulle päivän palkan.",
-            name: "palkka"
-        }
+  name: 'raha',
+  admin: false,
+  syntax: 'raha <saldo / uhkapeli / lahjoita /  palkka>',
+  desc: 'Kosmeettisen virtuaalivaluutan pyörittelyyn',
+  daily: 250,
+  sub: {
+    saldo: {
+      syntax: 'raha saldo ?<@pelaaja>',
+      desc: 'Näyttää oman tai toisen rahatilanteen.',
+      name: 'saldo'
     },
-    triggers: ["raha", "rahe", "money", "gamble"],
-    type: ["fun"]
-};
+    uhkapeli: {
+      syntax: 'raha uhkapeli <määrä>',
+      desc: 'Heittää asettamallasi määrällä kolikkoa. Voitolla tuplaat panoksen, ja häviöllä menetät.',
+      name: 'uhkapeli'
+    },
+    lahjoita: {
+      syntax: 'raha lahjoita <@kenelle> <määrä>',
+      desc: 'Lahjoittaa asettamasi määrän haluamallesi käyttäjälle.',
+      name: 'lahjoita'
+    },
+    palkka: {
+      syntax: 'raha palkka',
+      desc: 'Antaa sinulle päivän palkan.',
+      name: 'palkka'
+    }
+  },
+  triggers: ['raha', 'rahe', 'money', 'gamble'],
+  type: ['fun']
+}
 
 module.exports.executor = function (msg, client, args) {
-    return new Promise((resolve, reject) => {
-        const prefix = CLIENT_CONFIG.get('DISCORD.PREFIX');
-        let syntax = configuration.syntax;
-        let daily = configuration.daily;
-        embed
-            .setTitle(`Komento ${configuration.name} toimii näin:`)
-            .setDescription(`\`${syntax}\``);
+  return new Promise((resolve, reject) => {
+    if (msg.author.bot) return
 
-        if (!msg.author.bot) {
-            let userid = msg.author.id.toString();
-            let usrobj;
+    let prefix = CLIENT_CONFIG.PREFIX
 
-            if (userdata.users[msg.author.id]) {
-                usrobj = userdata.users[msg.author.id];
-            } else {
-                userdata.users[userid] = {
-                    credits: 200,
-                    bot: msg.author.bot,
-                    whenclaimed: Date.now() - 86400000
-                };
-                usrobj = userdata.users[msg.author.id];
-            }
+    const syntax = configuration.syntax
+    const daily = configuration.daily
 
-            if (args[1]) {
-                let subsyntax;
+    function syntaxInfo() {
+      let embed = new Discord.MessageEmbed().setColor(0xf4e542)
+      embed.setTitle(`Komento ${configuration.name} toimii näin:`).setDescription(`\`${syntax}\``)
+      return embed
+    }
 
-                switch (args[1]) {
-                    case "saldo":
-                        subsyntax = configuration.sub[args[1]].syntax;
-                        embed
-                            .setTitle(`${msg.member.user.username} balanssi:`)
-                            .setDescription(`${usrobj.credits} kolea`);
-                        msg.channel.send(embed).catch(error => console.info(error));
-                        break;
+    const updateData = (userObject) => {
+      userData = userData.map((user) => (user.id !== userObject.id ? user : userObject))
+    }
 
-                    case "uhkapeli":
-                        subsyntax = configuration.sub[args[1]].syntax;
+    function close() {
+      let userData = fs.writeFile('./assets/misc/raha/user-data.json', JSON.stringify(userData), function (err) {
+        if (err) {
+          return console.info(err)
+        }
+      })
+    }
 
-                        if (!isNaN(parseInt(args[2])) && parseInt(args[2]) > 0) {
-                            if (parseInt(args[2]) <= parseInt(usrobj.credits)) {
-                                embed
-                                    .setTitle(
-                                        `Käyttäjä ${msg.author.username} uhkapelaa ${
-                                        args[2]
-                                        } kolikolla. Lets mennään.`
-                                    )
-                                    .setDescription(`:game_die:`);
-                                msg.channel.send(embed).then(newmsg => {
-                                    let newembed = embed;
+    function createUserObject({ id, username }) {
+      return {
+        credits: 200,
+        id: id,
+        whenClaimed: Date.now() - 86400000,
+        username: username
+      }
+    }
 
-                                    function winorlose() {
-                                        let result = Math.round(Math.random());
-                                        return result === 1
-                                    }
+    let userId = msg.author.id
+    let userObject = userData.find((user) => user.id === userId)
 
-                                    setTimeout(function () {
-                                        if (winorlose()) {
-                                            newembed.setDescription(
-                                                `:game_die: Voitto! Sait ${args[2]} kolikkoa :game_die:`
-                                            );
-                                            newmsg.edit(newembed).catch(error => console.info(error));
-                                            usrobj.credits =
-                                                parseInt(usrobj.credits) + parseInt(args[2]);
-                                        } else {
-                                            newembed.setDescription(
-                                                `:game_die: Häviö! Hävisit ${
-                                                args[2]
-                                                } kolikkoa :game_die:`
-                                            );
-                                            newmsg.edit(newembed).catch(error => console.info(error));
-                                            usrobj.credits =
-                                                parseInt(usrobj.credits) - parseInt(args[2]);
-                                        }
-                                    }, 1500);
-                                });
-                            } else {
-                                embed
-                                    .setTitle(`${msg.member.user.username}, ,:`)
-                                    .setDescription(`Sulla ei oo tarpeeks koleja!`);
-                                msg.channel.send(embed).catch(error => console.info(error));
-                            }
-                        } else {
-                            embed
-                                .setTitle(
-                                    `Komennon ${configuration.name} alakomento ${
-                                    configuration.sub[args[1]].name
-                                    } toimii näin:`
-                                )
-                                .setDescription(`\`${subsyntax}\``);
-                            msg.channel.send(embed).catch(error => console.info(error));
-                        }
+    if (!userObject.username || userObject.username !== msg.author.username) {
+      userObject.username = msg.author.username
+    }
 
-                        break;
+    if (!userObject) {
+      let newUserObject = createUserObject({ id: msg.author.id, username: username })
+      userData.push(newUserObject)
+      userObject = userData.find((user) => user.id === userId)
+    }
 
-                    case "lahjoita":
-                        subsyntax = configuration.sub[args[1]].syntax;
+    if (!args[1]) {
+      msg.channel.send(syntaxInfo())
+      updateData(userObject)
+      return close()
+    }
 
-                        if (!isNaN(parseInt(args[2])) && parseInt(args[2]) > 0 && args[3]) {
-                            if (parseInt(args[2]) <= parseInt(usrobj.credits)) {
-                                let giftTo = "";
+    let command = args[1].toLowerCase()
 
-                                function gambleCheck(userid) {
-                                    for (let i = 0; i < userdata.users.length; i++) {
-                                        if (userdata.users[i].id == userid) {
-                                            giftTo = userdata.users[i];
-                                            return true;
-                                        }
-                                    }
-                                }
+    switch (command) {
+      case 'saldo': {
+        let embed = new Discord.MessageEmbed().setColor(0xf4e542)
+        let targetId = args[2] ? args[2].replace(/\D/g, '') : undefined
+        let target = targetId ? userData.find((user) => user.id === targetId) : userObject
 
-                                if (gambleCheck(args[3].replace(/\D/g, ""))) {
-                                    usrobj.credits = usrobj.credits - parseInt(args[2]);
-                                    giftTo.credits = giftTo.credits + parseInt(args[2]);
-                                    embed
-                                        .setTitle(`${msg.member.user.username}, huomaa:`)
-                                        .setDescription(
-                                            `Lahjoitit ${parseInt(args[2])} kolikkoa onnistuneesti!`
-                                        );
-                                    msg.channel.send(embed).catch(error => console.info(error));
-                                } else {
-                                    embed
-                                        .setTitle(`${msg.member.user.username}, huomaa:`)
-                                        .setDescription(
-                                            `Valitsemasi pelaaja ei ole vielä koskaan käyttänyt komentoa: \`${prefix}${
-                                            configuration.name
-                                            }\`. Et voi lahjoittaa hänelle.`
-                                        );
-                                    msg.channel.send(embed).catch(error => console.info(error));
-                                }
-                            } else {
-                                embed
-                                    .setTitle(`${msg.member.user.username}, huomaa:`)
-                                    .setDescription(`Sulla ei oo tarpeeks koleja!`);
-                                msg.channel.send(embed).catch(error => console.info(error));
-                            }
-                        } else {
-                            embed
-                                .setTitle(
-                                    `Komennon ${configuration.name} alakomento ${
-                                    configuration.sub[args[1]].name
-                                    } toimii näin:`
-                                )
-                                .setDescription(`\`${subsyntax}\``);
-                            msg.channel.send(embed).catch(error => console.info(error));
-                        }
-
-                        break;
-
-                    case "palkka":
-                        subsyntax = configuration.sub[args[1]].syntax;
-
-                        if (Date.now() - usrobj.whenclaimed > 86400000) {
-                            embed
-                                .setTitle(`${msg.member.user.username}, huomaa:`)
-                                .setDescription(`Sait päivän palkan, eli ${daily} kolikkelia.`);
-                            msg.channel.send(embed).catch(error => console.info(error));
-                            usrobj.whenclaimed = Date.now();
-                            usrobj.credits = usrobj.credits + daily;
-                        } else {
-                            let timeremaining = Math.round(
-                                (((usrobj.whenclaimed + 86400000 - Date.now()) / 1000 / 60 / 60) * 100) / 100
-                            );
-                            embed
-                                .setTitle(`${msg.member.user.username}, huomaa:`)
-                                .setDescription(
-                                    `Vielä ${timeremaining} tuntia et saat kolikkeleita.`
-                                );
-                            msg.channel.send(embed).catch(error => console.info(error));
-                        }
-
-                        break;
-
-                    default:
-                        msg.channel.send(embed).catch(error => console.info(error));
-                        break;
-                }
-            } else {
-                msg.channel.send(embed).catch(error => console.info(error));
-            }
-
-            fs.writeFile(
-                "./assets/misc/raha/user-data.json",
-                JSON.stringify(userdata),
-                function (err) {
-                    if (err) {
-                        return console.info(err);
-                    }
-                }
-            );
+        embed.setTitle(`${target.username} balanssi:`).setDescription(`${target.credits} kolea`)
+        msg.channel.send(embed).catch((error) => console.info(error))
+        return close()
+      }
+      case 'uhkapeli': {
+        function didWin() {
+          let result = Math.round(Math.random())
+          return result === 1
         }
 
-        resolve();
-    });
-};
+        let credits = parseInt(userObject.credits)
+        let gambleAmount = parseInt(args[2])
 
-module.exports.configuration = configuration;
+        function handleWin(message) {
+          let embed = new Discord.MessageEmbed()
+            .setColor(0xf4e542)
+            .setTitle(`Käyttäjä ${msg.author.username} uhkapelaa ${gambleAmount} kolikolla. Lets mennään.`)
+            .setDescription(`:game_die: Voitto! Sait ${gambleAmount} kolikkoa :game_die:`)
+          message.edit(embed).catch((error) => console.info(error))
+          userObject.credits = credits + gambleAmount
+        }
+
+        function handleLose(message) {
+          let embed = new Discord.MessageEmbed()
+            .setColor(0xf4e542)
+            .setTitle(`Käyttäjä ${msg.author.username} uhkapelaa ${gambleAmount} kolikolla. Lets mennään.`)
+            .setDescription(`:game_die: Häviö! Hävisit ${args[2]} kolikkoa :game_die:`)
+          message.edit(embed).catch((error) => console.info(error))
+          userObject.credits = credits - gambleAmount
+        }
+
+        if (!gambleAmount || gambleAmount <= 0) {
+          return close()
+        }
+
+        if (gambleAmount > credits) {
+          return close()
+          // user does not have enaf mani
+        }
+
+        let startMessage = new Discord.MessageEmbed()
+          .setColor(0xf4e542)
+          .setTitle(`Käyttäjä ${msg.author.username} uhkapelaa ${gambleAmount} kolikolla. Lets mennään.`)
+          .setDescription(`:game_die:`)
+
+        msg.channel.send(startMessage).then((sentMessage) => {
+          let won = didWin()
+          setTimeout(() => {
+            if (won) {
+              handleWin(sentMessage)
+            } else {
+              handleLose(sentMessage)
+            }
+            updateData(userObject)
+            close()
+          }, 1600)
+        })
+        return
+      }
+      case 'lahjoita': {
+        if (!args[3]) {
+          return close()
+        }
+
+        let donationAmount = parseInt(args[3])
+
+        if (!donationAmount || donationAmount <= 0) {
+          return close()
+        }
+
+        let credits = parseInt(userObject.credits)
+
+        if (donationAmount > credits) {
+          return close()
+        }
+
+        let receiverId = args[2].replace(/\D/g, '')
+
+        let receiver = userData.find((user) => user.id === receiverId)
+
+        if (!receiver) {
+          return close()
+        }
+
+        receiver.credits = receiver.credits + donationAmount
+        userObject.credits = userObject.credits - donationAmount
+
+        let embed = new Discord.MessageEmbed()
+          .setColor(0xf4e542)
+          .setTitle(`${msg.member.user.username}, huomaa:`)
+          .setDescription(`Lahjoitit ${parseInt(args[2])} kolikkoa onnistuneesti!`)
+        msg.channel.send(embed).catch((error) => console.info(error))
+
+        updateData(userObject)
+        updateData(receiver)
+
+        return close()
+      }
+      case 'palkka': {
+        if (Date.now() - userObject.whenClaimed < 86400000) {
+          let embed = new Discord.MessageEmbed().setColor(0xf4e542)
+          let timeremaining = Math.round(
+            (((userObject.whenClaimed + 86400000 - Date.now()) / 1000 / 60 / 60) * 100) / 100
+          )
+          embed
+            .setTitle(`${msg.member.user.username}, huomaa:`)
+            .setDescription(`Vielä ${timeremaining} tuntia et saat kolikkeleita.`)
+          msg.channel.send(embed).catch((error) => console.info(error))
+          return close()
+        }
+
+        let embed = new Discord.MessageEmbed()
+          .setColor(0xf4e542)
+          .setTitle(`${msg.member.user.username}, huomaa:`)
+          .setDescription(`Sait päivän palkan, eli ${daily} kolikkelia.`)
+
+        msg.channel.send(embed).catch((error) => console.info(error))
+        userObject.whenClaimed = Date.now()
+        userObject.credits = userObject.credits + daily
+
+        updateData(userObject)
+
+        return close()
+      }
+
+      default:
+        msg.channel.send(syntaxInfo()).catch((error) => console.info(error))
+        return close()
+    }
+  })
+}
+
+module.exports.configuration = configuration

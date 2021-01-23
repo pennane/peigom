@@ -6,3 +6,4 @@ bot/assets/misc/disabledChannels/channels.json
 bot/assets/misc/adminUsers/data.json
 node_modules/*
 .vscode
+.env
