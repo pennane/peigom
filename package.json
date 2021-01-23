@@ -1,6 +1,6 @@
 {
   "name": "peigombot",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "Discord bot with features for managing your server and creating all kinds of shenanigans.",
   "main": "bot.js",
   "license": "GPL-3.0-or-later",
@@ -14,20 +14,20 @@
     "url": "https://github.com/Pennane/peigom-bot.git"
   },
   "dependencies": {
-    "@discordjs/opus": "^0.1.0",
-    "chalk": "^2.4.2",
-    "cheerio": "^1.0.0-rc.3",
-    "config": "^3.0.1",
-    "discord.js": "^12.0.2",
+    "@discordjs/opus": "^0.3.3",
+    "chalk": "^4.1.0",
+    "cheerio": "^1.0.0-rc.5",
+    "config": "^3.3.3",
+    "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "genius-api": "^0.4.1",
-    "js-beautify": "^1.10.0",
+    "js-beautify": "^1.13.4",
     "node-fetch": "^2.6.1",
-    "node-schedule": "^1.3.1",
-    "sharp": "^0.25.2",
-    "simple-youtube-api": "^5.1.1",
-    "urban-dictionary": "^2.2.1",
-    "ytdl-core": "^4.2.1",
+    "node-schedule": "^1.3.2",
+    "sharp": "^0.27.0",
+    "simple-youtube-api": "^5.2.1",
+    "urban-dictionary": "^3.0.0",
+    "ytdl-core": "^4.4.4",
     "ytdl-core-discord": "^1.2.5"
   },
   "devDependencies": {
@@ -36,8 +36,8 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cross-env NODE_ENV=production node bot/index.js",
-    "dev": "cross-env NODE_ENV=development nodemon bot/index.js"
+    "start": "cross-env NODE_ENV=production node src/index.js",
+    "dev": "cross-env NODE_ENV=development nodemon src/index.js"
   },
   "nodemonConfig": {
     "ignore": [
