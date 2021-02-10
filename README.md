@@ -8,6 +8,10 @@ Peigom Bot is a bot for discord with various features including but not limited 
 - Music bot functionalities
 - Chat management
 
+## Diclaimer
+
+This project is very much a spaghetti-code-esque project. I've been building this for the last three years now improving bits from here and there. Parts of the code are beautiful, other parts not so much.
+
 ## Installation
 
 ### Required keys/tokens
