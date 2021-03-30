@@ -16,7 +16,6 @@
   "dependencies": {
     "@discordjs/opus": "^0.3.3",
     "chalk": "^4.1.0",
-    "config": "^3.3.3",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
     "js-beautify": "^1.13.4",
