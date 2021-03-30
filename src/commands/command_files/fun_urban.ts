@@ -32,8 +32,7 @@ const executor: CommandExecutor = async (message, client, args) => {
         embed.setFooter(entry.author, 'https://arttu.pennanen.org/file/thonk.gif')
         embed.setTimestamp()
         message.channel.send(embed)
-    } catch (e) {
-        console.log(e)
+    } catch {
         message.channel.send(`Ei löytyny selitystä sanomalle ${toDefine}`)
     }
 }

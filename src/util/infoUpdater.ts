@@ -4,7 +4,6 @@ import fs from 'fs'
 import schedule from 'node-schedule'
 
 import time from './getTime'
-import logger from './activityLogger'
 import ZimmerTj from '../util/zimmerTJ'
 import badwords from '../assets/misc/badwords/badwords.json'
 import commandLoader from '../commands/loader'
@@ -54,8 +53,6 @@ const init = async ({ client, timing }: { client: Discord.Client; timing: { time
     console.info(
         c.yellow('| Command spam protection: ') + (COMMAND_SPAM_PROTECTION.STATE ? c.green('true') : c.red('false'))
     )
-
-    logger.log(2)
 }
 
 const infoUpdater = {

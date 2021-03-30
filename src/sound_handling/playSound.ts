@@ -1,5 +1,5 @@
 import Discord from 'discord.js'
-import logger from '../util/activityLogger'
+import activityLogger from '../util/activityLogger'
 import { queueMethods } from './sound'
 import Command from '../commands/Command'
 
@@ -38,8 +38,8 @@ const play = async function ({ soundfile, message }: { soundfile: string; messag
         dispatcher.on('error', (error) => {
             throw error
         })
-    } catch (err) {
-        logger.log(3, `Error while playing audio: ${err}`)
+    } catch (error) {
+        activityLogger.log({ id: 32, content: 'Error in playsound', error })
     }
     return
 }

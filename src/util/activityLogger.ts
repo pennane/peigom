@@ -1,32 +1,136 @@
-import chalk from 'chalk'
+import fs from 'fs'
+import * as AppConfiguration from './config'
+import c from 'chalk'
 
 /*
-         Table for mode numbers:
-             1: Discord Command; User used a commmand.
-             2: Client Connected; Client connected succesfully.
-             3: Client Error; Something happened at the websocket.
-             4: Client Reconnecting; Client started to reconnect.
-             5: Client Reconnected; Client reconnect succesfully.
-             6: Discord Command Failure; Command failed.
-             7: New member; a new member joined a server.
-             8: Member left; member left from a server.
-             9: New server; bot added to a new server.
-             10: Server removed; bot removed from a server.
-             11: Command load failure; command failed to initialize.
-             12: Faulty command; command does not follow the command class.
-             13: Command failure with stack; fail at command and stack exists.
-             14: Command failed on use
-             15: Discord Command; User tried to use an unauthorized commmand.
+0 Client Connected
+1 Client Reconnected
+
+11 Command failed to load
+12 Command Used
+13 Command Use failure
+14 Command Unauthorized
+
+20 New Server
+21 Server Removed
+
+31 Error in process
+32 Error in discord client
+33 Error in utilities / core
 */
 
-const log = (id: number, content?: any) => {
-    if (id === 3 && content) {
-        console.log(chalk.red(content))
-        return
-    }
-    console.log(chalk.yellowBright('LOG: ' + id))
+const ensureFiles = ({ year, month, day }: { year: string; month: string; day: string }) => {
+    if (!fs.existsSync(`./log/${year}`)) fs.mkdirSync(`./log/${year}`)
+    if (!fs.existsSync(`./log/${year}/${month}`)) fs.mkdirSync(`./log/${year}/${month}`)
+    if (!fs.existsSync(`./log/${year}/${month}/${day}.txt`))
+        fs.writeFileSync(`./log/${year}/${month}/${day}.txt`, `Logs from ${day}.${month}.${year}\n\n`)
 }
 
-const ActivityLogger = { log }
+const getDateParts = () => {
+    let date = new Date()
+    let year = String(date.getFullYear())
+    let month = String(date.getMonth() + 1).padStart(2, '0')
+    let day = String(date.getDate()).padStart(2, '0')
+    let hour = String(date.getHours()).padStart(2, '0')
+    let minute = String(date.getMinutes()).padStart(2, '0')
+    let second = String(date.getSeconds()).padStart(2, '0')
 
+    return { date, year, month, day, hour, minute, second }
+}
+
+const saveActivity = (message: string) => {
+    let { year, month, day } = getDateParts()
+
+    ensureFiles({ year, month, day })
+    fs.appendFileSync(`./log/${year}/${month}/${day}.txt`, message)
+}
+
+const shortDate = (): string => {
+    let { hour, minute } = getDateParts()
+    return `${hour}:${minute}`
+}
+
+const buildMessage = ({
+    id,
+    title,
+    content,
+    error
+}: {
+    id: number
+    title: string
+    content?: string
+    error?: Error
+}) => {
+    return `${shortDate()} »〔${id}:${title}〕${content ? ` » ${content}` : ''}${
+        error?.name ? ` » '${error.name}'` : ''
+    }${error?.message ? `: '${error.message}'` : ''}${error?.stack ? ` » '${error.stack}'` : ''}\n`
+}
+
+export const log = ({ id, content, error }: { id: number; content?: string; error?: Error }) => {
+    // Return if config has been set to not log commands
+    let isCommandId = id === 12 || id === 14
+    if (isCommandId && !AppConfiguration.LOG_USED_COMMANDS) return
+
+    let message: string
+    switch (id) {
+        case 0: {
+            message = buildMessage({ id, title: 'Client Connected' })
+            break
+        }
+        case 1: {
+            message = buildMessage({ id, title: 'Client Reconnected' })
+            break
+        }
+        case 11: {
+            console.log(c.yellow('Command initiation failed') + ' ' + c.redBright(content) + ' ' + c.redBright(content))
+            message = buildMessage({ id, title: 'Command initiation failed', content, error })
+            break
+        }
+        case 12: {
+            message = buildMessage({ id, title: 'Command used', content })
+            break
+        }
+        case 13: {
+            message = buildMessage({ id, title: 'Command failed on use', content, error })
+            break
+        }
+        case 14: {
+            message = buildMessage({ id, title: 'Unauthorized command use', content })
+            break
+        }
+        case 20: {
+            console.log(c.greenBright('Bot added to new guild') + ' ' + c.redBright(content))
+            message = buildMessage({ id, title: 'Bot added to new guild', content })
+            break
+        }
+        case 21: {
+            console.log(c.yellowBright('Bot added to new guild') + ' ' + c.redBright(content))
+            message = buildMessage({ id, title: 'Bot removed from guild', content })
+            break
+        }
+        case 31: {
+            console.log(c.red('Error in the process'))
+            message = buildMessage({ id, title: 'Error in the process', error })
+            break
+        }
+        case 32: {
+            console.log(c.red('Error in the discord client'))
+            message = buildMessage({ id, title: 'Error in the discord client', error })
+            break
+        }
+        case 33: {
+            console.log(c.red('Error in utilities / core'))
+            message = buildMessage({ id, title: 'Error in utilities / core', error })
+            break
+        }
+
+        default:
+            return
+    }
+    saveActivity(message)
+}
+
+const ActivityLogger = {
+    log
+}
 export default ActivityLogger

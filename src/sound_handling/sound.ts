@@ -58,8 +58,7 @@ async function dispatch(guild: Discord.Guild) {
 
     let dispatcher = serverQueue.connection.play(stream, { volume: serverQueue.options.volume })
 
-    dispatcher.on('finish', (reason: string) => {
-        console.log('finished')
+    dispatcher.on('finish', () => {
         let serverQueue = QueueMap.get(guild.id)
         if (!serverQueue) return
 
@@ -69,6 +68,7 @@ async function dispatch(guild: Discord.Guild) {
             dispatch(guild)
         }, 1000)
     })
+
     dispatcher.on('error', (err) => {
         if (!serverQueue) return
         console.info('error in dispatcher:', err)

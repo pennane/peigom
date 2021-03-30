@@ -1,4 +1,5 @@
 import Discord from 'discord.js'
+import activityLogger from '../util/activityLogger'
 import * as AppConfiguration from '../util/config'
 import SyntaxEmbed, { SyntaxEmbedOptions } from './syntaxEmbed'
 
@@ -150,7 +151,6 @@ class Command {
     }
 
     static isMemberSuperAdminAuthorized(message: Discord.Message): boolean {
-        console.log('checking permissions...')
         return AppConfiguration.DISCORD.SUPER_ADMIN_AUTHORIZED.includes(message.author.id)
     }
 
@@ -163,6 +163,10 @@ class Command {
     }
 
     unauthorizedAction(message: Discord.Message): void {
+        activityLogger.log({
+            id: 14,
+            content: message.author.username + message.author.discriminator + ' Command: ' + this.name
+        })
         message.reply('Sinulla ei ole oikeutta käyttää komentoa ' + this._name)
     }
 
@@ -190,7 +194,25 @@ class Command {
             return this.unauthorizedAction(message)
         }
 
-        this._executor(message, client, args).catch((err) => console.info(err))
+        this._executor(message, client, args).catch((error) =>
+            activityLogger.log({ id: 13, content: this.name, error })
+        )
+        activityLogger.log({
+            id: 12,
+            content:
+                message.author.username +
+                '#' +
+                message.author.discriminator +
+                ' @ ' +
+                message.guild?.name +
+                ':' +
+                message.guild?.id +
+                ' » ' +
+                this.name +
+                ' ' +
+                AppConfiguration.PREFIX +
+                args.join(' ')
+        })
     }
 }
 

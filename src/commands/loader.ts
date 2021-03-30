@@ -5,6 +5,8 @@ import Command from './Command.js'
 const commandDirectoryName = './command_files'
 const directory = fs.readdirSync(path.resolve(__dirname, commandDirectoryName))
 
+import activityLogger from '../util/activityLogger'
+
 const reservedNames = ['työkalut', 'komennot', 'hauskat', 'kuvat', 'admin', 'muut']
 
 let loadedTriggers: Map<string, Array<string>> = new Map()
@@ -21,8 +23,8 @@ const loadCommand = async (target: CommandTarget) => {
     let importedCommand
     try {
         importedCommand = await import(`${directory}/${file}`)
-    } catch (e) {
-        console.error(e)
+    } catch (error) {
+        activityLogger.log({ id: 11, content: 'Failed to load command ' + file, error })
     }
 
     const command: Command = importedCommand.default
@@ -51,8 +53,8 @@ const loadCommand = async (target: CommandTarget) => {
 
         loadedCommands.set(command.name, command)
         loadedTriggers.set(command.name, triggers)
-    } catch (err) {
-        console.info(`ERROR: ${file} : ${err} `)
+    } catch (error) {
+        activityLogger.log({ id: 11, content: 'Conflicting triggers ' + file, error })
     }
 }
 
@@ -67,8 +69,8 @@ directory.forEach((file: string) => {
                 directory: commandDirectoryName
             })
         )
-    } catch (e) {
-        console.error(e)
+    } catch (error) {
+        activityLogger.log({ id: 11, content: 'Failed to push load promise to commandPromises ' + file, error })
     }
 })
 
