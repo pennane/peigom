@@ -1,0 +1,20 @@
+import { Sharp } from 'sharp'
+import ImageCommand, { ImageCommandConfiguration, ImageManipulator } from '../ImageCommand'
+
+const configuration: ImageCommandConfiguration = {
+    name: 'reddeath',
+    admin: false,
+    syntax: 'reddeath',
+    desc: 'en voi hyvin',
+    triggers: ['red', 'death', 'reddeath'],
+    type: ['image'],
+    imageName: 'ded',
+    imageTitle: 'näytänkö mä siltä et mä voin hyvin?'
+}
+
+const manipulator: ImageManipulator = (sharp: Sharp): Sharp => sharp.modulate({ saturation: 16 }).jpeg({ quality: 1 })
+
+export default new ImageCommand({
+    configuration,
+    manipulator
+})
