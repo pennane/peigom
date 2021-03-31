@@ -1,4 +1,4 @@
-import names from '../../assets/misc/badwords/badwords.json'
+import names from '../../../assets/misc/badwords/badwords.json'
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 import { Role } from 'discord.js'
 import { randomFromArray } from '../../util/misc'

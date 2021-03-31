@@ -5,7 +5,7 @@ import schedule from 'node-schedule'
 
 import time from './getTime'
 import ZimmerTj from '../util/zimmerTJ'
-import badwords from '../assets/misc/badwords/badwords.json'
+import badwords from '../../assets/misc/badwords/badwords.json'
 import commandLoader from '../commands/loader'
 import { shuffleArray } from './misc'
 import { DISCORD, LOG_USED_COMMANDS, COMMAND_SPAM_PROTECTION, PREFIX } from './config'

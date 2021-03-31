@@ -1,5 +1,3 @@
-process.chdir(__dirname)
-
 import * as AppConfiguration from './util/config'
 import Discord from 'discord.js'
 import chalk from 'chalk'
