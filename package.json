@@ -37,7 +37,7 @@
   },
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon src/index.ts",
-    "start": "ts-node src/server/index.ts"
+    "start": "ts-node src/index.ts"
   },
   "nodemonConfig": {
     "ignore": [
