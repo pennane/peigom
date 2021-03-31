@@ -88,6 +88,7 @@ class Command {
     _superadminCommand: boolean | undefined
     _requireGuild: boolean
     _executor: CommandExecutor
+    _configuration: CommandConfiguration
 
     constructor(initializer: CommandInitializer) {
         const { configuration } = initializer
@@ -121,6 +122,8 @@ class Command {
         if (this._superadminCommand && !this._type.includes('superadmin')) {
             this._type.push('superadmin')
         }
+
+        this._configuration = configuration
     }
 
     get name() {

@@ -1,34 +1,22 @@
 [
     {
-        "name": "adminoikeudet",
-        "admin": true,
-        "superadmin": true,
-        "syntax": "adminoikeudet <anna/poista> @rooli",
-        "desc": "Antaa admin oikeudet jollee roolille",
-        "triggers": [
-            "adminoikeudet"
-        ],
-        "type": [
-            "admin"
-        ]
-    },
-    {
         "name": "bottitoimiitäällä",
-        "admin": false,
+        "admin": true,
         "syntax": "bottitoimiitäällä <#channel> <ei/joo> tai bottitoimiitäällä <ei/joo>",
-        "desc": "Kosmeettisen virtuaalivaluutan pyörittelyyn",
+        "desc": "Laita botti pois päältä / päälle per tekstikanava",
         "triggers": [
             "bottitoimiitäällä"
         ],
         "type": [
             "admin",
             "utility"
-        ]
+        ],
+        "requireGuild": true
     },
     {
         "name": "puhista",
         "admin": true,
-        "syntax": "puhista <määrä (2-99)>",
+        "syntax": "puhista <määrä (1-99)>",
         "desc": "Poistaa annetun määrän viestejä kanavalta.",
         "triggers": [
             "puhista",
@@ -70,29 +58,6 @@
         "admin": false,
         "syntax": "raha <saldo / uhkapeli / lahjoita /  palkka>",
         "desc": "Kosmeettisen virtuaalivaluutan pyörittelyyn",
-        "daily": 250,
-        "sub": {
-            "saldo": {
-                "syntax": "raha saldo ?<@pelaaja>",
-                "desc": "Näyttää oman tai toisen rahatilanteen.",
-                "name": "saldo"
-            },
-            "uhkapeli": {
-                "syntax": "raha uhkapeli <määrä>",
-                "desc": "Heittää asettamallasi määrällä kolikkoa. Voitolla tuplaat panoksen, ja häviöllä menetät.",
-                "name": "uhkapeli"
-            },
-            "lahjoita": {
-                "syntax": "raha lahjoita <@kenelle> <määrä>",
-                "desc": "Lahjoittaa asettamasi määrän haluamallesi käyttäjälle.",
-                "name": "lahjoita"
-            },
-            "palkka": {
-                "syntax": "raha palkka",
-                "desc": "Antaa sinulle päivän palkan.",
-                "name": "palkka"
-            }
-        },
         "triggers": [
             "raha",
             "rahe",
@@ -182,6 +147,50 @@
         ]
     },
     {
+        "name": "image-eval",
+        "superadmin": true,
+        "syntax": "image-eval <js-koodia>",
+        "desc": "Lähettää kanavalle vaarallisesti muokatun kuvan",
+        "triggers": [
+            "image-eval",
+            "ival"
+        ],
+        "type": [
+            "image",
+            "superadmin"
+        ],
+        "imageName": "eval",
+        "imageTitle": "vaarallisesti tuotettu kuva"
+    },
+    {
+        "name": "hirvitys",
+        "admin": false,
+        "syntax": "hirvitys",
+        "desc": "pelottaa kauhiasti",
+        "triggers": [
+            "hirvitys"
+        ],
+        "type": [
+            "image"
+        ],
+        "imageName": "hirvitys",
+        "imageTitle": "hirvityshirvityshirvitys"
+    },
+    {
+        "name": "invert",
+        "admin": false,
+        "syntax": "invert",
+        "desc": "upsidedöwn",
+        "triggers": [
+            "invert"
+        ],
+        "type": [
+            "image"
+        ],
+        "imageName": "invert",
+        "imageTitle": "invertti"
+    },
+    {
         "name": "jpeg",
         "admin": false,
         "syntax": "jpeg",
@@ -192,7 +201,39 @@
         ],
         "type": [
             "image"
-        ]
+        ],
+        "imageName": "jpeg",
+        "imageTitle": "näytänkö mä siltä et mä tiedän mikä jpeg on?"
+    },
+    {
+        "name": "korkea",
+        "admin": false,
+        "syntax": "korkea",
+        "desc": "korkeaucco",
+        "triggers": [
+            "korkea",
+            "tallboi"
+        ],
+        "type": [
+            "image"
+        ],
+        "imageName": "korkea",
+        "imageTitle": "yes"
+    },
+    {
+        "name": "leveä",
+        "admin": false,
+        "syntax": "leveä",
+        "desc": "wideboi",
+        "triggers": [
+            "leveä",
+            "wide"
+        ],
+        "type": [
+            "image"
+        ],
+        "imageName": "wide",
+        "imageTitle": "niinistö on kävelemässä"
     },
     {
         "name": "minime",
@@ -204,7 +245,9 @@
         ],
         "type": [
             "image"
-        ]
+        ],
+        "imageName": "mini",
+        "imageTitle": "mini sinä"
     },
     {
         "name": "nightmare",
@@ -217,7 +260,25 @@
         ],
         "type": [
             "image"
-        ]
+        ],
+        "imageName": "nitemare",
+        "imageTitle": "guumodus?"
+    },
+    {
+        "name": "death",
+        "admin": false,
+        "syntax": "death",
+        "desc": "en voi hyvin",
+        "triggers": [
+            "red",
+            "death",
+            "reddeath"
+        ],
+        "type": [
+            "image"
+        ],
+        "imageName": "ded",
+        "imageTitle": "näytänkö mä siltä et mä voin hyvin?"
     },
     {
         "name": "vietnam",
@@ -230,9 +291,12 @@
         ],
         "type": [
             "image"
-        ]
+        ],
+        "imageName": "nam",
+        "imageTitle": "fläshback"
     },
     {
+        "requireGuild": true,
         "name": "clear",
         "admin": false,
         "syntax": "clear",
@@ -245,6 +309,7 @@
         ]
     },
     {
+        "requireGuild": true,
         "name": "disconnect",
         "admin": false,
         "syntax": "disconenct",
@@ -258,22 +323,7 @@
         ]
     },
     {
-        "name": "lyrics",
-        "admin": false,
-        "syntax": "lyrics <song query> ",
-        "desc": "näyttää kappaleen lyriikat, bro. jos et anna argumenttei ni näyttää soitettavan biisin sanat",
-        "triggers": [
-            "lyrics",
-            "sanat",
-            "sanoitukset",
-            "lyriikat",
-            "mitähelvettiäselaulaa"
-        ],
-        "type": [
-            "music"
-        ]
-    },
-    {
+        "requireGuild": true,
         "name": "move",
         "admin": false,
         "syntax": "move",
@@ -298,7 +348,8 @@
         ],
         "type": [
             "music"
-        ]
+        ],
+        "requireGuild": true
     },
     {
         "name": "pause",
@@ -310,7 +361,8 @@
         ],
         "type": [
             "music"
-        ]
+        ],
+        "requireGuild": true
     },
     {
         "name": "play",
@@ -324,7 +376,8 @@
         ],
         "type": [
             "music"
-        ]
+        ],
+        "requireGuild": true
     },
     {
         "name": "playtop",
@@ -337,7 +390,8 @@
         ],
         "type": [
             "music"
-        ]
+        ],
+        "requireGuild": true
     },
     {
         "name": "queue",
@@ -352,7 +406,8 @@
         ],
         "type": [
             "music"
-        ]
+        ],
+        "requireGuild": true
     },
     {
         "name": "remove",
@@ -366,7 +421,8 @@
         ],
         "type": [
             "music"
-        ]
+        ],
+        "requireGuild": true
     },
     {
         "name": "resume",
@@ -378,7 +434,8 @@
         ],
         "type": [
             "music"
-        ]
+        ],
+        "requireGuild": true
     },
     {
         "name": "shuffle",
@@ -392,7 +449,8 @@
         ],
         "type": [
             "music"
-        ]
+        ],
+        "requireGuild": true
     },
     {
         "name": "skip",
@@ -405,9 +463,11 @@
         ],
         "type": [
             "music"
-        ]
+        ],
+        "requireGuild": true
     },
     {
+        "requireGuild": true,
         "name": "volume",
         "admin": true,
         "syntax": "volume 1-infinity",
@@ -423,8 +483,7 @@
     {
         "name": "piilota",
         "admin": false,
-        "superadmin": false,
-        "syntax": "adminoikeudet <anna/poista> @rooli",
+        "syntax": "piilota",
         "desc": "Antaa admin oikeudet jollee roolille",
         "triggers": [
             "shuflle",
@@ -714,19 +773,15 @@
         "admin": false,
         "syntax": "auta <komennon/toiminnon nimi>",
         "desc": "Kertoo tietoa botin komennoista ja toiminnoista",
-        "embed": {
-            "desc": "Vähän tietoa komennoista ja toiminnasta.",
-            "color": 16049474,
-            "author": "Susse",
-            "footer": "bumtsi bum, nimi o peigom © 2018"
-        },
         "triggers": [
             "auta",
-            "help"
+            "help",
+            "hjälp"
         ],
         "type": [
             "utility"
-        ]
+        ],
+        "requireGuild": true
     },
     {
         "name": "emojis",
@@ -758,14 +813,15 @@
         "name": "ping",
         "admin": false,
         "syntax": "ping",
-        "desc": "Kertoo botin viiveen",
+        "desc": "pingaa bottia",
         "triggers": [
             "ping",
             "pong"
         ],
         "type": [
             "utility"
-        ]
+        ],
+        "requireGuild": false
     },
     {
         "name": "thonk",

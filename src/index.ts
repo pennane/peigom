@@ -4,6 +4,21 @@ import chalk from 'chalk'
 import messageHandler from './message_handling/handler'
 import infoUpdater from './util/infoUpdater'
 import activityLogger from './util/activityLogger'
+import fs from 'fs'
+
+import commadData from './commands/loader'
+
+const createCommandMap = async () => {
+    let { commands } = await commadData()
+    let commandMetaMap: {}[] = []
+    commands.forEach((command, name) => {
+        commandMetaMap.push(command._configuration)
+    })
+
+    fs.writeFileSync(__dirname + '/../commandMetaMap.json', JSON.stringify(commandMetaMap))
+}
+
+createCommandMap()
 
 const client = new Discord.Client()
 
