@@ -6,8 +6,8 @@ let YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY
 let GENIUS_ACCESS_TOKEN = process.env.GENIUS_ACCESS_TOKEN
 
 let APP = {
-    VERSION: '2.0.0',
-    NAME: 'peigom-bot'
+    VERSION: '4.0.0',
+    NAME: 'Peigom'
 }
 
 let PREFIX = ','

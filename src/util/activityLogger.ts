@@ -82,7 +82,7 @@ export const log = ({ id, content, error }: { id: number; content?: string; erro
             break
         }
         case 11: {
-            console.log(c.yellow('Command initiation failed') + ' ' + c.redBright(content) + ' ' + c.redBright(content))
+            console.log(c.yellow('Command initiation failed') + ' ' + c.redBright(content))
             message = buildMessage({ id, title: 'Command initiation failed', content, error })
             break
         }
