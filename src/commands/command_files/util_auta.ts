@@ -19,7 +19,7 @@ const embedConfiguration = {
     desc: 'Vähän tietoa komennoista ja toiminnasta.',
     color: 0xf4e542,
     author: 'Susse#9999',
-    footer: 'bumtsi bum, nimi o peigom © 2018'
+    footer: 'bumtsi bum, nimi o peigom © 2018-2021'
 }
 
 async function loadCommandData() {
@@ -64,6 +64,19 @@ const executor: CommandExecutor = async (message, client, args) => {
             .setFooter(embedConfiguration.footer, 'https://arttu.pennanen.org/file/thonk.gif')
             .setTimestamp()
 
+        return embed
+    }
+
+    function createNoActionEmbed(action: string): Discord.MessageEmbed {
+        let embed = createBaseEmbed()
+
+        embed
+            .setTitle(':eyes: Hupsista')
+            .setDescription(`Antamaasi \`${prefix}${configuration.name}\` toimintoa \`${action}\` ei ole olemassa.`)
+            .addField(
+                `:pencil: **Kokeile** \`${prefix}${configuration.name} komennot\``,
+                `(tai pelkästään ${prefix}${configuration.name})`
+            )
         return embed
     }
 
@@ -194,7 +207,7 @@ const executor: CommandExecutor = async (message, client, args) => {
             )
             .addField(`:vertical_traffic_light: Versio:`, `${AppConfiguration.APP.VERSION}`, false)
 
-            .addField(`:1234: Komentojen määrä:`, Object.keys(commands).length, true)
+            .addField(`:1234: Komentojen määrä:`, commands.size, true)
             .addField(`:file_cabinet: Serverien määrä:`, client.guilds.cache.size, true)
             .addField(`:pencil: Kehittäjä:`, `@Susse#9999`, true)
         return embed
@@ -251,6 +264,8 @@ const executor: CommandExecutor = async (message, client, args) => {
         if (!command) throw new Error('action in triggers but trigger not in command')
 
         message.channel.send(createCommandEmbed(command))
+    } else {
+        message.channel.send(createNoActionEmbed(action))
     }
 
     return
