@@ -204,23 +204,17 @@ export const queueMethods = {
         let trackLength = msToReadable(Number(serverQueue.tracks[0].videoDetails.lengthSeconds) * 1000)
 
         responseEmbed
-            .setAuthor(`Nyt soi`, undefined, track.videoDetails.video_url)
+            .addField(
+                `Nyt soi:`,
+                `[${serverQueue.tracks[0].videoDetails.title}](${serverQueue.tracks[0].videoDetails.video_url})\n${playedTime} / ${trackLength}`,
+                true
+            )
             .setColor('#2f3136')
             .addField(`${track.videoDetails.title}`, `${playedTime} / ${trackLength}`, true)
             .addField('Biisiä toivo:', track.requestedBy || '?', true)
 
         if (track.videoDetails.thumbnails[0].url) {
             responseEmbed.setThumbnail(track.videoDetails.thumbnails[0].url)
-        }
-
-        if (serverQueue.tracks[1]) {
-            responseEmbed.addField(
-                'Seuraavana:',
-                `${serverQueue.tracks
-                    .slice(1, 2)
-                    .map((track, i) => `\`${i + 1}\`: [${track.videoDetails.title}](${track.videoDetails.video_url})`)
-                    .join(`\n`)}`
-            )
         }
 
         message.channel.send(responseEmbed)
