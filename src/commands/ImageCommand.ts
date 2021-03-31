@@ -3,6 +3,8 @@ import sharp from 'sharp'
 import Command, { CommandConfiguration, CommandExecutor } from './Command'
 import { fetchFile } from '../util/misc'
 import fs from 'fs'
+import activityLogger from '../util/activityLogger'
+import * as AppConfiguration from '../util/config'
 
 export type ImageManipulator = (sharp: sharp.Sharp) => sharp.Sharp
 
@@ -117,7 +119,24 @@ export class ImageCommand extends Command {
             return this.unauthorizedAction(message)
         }
 
-        this.executor(message, client, args).catch((err) => console.info(err))
+        this.executor(message, client, args).catch((error) => activityLogger.log({ id: 13, content: this.name, error }))
+
+        activityLogger.log({
+            id: 12,
+            content:
+                message.author.username +
+                '#' +
+                message.author.discriminator +
+                ' @ ' +
+                message.guild?.name +
+                ':' +
+                message.guild?.id +
+                ' » ' +
+                this.name +
+                ' ' +
+                AppConfiguration.PREFIX +
+                args.join(' ')
+        })
     }
 }
 

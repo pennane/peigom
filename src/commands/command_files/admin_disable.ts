@@ -11,7 +11,7 @@ const configuration: CommandConfiguration = {
     name: 'bottitoimiitäällä',
     admin: true,
     syntax: 'bottitoimiitäällä <#channel> <ei/joo> tai bottitoimiitäällä <ei/joo>',
-    desc: 'Kosmeettisen virtuaalivaluutan pyörittelyyn',
+    desc: 'Laita botti pois päältä / päälle per tekstikanava',
     triggers: ['bottitoimiitäällä'],
     type: ['admin', 'utility'],
     requireGuild: true
