@@ -2,11 +2,11 @@ import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 
 const configuration: CommandConfiguration = {
     name: 'ping',
-    admin: true,
+    admin: false,
     syntax: 'ping',
     desc: 'pingaa bottia',
     triggers: ['ping', 'pong'],
-    type: ['työkalut'],
+    type: ['utility'],
     requireGuild: false
 }
 

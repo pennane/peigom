@@ -19,11 +19,15 @@ import c from 'chalk'
 33 Error in utilities / core
 */
 
-const ensureFiles = ({ year, month, day }: { year: string; month: string; day: string }) => {
+const ensureFiles = ({ year, month, day, error }: { year: string; month: string; day: string; error?: boolean }) => {
     if (!fs.existsSync(`./log/${year}`)) fs.mkdirSync(`./log/${year}`)
     if (!fs.existsSync(`./log/${year}/${month}`)) fs.mkdirSync(`./log/${year}/${month}`)
-    if (!fs.existsSync(`./log/${year}/${month}/${day}.txt`))
+
+    if (!error && !fs.existsSync(`./log/${year}/${month}/${day}.txt`))
         fs.writeFileSync(`./log/${year}/${month}/${day}.txt`, `Logs from ${day}.${month}.${year}\n\n`)
+
+    if (error && !fs.existsSync(`./log/${year}/${month}/${day}.error.txt`))
+        fs.writeFileSync(`./log/${year}/${month}/${day}.error.txt`, `Logs from ${day}.${month}.${year}\n\n`)
 }
 
 const getDateParts = () => {
@@ -45,9 +49,21 @@ const saveActivity = (message: string) => {
     fs.appendFileSync(`./log/${year}/${month}/${day}.txt`, message)
 }
 
+const saveError = (message: string) => {
+    let { year, month, day } = getDateParts()
+
+    ensureFiles({ year, month, day, error: true })
+    fs.appendFileSync(`./log/${year}/${month}/${day}.error.txt`, message)
+}
+
 const shortDate = (): string => {
     let { hour, minute } = getDateParts()
     return `${hour}:${minute}`
+}
+
+const longDate = (): string => {
+    let { day, month, hour, minute } = getDateParts()
+    return `${day}.${month} ${hour}:${minute}`
 }
 
 const buildMessage = ({
@@ -72,6 +88,7 @@ export const log = ({ id, content, error }: { id: number; content?: string; erro
     if (isCommandId && !AppConfiguration.LOG_USED_COMMANDS) return
 
     let message: string
+
     switch (id) {
         case 0: {
             message = buildMessage({ id, title: 'Client Connected' })
@@ -82,7 +99,9 @@ export const log = ({ id, content, error }: { id: number; content?: string; erro
             break
         }
         case 11: {
-            console.log(c.yellow('Command initiation failed') + ' ' + c.redBright(content))
+            console.log(
+                c.bgBlack(longDate()) + ': ' + c.yellow('Command initiation failed') + ' ' + c.redBright(content)
+            )
             message = buildMessage({ id, title: 'Command initiation failed', content, error })
             break
         }
@@ -99,27 +118,31 @@ export const log = ({ id, content, error }: { id: number; content?: string; erro
             break
         }
         case 20: {
-            console.log(c.greenBright('Bot added to new guild') + ' ' + c.redBright(content))
+            console.log(
+                c.bgBlack(longDate()) + ': ' + c.greenBright('Bot added to new guild') + ' ' + c.redBright(content)
+            )
             message = buildMessage({ id, title: 'Bot added to new guild', content })
             break
         }
         case 21: {
-            console.log(c.yellowBright('Bot added to new guild') + ' ' + c.redBright(content))
+            console.log(
+                c.bgBlack(longDate()) + ': ' + c.yellowBright('Bot added to new guild') + ' ' + c.redBright(content)
+            )
             message = buildMessage({ id, title: 'Bot removed from guild', content })
             break
         }
         case 31: {
-            console.log(c.red('Error in the process'))
+            console.log(c.bgBlack(longDate()) + ': ' + c.red('Error in the process'))
             message = buildMessage({ id, title: 'Error in the process', error })
             break
         }
         case 32: {
-            console.log(c.red('Error in the discord client'))
+            console.log(c.bgBlack(longDate()) + ': ' + c.red('Error in the discord client'))
             message = buildMessage({ id, title: 'Error in the discord client', error })
             break
         }
         case 33: {
-            console.log(c.red('Error in utilities / core'))
+            console.log(c.bgBlack(longDate()) + ': ' + c.red('Error in utilities / core'))
             message = buildMessage({ id, title: 'Error in utilities / core', error })
             break
         }
@@ -127,7 +150,12 @@ export const log = ({ id, content, error }: { id: number; content?: string; erro
         default:
             return
     }
-    saveActivity(message)
+
+    if (error) {
+        saveError(message)
+    } else {
+        saveActivity(message)
+    }
 }
 
 const ActivityLogger = {

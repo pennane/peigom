@@ -115,8 +115,11 @@ class Command {
         this._executor = initializer.executor || initializer.executor
         this._requireGuild = typeof configuration.requireGuild === 'boolean' ? configuration.requireGuild : true
 
-        if (this._adminCommand && this._type.indexOf('admin') === -1) {
+        if (this._adminCommand && !this._type.includes('admin')) {
             this._type.push('admin')
+        }
+        if (this._superadminCommand && !this._type.includes('superadmin')) {
+            this._type.push('superadmin')
         }
     }
 

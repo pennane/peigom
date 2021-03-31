@@ -1,5 +1,5 @@
 import { YOUTUBE_API_KEY } from '../util/config'
-import Discord from 'discord.js'
+import Discord, { Util } from 'discord.js'
 import ytdl, { videoInfo } from 'ytdl-core'
 import { buildInitialServerQueue, msToReadable, shuffleArray } from '../util/misc'
 
@@ -101,14 +101,15 @@ export const queueMethods = {
         const trackDuration = msToReadable(Number(track.videoDetails.lengthSeconds) * 1000)
 
         const responseEmbed = new Discord.MessageEmbed()
-            .setAuthor(`Jonoon lisätty 🎵`, track.thumbnail_url, track.videoDetails.video_url)
-            .addField(`[${track.videoDetails.title}](${track.videoDetails.video_url})`, track.videoDetails.author.name)
-            .setColor('RANDOM')
+            .addField(`Jonoon lisätty`, `[${track.videoDetails.title}](${track.videoDetails.video_url})`)
+            .setColor('#2f3136')
             .addField('Pituus', trackDuration, true)
-            .setTimestamp()
+            .addField('Biisiä toivo:', track.requestedBy || '?', true)
 
-        if (track.thumbnail_url) {
-            responseEmbed.setThumbnail(track.thumbnail_url)
+            .setURL(track.videoDetails.video_url)
+
+        if (track.videoDetails.thumbnails[0].url) {
+            responseEmbed.setThumbnail(track.videoDetails.thumbnails[0].url)
         }
 
         message.channel.send(responseEmbed)
@@ -134,6 +135,9 @@ export const queueMethods = {
             serverQueue.tracks = [serverQueue.tracks[0], track, ...serverQueue.tracks.slice(1)]
         } else {
             serverQueue.tracks.push(track)
+            for (let i = 0; i < 10; i++) {
+                serverQueue.tracks.push(track)
+            }
         }
     },
     show: function ({ guild, message }: { guild: Discord.Guild; message: Discord.Message }) {
@@ -143,24 +147,39 @@ export const queueMethods = {
             return
         }
 
+        let playedTime = serverQueue.connection?.dispatcher
+            ? msToReadable(serverQueue.connection?.dispatcher.streamTime)
+            : '?'
+        let trackLength = msToReadable(Number(serverQueue.tracks[0].videoDetails.lengthSeconds) * 1000)
+
         let responseEmbed = new Discord.MessageEmbed()
-            .setAuthor(`Jono kanavalla ${guild.name}`)
-            .setColor('RANDOM')
+            .setColor('#2f3136')
             .addField(
                 `Nyt soi:`,
-                `${serverQueue.tracks[0].videoDetails.title} | Biisiä pyys: ${serverQueue.tracks[0].requestedBy}`,
-                false
+                `[${serverQueue.tracks[0].videoDetails.title}](${serverQueue.tracks[0].videoDetails.video_url})\n${playedTime} / ${trackLength}`,
+                true
             )
-            .setTimestamp()
+            .addField('Biisiä toivo:', serverQueue.tracks[0].requestedBy || '?', true)
+            .setURL(serverQueue.tracks[0].videoDetails.video_url)
+        if (serverQueue.tracks[0].videoDetails.thumbnails[0].url) {
+            responseEmbed.setThumbnail(serverQueue.tracks[0].videoDetails.thumbnails[0].url)
+        }
 
-        if (serverQueue.tracks.length > 1) {
-            responseEmbed.addField(
-                'Seuraavana:',
-                `${serverQueue.tracks
-                    .slice(1)
-                    .map((track, i) => `\`${i + 1}\`: [${track.videoDetails.title}](${track.videoDetails.video_url})`)
-                    .join(`\n`)}`
-            )
+        if (serverQueue.tracks[1]) {
+            let tracks = serverQueue.tracks
+                .slice(1)
+                .map((track, i) => `\`${i + 1}\`: [${track.videoDetails.title}](${track.videoDetails.video_url})`)
+            let tracksMessage = tracks.join('\n')
+            let [first, ...rest] = Util.splitMessage(tracksMessage, { maxLength: 950 })
+            rest = rest.slice(0, 2)
+
+            responseEmbed.addField('Seuraavana', first)
+
+            if (rest) {
+                for (let part of rest) {
+                    responseEmbed.addField('\u200b', part)
+                }
+            }
         }
 
         message.channel.send(responseEmbed)
@@ -185,14 +204,23 @@ export const queueMethods = {
         let trackLength = msToReadable(Number(serverQueue.tracks[0].videoDetails.lengthSeconds) * 1000)
 
         responseEmbed
-            .setAuthor(`Ny soi: 🎵`, track.thumbnail_url, track.videoDetails.video_url)
-            .setColor('RANDOM')
-            .addField(`${serverQueue.tracks[0].videoDetails.title}`, `${playedTime} / ${trackLength}`, true)
+            .setAuthor(`Nyt soi`, undefined, track.videoDetails.video_url)
+            .setColor('#2f3136')
+            .addField(`${track.videoDetails.title}`, `${playedTime} / ${trackLength}`, true)
             .addField('Biisiä toivo:', track.requestedBy || '?', true)
-            .setTimestamp()
 
-        if (track.thumbnail_url) {
-            responseEmbed.setThumbnail(track.thumbnail_url)
+        if (track.videoDetails.thumbnails[0].url) {
+            responseEmbed.setThumbnail(track.videoDetails.thumbnails[0].url)
+        }
+
+        if (serverQueue.tracks[1]) {
+            responseEmbed.addField(
+                'Seuraavana:',
+                `${serverQueue.tracks
+                    .slice(1, 2)
+                    .map((track, i) => `\`${i + 1}\`: [${track.videoDetails.title}](${track.videoDetails.video_url})`)
+                    .join(`\n`)}`
+            )
         }
 
         message.channel.send(responseEmbed)
@@ -269,13 +297,30 @@ export const queueMethods = {
     pause: function ({ guild }: { guild: Discord.Guild }) {
         let serverQueue = QueueMap.get(guild.id)
 
-        // TODO
+        if (serverQueue?.connection?.dispatcher && !serverQueue.connection.dispatcher.paused) {
+            serverQueue.connection.dispatcher.pause()
+        }
     },
     resume: function ({ guild }: { guild: Discord.Guild }) {
         let serverQueue = QueueMap.get(guild.id)
 
-        // TODO
+        console.log(serverQueue?.connection?.dispatcher)
+        console.log(serverQueue?.connection?.dispatcher.paused)
+
+        if (serverQueue?.connection?.dispatcher.paused) {
+            serverQueue.connection.dispatcher.resume()
+        }
     },
+    // seek: function ({ guild, seekTo, message }: { guild: Discord.Guild, seekTo:string, message:Discord.Message }) {
+    //     let serverQueue = QueueMap.get(guild.id)
+
+    //     if (!serverQueue?.connection?.dispatcher ) {
+
+    //     message.channel.send('broidi no music to seek around ')
+    //     return
+    //     }
+    //     serverQueue.connection.dispatcher.seek
+    // },
     volume: function ({ guild, message, volume }: { guild: Discord.Guild; message: Discord.Message; volume: string }) {
         let serverQueue = QueueMap.get(guild.id)
 
