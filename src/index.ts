@@ -25,9 +25,12 @@ client.on('message', async (message) => {
 
 client.on('guildCreate', (guild) => activityLogger.log({ id: 20, content: `${guild.name} ${guild.id}` }))
 client.on('guildDelete', (guild) => activityLogger.log({ id: 21, content: `${guild.name} ${guild.id}` }))
-client.on('rateLimit', (reason) => console.info('Client being ratelimited:', reason))
 client.on('resume', () => activityLogger.log({ id: 1 }))
 client.on('error', (error) => activityLogger.log({ id: 32, error }))
 process.on('uncaughtException', (error) => activityLogger.log({ id: 31, error }))
+
+if (process.env.NODE_ENV === 'development') {
+    client.on('rateLimit', (reason) => console.info('Client being ratelimited:', reason))
+}
 
 client.login(AppConfiguration.DISCORD_TOKEN)
