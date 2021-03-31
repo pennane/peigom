@@ -1,7 +1,7 @@
 .DS_Store
-src/data/raha/user-data.json
-src/data/disabledChannels/channels.json
-src/data/adminUsers/data.json
+data/raha/user-data.json
+data/disabledChannels/channels.json
+data/adminUsers/data.json
 node_modules/*
 .vscode
 .env

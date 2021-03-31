@@ -5,15 +5,15 @@ import schedule from 'node-schedule'
 
 import time from './getTime'
 import ZimmerTj from '../util/zimmerTJ'
-import badwords from '../../assets/misc/badwords/badwords.json'
+import badwords from '../lib/badwords/badwords.json'
 import commandLoader from '../commands/loader'
 import { shuffleArray } from './misc'
 import { DISCORD, LOG_USED_COMMANDS, COMMAND_SPAM_PROTECTION, PREFIX } from './config'
 
 let { ACTIVITIES, REFRESH_RATE } = DISCORD.PRESENCE
 
-let moneyUserData = fs.existsSync('./assets/misc/raha/user-data.json')
-    ? JSON.parse(fs.readFileSync('./assets/misc/raha/user-data.json', 'utf8'))
+let moneyUserData = fs.existsSync('./data/raha/user-data.json')
+    ? JSON.parse(fs.readFileSync('./data/raha/user-data.json', 'utf8'))
     : undefined
 
 const init = async ({ client, timing }: { client: Discord.Client; timing: { timer: Date; completed: boolean } }) => {

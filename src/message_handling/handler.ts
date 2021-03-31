@@ -3,7 +3,7 @@ import Discord from 'discord.js'
 import * as AppConfiguration from '../util/config'
 import Command from '../commands/Command'
 import loader from '../commands/loader'
-import badWords from '../../assets/misc/badwords/badwords.json'
+import badWords from '../lib/badwords/badwords.json'
 
 import { disabledChannels } from '../commands/command_files/admin_disable'
 
