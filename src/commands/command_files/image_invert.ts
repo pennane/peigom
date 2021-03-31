@@ -12,7 +12,7 @@ const configuration: ImageCommandConfiguration = {
     imageTitle: 'invertti'
 }
 
-const manipulator: ImageManipulator = (sharp: Sharp): Sharp => sharp.negate()
+const manipulator: ImageManipulator = (sharp: Sharp): Sharp => sharp.resize(512, 512).negate()
 
 export default new ImageCommand({
     configuration,

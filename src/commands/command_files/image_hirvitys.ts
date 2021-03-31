@@ -13,7 +13,10 @@ const configuration: ImageCommandConfiguration = {
 }
 
 const manipulator: ImageManipulator = (sharp: Sharp): Sharp =>
-    sharp.sharpen(2, 0, 500).convolve({ width: 3, height: 3, kernel: [-1, 0, 1, -2, 0, 2, -1, 0, 1] })
+    sharp
+        .resize(512, 512)
+        .sharpen(2, 0, 500)
+        .convolve({ width: 3, height: 3, kernel: [-1, 0, 1, -2, 0, 2, -1, 0, 1] })
 
 export default new ImageCommand({
     configuration,

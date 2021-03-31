@@ -16,10 +16,9 @@ const manipulator: ImageManipulator = (sharp: Sharp): Sharp => {
     const flashback = './assets/images/flashback.png'
 
     const s = sharp
-        .resize(256, 256)
+        .resize(512, 512)
         .grayscale()
         .composite([{ input: flashback, gravity: 'southeast' }])
-        .jpeg({ quality: 60 })
 
     return s
 }

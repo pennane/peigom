@@ -12,7 +12,7 @@ const configuration: ImageCommandConfiguration = {
     imageTitle: 'niinistö on kävelemässä'
 }
 
-const manipulator: ImageManipulator = (sharp: Sharp): Sharp => sharp.resize(300, 80, { fit: 'fill' })
+const manipulator: ImageManipulator = (sharp: Sharp): Sharp => sharp.resize(512, 135, { fit: 'fill' })
 
 export default new ImageCommand({
     configuration,

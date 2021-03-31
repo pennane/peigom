@@ -66,9 +66,29 @@ export class ImageCommand extends Command {
 
         let now = new Date()
 
-        let identifier = `-${now.getFullYear}-${now.getMonth}-${now.getDate}-${now.getHours}`
+        let identifier = `-${now.getFullYear()}-${now.getMonth()}-${now.getDate()}-${now.getHours()}`
 
-        let avatarFile = `./assets/images/avatars/avatar${targetUser.id}${identifier}.jpg`
+        const temporaryImage = `./assets/images/avatars/${this._name.toLowerCase()}-${targetUser.id}${identifier}.jpg`
+
+        let embed = Command.createEmbed()
+
+        embed.setTitle(this.imageTitle)
+        embed.setImage(`attachment://${this.imageName}.jpg`)
+
+        if (fs.existsSync(temporaryImage)) {
+            await message.channel.send({
+                embed: embed,
+                files: [
+                    {
+                        attachment: temporaryImage,
+                        name: `${this.imageName}.jpg`
+                    }
+                ]
+            })
+            return
+        }
+
+        const avatarFile = `./assets/images/avatars/avatar${targetUser.id}-${identifier}.jpg`
 
         if (!fs.existsSync(avatarFile)) {
             let avatar = targetUser.displayAvatarURL({
@@ -78,17 +98,7 @@ export class ImageCommand extends Command {
             })
             await fetchFile({ url: avatar, target: avatarFile })
         }
-
-        let embed = Command.createEmbed()
-
-        const randomId = Math.random().toString(36).substring(2, 9) + Math.random().toString(36).substring(2, 9)
-        const temporaryImage = `./assets/images/${Date.now()}-${randomId}.jpg`
-
-        embed.setTitle(this.imageTitle)
-
         await this.manipulator(sharp(avatarFile), message, client, args).toFile(temporaryImage)
-
-        embed.setImage(`attachment://${this.imageName}.jpg`)
 
         await message.channel.send({
             embed: embed,
@@ -100,8 +110,6 @@ export class ImageCommand extends Command {
             ]
         })
 
-        fs.unlinkSync(temporaryImage)
-        fs.unlinkSync(avatarFile)
         return
     }
     async execute(message: Discord.Message, client: Discord.Client, args: Array<string>): Promise<void> {
