@@ -135,9 +135,6 @@ export const queueMethods = {
             serverQueue.tracks = [serverQueue.tracks[0], track, ...serverQueue.tracks.slice(1)]
         } else {
             serverQueue.tracks.push(track)
-            for (let i = 0; i < 10; i++) {
-                serverQueue.tracks.push(track)
-            }
         }
     },
     show: function ({ guild, message }: { guild: Discord.Guild; message: Discord.Message }) {
