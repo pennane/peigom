@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "license": "GPL-3.0-or-later",
   "scripts": {
-    "deploy": "npm run build && npm run start:deploy",
+    "deploy": "rm -rf dist && npm run build && npm run start:deploy",
     "start:deploy": "cross-env NODE_ENV=production node ./dist/index.js",
     "dev": "cross-env NODE_ENV=development nodemon src/index.ts",
     "build": "tsc"

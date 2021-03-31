@@ -144,7 +144,7 @@ export const queueMethods = {
             return
         }
 
-        let playedTime = serverQueue.connection?.dispatcher
+        let playedTime = serverQueue.connection?.dispatcher?.streamTime
             ? msToReadable(serverQueue.connection?.dispatcher.streamTime)
             : '?'
         let trackLength = msToReadable(Number(serverQueue.tracks[0].videoDetails.lengthSeconds) * 1000)
@@ -197,7 +197,10 @@ export const queueMethods = {
         let responseEmbed = new Discord.MessageEmbed()
 
         let track = serverQueue.tracks[0]
-        let playedTime = msToReadable(serverQueue.connection.dispatcher.streamTime)
+
+        let playedTime = serverQueue?.connection?.dispatcher?.streamTime
+            ? msToReadable(serverQueue.connection.dispatcher.streamTime)
+            : '?'
         let trackLength = msToReadable(Number(serverQueue.tracks[0].videoDetails.lengthSeconds) * 1000)
 
         responseEmbed
