@@ -1,7 +1,7 @@
-import names from '../../lib/badwords/badwords.json'
+import names from '../../assets/badwords/badwords.json'
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 import { Role } from 'discord.js'
-import { randomFromArray } from '../../util/misc'
+import { randomFromArray } from '../../lib/util'
 
 const configuration: CommandConfiguration = {
     name: 'vittuile',

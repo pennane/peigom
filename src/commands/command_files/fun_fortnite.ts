@@ -1,5 +1,5 @@
 import playSound from '../../sound_handling/playSound'
-import dancemoves from '../../lib/fortnite/dancemoves'
+import dancemoves from '../../assets/fortnite/dancemoves'
 import Command, { CommandExecutor } from '../Command'
 import { queueMethods } from '../../sound_handling/sound'
 

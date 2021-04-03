@@ -1,5 +1,5 @@
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
-import { PREFIX } from '../../util/config'
+import { PREFIX } from '../../lib/config'
 
 const animations = [
     {

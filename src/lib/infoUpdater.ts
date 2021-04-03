@@ -4,10 +4,10 @@ import fs from 'fs'
 import schedule from 'node-schedule'
 
 import time from './getTime'
-import ZimmerTj from '../util/zimmerTJ'
-import badwords from '../lib/badwords/badwords.json'
+import ZimmerTj from '../lib/zimmerTJ'
+import badwords from '../assets/badwords/badwords.json'
 import commandLoader from '../commands/loader'
-import { shuffleArray } from './misc'
+import { shuffleArray } from './util'
 import { DISCORD, LOG_USED_COMMANDS, COMMAND_SPAM_PROTECTION, PREFIX } from './config'
 
 let { ACTIVITIES, REFRESH_RATE } = DISCORD.PRESENCE

@@ -1,6 +1,6 @@
 import Discord from 'discord.js'
-import activityLogger from '../util/activityLogger'
-import * as AppConfiguration from '../util/config'
+import activityLogger from '../lib/activityLogger'
+import * as AppConfiguration from '../lib/config'
 import SyntaxEmbed, { SyntaxEmbedOptions } from './syntaxEmbed'
 
 export type CommandExecutor = (message: Discord.Message, client: Discord.Client, args: Array<string>) => Promise<any>

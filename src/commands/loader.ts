@@ -5,7 +5,7 @@ import Command from './Command.js'
 const commandDirectoryName = './command_files'
 const directory = fs.readdirSync(path.resolve(__dirname, commandDirectoryName))
 
-import activityLogger from '../util/activityLogger'
+import activityLogger from '../lib/activityLogger'
 
 const reservedNames = ['työkalut', 'komennot', 'hauskat', 'kuvat', 'admin', 'muut']
 
@@ -58,7 +58,7 @@ const loadCommand = async (target: CommandTarget) => {
     }
 }
 
-let commandPromises: Array<Promise<any>> = []
+let commandPromises: Array<Promise<void>> = []
 
 directory.forEach((file: string) => {
     if (!file.endsWith('.ts') && !file.endsWith('.js')) return
@@ -76,7 +76,7 @@ directory.forEach((file: string) => {
 
 const getLoadedCommands = async () => {
     await Promise.allSettled(commandPromises)
-    let _triggers: any = {}
+    let _triggers: { [trigger: string]: string } = {}
     loadedTriggers.forEach((triggers, command) => {
         triggers.forEach((trigger: string) => {
             _triggers[trigger] = command

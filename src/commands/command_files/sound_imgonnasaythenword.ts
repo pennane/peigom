@@ -1,6 +1,6 @@
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 import playSound from '../../sound_handling/playSound'
-import { randomFromArray } from '../../util/misc'
+import { randomFromArray } from '../../lib/util'
 
 const configuration: CommandConfiguration = {
     name: 'imgonnasaythenword',

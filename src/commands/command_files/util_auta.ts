@@ -1,5 +1,5 @@
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
-import * as AppConfiguration from '../../util/config'
+import * as AppConfiguration from '../../lib/config'
 import commandLoader from '../loader'
 import Discord from 'discord.js'
 

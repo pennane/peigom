@@ -1,4 +1,4 @@
-import * as AppConfiguration from '../../util/config'
+import * as AppConfiguration from '../../lib/config'
 import fs from 'fs'
 import Discord from 'discord.js'
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'

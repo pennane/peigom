@@ -1,6 +1,6 @@
 import Discord from 'discord.js'
 import { CommandConfiguration } from './Command'
-import * as AppConfiguration from '../util/config'
+import * as AppConfiguration from '../lib/config'
 
 const prefix = AppConfiguration.PREFIX
 

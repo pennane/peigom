@@ -1,9 +1,9 @@
-import * as AppConfiguration from './util/config'
+import * as AppConfiguration from './lib/config'
 import Discord from 'discord.js'
 import chalk from 'chalk'
 import messageHandler from './message_handling/handler'
-import infoUpdater from './util/infoUpdater'
-import activityLogger from './util/activityLogger'
+import infoUpdater from './lib/infoUpdater'
+import activityLogger from './lib/activityLogger'
 import fs from 'fs'
 
 import commadData from './commands/loader'

@@ -1,10 +1,10 @@
 import Discord from 'discord.js'
 import sharp from 'sharp'
 import Command, { CommandConfiguration, CommandExecutor } from './Command'
-import { fetchFile } from '../util/misc'
+import { fetchFile } from '../lib/util'
 import fs from 'fs'
-import activityLogger from '../util/activityLogger'
-import * as AppConfiguration from '../util/config'
+import activityLogger from '../lib/activityLogger'
+import * as AppConfiguration from '../lib/config'
 
 export type ImageManipulator = (sharp: sharp.Sharp) => sharp.Sharp
 

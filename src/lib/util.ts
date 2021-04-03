@@ -23,7 +23,7 @@ export function msToReadable(ms: number) {
     return min + ':' + (Number(sec) < 10 ? '0' : '') + sec
 }
 
-export function shuffleArray(arr: any[]) {
+export function shuffleArray<T>(arr: T[]): T[] {
     let a = [...arr]
     for (let i = a.length - 1; i > 0; i--) {
         const s = Math.floor(Math.random() * (i + 1))
@@ -32,7 +32,7 @@ export function shuffleArray(arr: any[]) {
     return a
 }
 
-export function randomFromArray(array: any[]) {
+export function randomFromArray<T>(array: T[]): T {
     return array[Math.floor(Math.random() * array.length)]
 }
 

@@ -1,5 +1,5 @@
 import Discord from 'discord.js'
-import activityLogger from '../util/activityLogger'
+import activityLogger from '../lib/activityLogger'
 import { queueMethods } from './sound'
 import Command from '../commands/Command'
 

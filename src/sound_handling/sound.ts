@@ -1,7 +1,7 @@
-import { YOUTUBE_API_KEY } from '../util/config'
+import { YOUTUBE_API_KEY } from '../lib/config'
 import Discord, { Util } from 'discord.js'
 import ytdl, { videoInfo } from 'ytdl-core'
-import { buildInitialServerQueue, msToReadable, shuffleArray } from '../util/misc'
+import { buildInitialServerQueue, msToReadable, shuffleArray } from '../lib/util'
 
 const Youtube = require('simple-youtube-api')
 
