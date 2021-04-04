@@ -210,7 +210,6 @@ export const queueMethods = {
                 true
             )
             .setColor('#2f3136')
-            .addField(`${track.videoDetails.title}`, `${playedTime} / ${trackLength}`, true)
             .addField('Biisiä toivo:', track.requestedBy || '?', true)
 
         if (track.videoDetails.thumbnails[0].url) {

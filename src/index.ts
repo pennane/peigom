@@ -11,7 +11,7 @@ import commadData from './commands/loader'
 const createCommandMap = async () => {
     let { commands } = await commadData()
     let commandMetaMap: {}[] = []
-    commands.forEach((command, name) => {
+    commands.forEach((command) => {
         commandMetaMap.push(command._configuration)
     })
 
