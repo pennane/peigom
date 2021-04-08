@@ -26,12 +26,20 @@ const init = async ({ client, timing }: { client: Discord.Client; timing: { time
     client.user.setActivity(activities[currentActivityIndex].text, { type: activities[currentActivityIndex].type })
 
     ZimmerTj(client)
-
     schedule.scheduleJob(`*/${REFRESH_RATE} * * * *`, () => {
+        let activity = activities[currentActivityIndex] as any
         if (!client.user) return
-        client.user.setActivity(activities[currentActivityIndex].text, { type: activities[currentActivityIndex].type })
-        if (currentActivityIndex === activities.length - 1) currentActivityIndex = 0
-        else currentActivityIndex++
+        if (activity.type === 'STREAMING' && activity?.url) {
+            client.user.setPresence({
+                status: 'online',
+                activity: { name: activity.text, type: 'STREAMING', url: 'https://www.twitch.tv/ninja' }
+            })
+        } else {
+            client.user.setActivity(activity.text, { type: activities[currentActivityIndex].type })
+        }
+        if (currentActivityIndex)
+            if (currentActivityIndex === activities.length - 1) currentActivityIndex = 0
+            else currentActivityIndex++
     })
 
     console.info(c.yellow('Logged in as ') + c.bgYellow.black(' ' + client.user.tag + ' '))

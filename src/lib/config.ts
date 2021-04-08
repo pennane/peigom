@@ -1,4 +1,5 @@
 import dotenv from 'dotenv'
+import Discord from 'discord.js'
 dotenv.config()
 
 let DISCORD_TOKEN = process.env.TOKEN
@@ -12,59 +13,78 @@ let APP = {
 
 let PREFIX = ','
 
+interface Activity {
+    text: string
+    type: Discord.ActivityType
+}
+
+let activities: Activity[] = [
+    // {
+    //     text: ',auta',
+    //     type: 'LISTENING'
+    // },
+    // {
+    //     text: 'my name be jeff',
+    //     type: 'PLAYING'
+    // },
+    // {
+    //     text: 'yo big man bom',
+    //     type: 'PLAYING'
+    // },
+    // {
+    //     text: '>:^V',
+    //     type: 'WATCHING'
+    // },
+    {
+        text: 'Borat on Amazon Prime',
+        type: 'STREAMING'
+    }
+    // {
+    //     text: 'sugondese is a funny meme',
+    //     type: 'PLAYING'
+    // },
+    // {
+    //     text: 'töis mut ei töis',
+    //     type: 'PLAYING'
+    // },
+    // {
+    //     text: 'big, if true',
+    //     type: 'WATCHING'
+    // },
+    // {
+    //     text: 'competing',
+    //     type: 'COMPETING'
+    // },
+    // {
+    //     text: 'pullava',
+    //     type: 'WATCHING'
+    // },
+    // {
+    //     text: 'documentaries',
+    //     type: 'WATCHING'
+    // },
+    // {
+    //     text: 'smooth swing jazz',
+    //     type: 'LISTENING'
+    // },
+    // {
+    //     text: 'your conversation',
+    //     type: 'LISTENING'
+    // },
+    // {
+    //     text: 'pimpeli pom, nimi o peigom',
+    //     type: 'PLAYING'
+    // },
+    // {
+    //     text: 'Playing',
+    //     type: 'PLAYING'
+    // }
+]
+
 let DISCORD = {
     SUPER_ADMIN_AUTHORIZED: ['143097697828601857'],
     PRESENCE: {
-        ACTIVITIES: [
-            {
-                text: ',auta',
-                type: 2
-            },
-            {
-                text: 'my name be jeff',
-                type: 0
-            },
-            {
-                text: 'yo big man bom',
-                type: 0
-            },
-            {
-                text: '>:^V',
-                type: 3
-            },
-            {
-                text: 'sugondese is a funny meme',
-                type: 0
-            },
-            {
-                text: 'töis mut ei töis',
-                type: 0
-            },
-            {
-                text: 'big, if true',
-                type: 3
-            },
-            {
-                text: 'documentaries',
-                type: 3
-            },
-            {
-                text: 'smooth swing jazz',
-                type: 2
-            },
-            {
-                text: 'your conversation',
-                type: 2
-            },
-            {
-                text: 'pimpeli pom, nimi o peigom',
-                type: 0
-            },
-            {
-                text: 'Playing',
-                type: 0
-            }
-        ],
+        ACTIVITIES: activities,
         REFRESH_RATE: 30
     }
 }
