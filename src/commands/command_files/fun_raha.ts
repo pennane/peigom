@@ -138,21 +138,21 @@ const executor: CommandExecutor = async (message, client, args) => {
 
             let gambleAmount = parseInt(args[2])
 
-            function handleWin(message: Discord.Message) {
+            function handleWin(message: Discord.Message, original: Discord.Message) {
                 if (!userObject) return
                 let embed = new Discord.MessageEmbed()
                     .setColor(0xf4e542)
-                    .setTitle(`Käyttäjä ${message.author.username} uhkapelaa ${gambleAmount} kolikolla. Lets mennään.`)
+                    .setTitle(`Käyttäjä ${original.author.username} uhkapelaa ${gambleAmount} kolikolla. Lets mennään.`)
                     .setDescription(`:game_die: Voitto! Sait ${gambleAmount} kolikkoa :game_die:`)
                 message.edit(embed).catch((error) => console.info(error))
                 userObject.credits = credits + gambleAmount
             }
 
-            function handleLose(message: Discord.Message) {
+            function handleLose(message: Discord.Message, original: Discord.Message) {
                 if (!userObject) return
                 let embed = new Discord.MessageEmbed()
                     .setColor(0xf4e542)
-                    .setTitle(`Käyttäjä ${message.author.username} uhkapelaa ${gambleAmount} kolikolla. Lets mennään.`)
+                    .setTitle(`Käyttäjä ${original.author.username} uhkapelaa ${gambleAmount} kolikolla. Lets mennään.`)
                     .setDescription(`:game_die: Häviö! Hävisit ${args[2]} kolikkoa :game_die:`)
                 message.edit(embed).catch((error) => console.info(error))
                 userObject.credits = credits - gambleAmount
@@ -187,9 +187,9 @@ const executor: CommandExecutor = async (message, client, args) => {
                     if (!userObject) return
 
                     if (won) {
-                        handleWin(sentMessage)
+                        handleWin(sentMessage, message)
                     } else {
-                        handleLose(sentMessage)
+                        handleLose(sentMessage, message)
                     }
                     updateData(userObject)
                 }, 1600)
