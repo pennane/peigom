@@ -7,8 +7,8 @@ import time from './getTime'
 import ZimmerTj from '../lib/zimmerTJ'
 import badwords from '../assets/badwords/badwords.json'
 import commandLoader from '../commands/loader'
-import { shuffleArray } from './util'
-import { DISCORD, LOG_USED_COMMANDS, COMMAND_SPAM_PROTECTION, PREFIX } from './config'
+import { randomFromArray, shuffleArray } from './util'
+import { DISCORD, LOG_USED_COMMANDS, COMMAND_SPAM_PROTECTION, PREFIX, ClientActivity } from './config'
 
 let { ACTIVITIES, REFRESH_RATE } = DISCORD.PRESENCE
 
@@ -16,38 +16,42 @@ let moneyUserData = fs.existsSync('./data/raha/user-data.json')
     ? JSON.parse(fs.readFileSync('./data/raha/user-data.json', 'utf8'))
     : undefined
 
-const init = async ({ client, timing }: { client: Discord.Client; timing: { timer: Date; completed: boolean } }) => {
+const setActivity = (activity: ClientActivity, client: Discord.Client) => {
     if (!client.user) return
+
+    let activityObject = {
+        name: activity.text,
+        type: activity.type,
+        url: activity.type === 'STREAMING' ? 'https://www.twitch.tv/ninja' : undefined
+    }
+    client.user.setPresence({
+        status: 'online',
+        afk: false,
+        activity: activityObject
+    })
+}
+
+const init = async ({ client, timing }: { client: Discord.Client; timing: { timer: Date; completed: boolean } }) => {
+    ZimmerTj(client)
 
     const activities = shuffleArray(ACTIVITIES)
 
-    let currentActivityIndex = Math.floor(Math.random() * activities.length)
+    setActivity(randomFromArray(activities), client)
 
-    client.user.setActivity(activities[currentActivityIndex].text, { type: activities[currentActivityIndex].type })
-
-    ZimmerTj(client)
     schedule.scheduleJob(`*/${REFRESH_RATE} * * * *`, () => {
-        let activity = activities[currentActivityIndex] as any
-        if (!client.user) return
-        if (activity.type === 'STREAMING' && activity?.url) {
-            client.user.setPresence({
-                status: 'online',
-                activity: { name: activity.text, type: 'STREAMING', url: 'https://www.twitch.tv/ninja' }
-            })
-        } else {
-            client.user.setActivity(activity.text, { type: activities[currentActivityIndex].type })
-        }
-        if (currentActivityIndex)
-            if (currentActivityIndex === activities.length - 1) currentActivityIndex = 0
-            else currentActivityIndex++
+        setActivity(randomFromArray(activities), client)
     })
 
-    console.info(c.yellow('Logged in as ') + c.bgYellow.black(' ' + client.user.tag + ' '))
+    if (client.user) {
+        console.info(c.yellow('Logged in as ') + c.bgYellow.black(' ' + client.user.tag + ' '))
+    } else {
+        console.info(c.red('Failed to get client user'))
+    }
+
     console.info(c.yellow('| Time: ') + time.get(true))
 
     if (!timing.completed) {
-        let duration = Date.now() - timing.timer.getTime()
-        console.info(c.yellow(`| Connected in ${duration} ms`))
+        console.info(c.yellow(`| Connected in ${Date.now() - timing.timer.getTime()} ms`))
         timing.completed = true
     }
 
