@@ -1,8 +1,6 @@
 import Command, { CommandExecutor, CommandConfiguration } from '../Command'
-import fs from 'fs/promises'
-import { arrayToChunks, fetchFile } from '../../lib/util'
-import getLoadedCommands from '../loader'
-import { PREFIX } from '../../../dist/lib/config'
+import { arrayToChunks } from '../../lib/util'
+import { PREFIX } from '../../lib/config'
 import { readSoundData } from './admin_createsound'
 
 const configuration: CommandConfiguration = {

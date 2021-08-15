@@ -2,7 +2,7 @@ import Command, { CommandExecutor, CommandConfiguration } from '../Command'
 import fs from 'fs/promises'
 import { fetchFile } from '../../lib/util'
 import getLoadedCommands from '../loader'
-import { PREFIX } from '../../../dist/lib/config'
+import { PREFIX } from '../../lib/config'
 
 const configuration: CommandConfiguration = {
     name: 'luoääni',

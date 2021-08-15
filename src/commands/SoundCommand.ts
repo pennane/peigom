@@ -1,5 +1,5 @@
 import Discord from 'discord.js'
-import playSound from '../../dist/sound_handling/playSound'
+import playSound from '../sound_handling/playSound'
 import { CustomSoundCommandData } from './command_files/admin_createsound'
 
 type SoundCommandExecutor = (
