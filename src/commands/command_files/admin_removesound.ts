@@ -31,6 +31,13 @@ const executor: CommandExecutor = async (message, client, args) => {
         return
     }
 
+    let soundCommand = customSoundCommands[soundToRemove]
+
+    if (soundCommand.addedBy !== message.author.id) {
+        message.channel.send('oot kakabeba ja koitat rikkoo. poista vaan omia ääniä.')
+        return
+    }
+
     delete customSoundCommands[soundToRemove]
 
     await writeSoundData(customSoundCommands)

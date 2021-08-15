@@ -8,7 +8,7 @@ const configuration: CommandConfiguration = {
     name: 'luoääni',
     admin: true,
     syntax: 'luoääni <nimi>',
-    desc: 'Luo äänikomento, lisää ääni liitteenä',
+    desc: 'Luo äänikomento, lisää mp3 ääni liitteenä',
     triggers: ['luoääni', 'createsound'],
     type: ['admin', 'utility'],
     requireGuild: false
@@ -67,6 +67,11 @@ const executor: CommandExecutor = async (message, client, args) => {
 
     if (!attachedSoundFile) {
         sendHowToUse()
+        return
+    }
+
+    if (attachedSoundFile.size > 3000000) {
+        message.channel.send('Liian iso tiedosto. Vain alle 3mb on ok')
         return
     }
 
