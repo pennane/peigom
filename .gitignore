@@ -7,3 +7,5 @@ node_modules/*
 .env
 commandMetaMap.json
 dist/
+assets/createsound/data.json
+assets/createsound/files/*

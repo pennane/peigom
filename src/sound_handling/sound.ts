@@ -297,9 +297,6 @@ export const queueMethods = {
     resume: function ({ guild }: { guild: Discord.Guild }) {
         let serverQueue = QueueMap.get(guild.id)
 
-        console.log(serverQueue?.connection?.dispatcher)
-        console.log(serverQueue?.connection?.dispatcher.paused)
-
         if (serverQueue?.connection?.dispatcher.paused) {
             serverQueue.connection.dispatcher.resume()
         }

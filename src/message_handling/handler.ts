@@ -4,8 +4,10 @@ import * as AppConfiguration from '../lib/config'
 import Command from '../commands/Command'
 import loader from '../commands/loader'
 import badWords from '../assets/badwords/badwords.json'
+import { executor as SoundCommandExecutor } from '../commands/SoundCommand'
 
 import { disabledChannels } from '../commands/command_files/admin_disable'
+import { readSoundData } from '../commands/command_files/admin_createsound'
 
 let triggers: { [trigger: string]: string }
 let commands: Map<string, Command>
@@ -28,6 +30,8 @@ const handler = {
         if (!commandsFetched) {
             await fetchCommands()
         }
+
+        let customSounds = await readSoundData()
 
         let hasBadWords = badWords.some((word) => message.content.includes(word))
         let hasPrefix = message.content.startsWith(prefix)
@@ -53,15 +57,20 @@ const handler = {
         let args = message.content.trim().substr(prefix.length).split(' ')
 
         let trigger = args[0].toLowerCase()
-        if (!triggers.hasOwnProperty(trigger)) return
+
+        let customSoundCommand = customSounds[trigger]
+
+        if (!triggers.hasOwnProperty(trigger) && !customSoundCommand) return
 
         let command = commands.get(triggers[trigger])
-        if (!command || !command.execute) return
+        let viableCommand = command && command.execute
+
+        if (!viableCommand && !customSoundCommand) return
 
         let channelId = message.channel.id
 
         const ignoreCommand =
-            command.name !== 'bottitoimiitäällä' &&
+            command?.name !== 'bottitoimiitäällä' &&
             channelId in disabledChannels &&
             disabledChannels[channelId] === 'disabled'
 
@@ -71,7 +80,11 @@ const handler = {
             return
         }
 
-        command.execute(message, client, args)
+        if (customSoundCommand) {
+            SoundCommandExecutor(message, client, args, customSoundCommand)
+        } else if (viableCommand) {
+            ;(command as Command).execute(message, client, args)
+        }
 
         return
     }

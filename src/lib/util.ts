@@ -3,6 +3,15 @@ import { ServerQueue } from '../sound_handling/sound'
 import fs from 'fs'
 import https from 'https'
 
+export function arrayToChunks<T>(arr: T[], chunkSize: number): Array<T[]> {
+    const chunks = []
+    while (arr.length > 0) {
+        const chunk = arr.splice(0, chunkSize)
+        chunks.push(chunk)
+    }
+    return chunks
+}
+
 export function fetchFile({ url, target }: { url: string; target: string }): Promise<string> {
     return new Promise((resolve, reject) => {
         let file = fs.createWriteStream(target)
