@@ -1,14 +1,15 @@
 import Command, { CommandExecutor, CommandConfiguration } from '../Command'
 import { readSoundData, writeSoundData } from './admin_createsound'
+import fs from 'fs/promises'
 
 const configuration: CommandConfiguration = {
     name: 'poistaääni',
     admin: true,
     syntax: 'poistaääni <nimi>',
-    desc: 'Poista äänikomento',
+    desc: 'Poista äänikomento palvelimen käytöstä',
     triggers: ['poistaääni', 'removesound'],
     type: ['admin', 'utility'],
-    requireGuild: false
+    requireGuild: true
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
@@ -17,7 +18,9 @@ const executor: CommandExecutor = async (message, client, args) => {
         message.channel.send(embed).catch((err) => console.info(err))
     }
 
-    const customSoundCommands = await readSoundData()
+    if (!message.guild) return
+
+    const customSoundCommands = await readSoundData(message.guild)
     const soundToRemove = args[1]
     if (!soundToRemove) {
         sendHowToUse()
@@ -33,14 +36,16 @@ const executor: CommandExecutor = async (message, client, args) => {
 
     let soundCommand = customSoundCommands[soundToRemove]
 
-    if (soundCommand.addedBy !== message.author.id) {
-        message.channel.send('oot kakabeba ja koitat rikkoo. poista vaan omia ääniä.')
+    if (soundCommand.addedBy !== message.author.id && message.author.id !== message.guild.ownerID) {
+        message.channel.send('Voit poistaa vain omia ääniä ellet ole palvelimen omistaja.')
         return
     }
 
+    fs.unlink(`./assets/createsound/guilds/${message.guild.id}/${customSoundCommands[soundToRemove].file}`)
+
     delete customSoundCommands[soundToRemove]
 
-    await writeSoundData(customSoundCommands)
+    await writeSoundData(message.guild, customSoundCommands)
 
     message.channel.send('Ääni poistettu')
 }

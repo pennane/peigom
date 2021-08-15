@@ -7,14 +7,15 @@ const configuration: CommandConfiguration = {
     name: 'listaaäänet',
     admin: true,
     syntax: 'listaaäänet (sivunro)',
-    desc: 'Näyttää custom äänet',
+    desc: 'Näyttää palvelimella käytössä olevat custom äänet',
     triggers: ['listaaäänet', 'listsounds'],
     type: ['utility'],
-    requireGuild: false
+    requireGuild: true
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
-    const customSounds = await readSoundData()
+    if (!message.guild) return
+    const customSounds = await readSoundData(message.guild)
     const soundNames = Object.keys(customSounds)
 
     let embed = Command.createEmbed()
@@ -36,7 +37,7 @@ const executor: CommandExecutor = async (message, client, args) => {
 
     embed.setTitle('Custom äänikomennot')
     currentPageSoundNames.forEach((soundName) => {
-        embed.addField(`${PREFIX}${soundName}`, `\u200B`)
+        embed.addField(`${PREFIX}${soundName}`, `Lisännyt <@${customSounds[soundName].addedBy}>`)
     })
     embed.setFooter(`Sivu ${pageNumber + 1} / ${pageCount}`)
 

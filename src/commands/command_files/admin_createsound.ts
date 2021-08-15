@@ -3,18 +3,17 @@ import fs from 'fs/promises'
 import { fetchFile } from '../../lib/util'
 import getLoadedCommands from '../loader'
 import { PREFIX } from '../../lib/config'
+import { Guild } from 'discord.js'
 
 const configuration: CommandConfiguration = {
     name: 'luoääni',
     admin: true,
-    syntax: 'luoääni <nimi>',
-    desc: 'Luo äänikomento, lisää mp3 ääni liitteenä',
+    syntax: 'luoääni <nimi> (liitteenä lisätty mp3 tiedosto, max 4mb)',
+    desc: 'Luo äänikomento vain palvelimen käyttöön, lisää mp3 ääni liitteenä, max 4mb',
     triggers: ['luoääni', 'createsound'],
     type: ['admin', 'utility'],
-    requireGuild: false
+    requireGuild: true
 }
-
-let soundDataLocation = './assets/createsound/data.json'
 
 export type CustomSoundCommandData = {
     name: string
@@ -27,26 +26,35 @@ type SoundData = {
     [name: string]: CustomSoundCommandData
 }
 
-export const readSoundData = async (): Promise<SoundData> => {
+export const readSoundData = async (guild: Guild): Promise<SoundData> => {
+    const guildDataDirectory = './assets/createsound/guilds/' + guild.id + '/'
+    const guildSoundDataPath = guildDataDirectory + 'data.json'
+
+    try {
+        await fs.mkdir(guildDataDirectory)
+    } catch {}
+
     let file
     try {
-        file = await fs.open(soundDataLocation, 'r')
+        file = await fs.open(guildSoundDataPath, 'r')
     } catch {
-        await fs.writeFile(soundDataLocation, '{}')
+        await fs.writeFile(guildSoundDataPath, '{}')
     } finally {
         if (file) file.close()
     }
 
-    const data = await fs.readFile(soundDataLocation, 'utf8')
+    const data = await fs.readFile(guildSoundDataPath, 'utf8')
     return JSON.parse(data)
 }
-export const writeSoundData = async (data: any): Promise<void> => {
-    await fs.writeFile(soundDataLocation, JSON.stringify(data))
+export const writeSoundData = async (guild: Guild, data: any): Promise<void> => {
+    const guildDataDirectory = './assets/createsound/guilds/' + guild.id + '/'
+    const guildSoundDataPath = guildDataDirectory + 'data.json'
+    await fs.writeFile(guildSoundDataPath, JSON.stringify(data))
 }
 
-readSoundData()
-
 const executor: CommandExecutor = async (message, client, args) => {
+    if (!message.guild) return
+
     const soundFileExtensions = ['mp3']
 
     const sendHowToUse = () => {
@@ -54,9 +62,9 @@ const executor: CommandExecutor = async (message, client, args) => {
         message.channel.send(embed).catch((err) => console.info(err))
     }
 
-    let name = args[1]
+    let soundCommandName = args[1]
 
-    if (!name || name === null) {
+    if (!soundCommandName || soundCommandName === null) {
         sendHowToUse()
         return
     }
@@ -80,16 +88,21 @@ const executor: CommandExecutor = async (message, client, args) => {
 
     let identifier = Date.now() + '-' + Math.round(Math.random() * 100000)
     let fileName = `${args[1].toLowerCase()}-${identifier}.mp3`
-    let target = `./assets/createsound/files/${fileName}`
+    let target = `./assets/createsound/guilds/${message.guild.id}/${fileName}`
 
-    if (name in loadedBaseTriggers) {
+    if (soundCommandName in loadedBaseTriggers) {
         message.channel.send('Nimi on jo käytössä')
         return
     }
 
-    const loadedCustomSounds = await readSoundData()
+    if (!message.guild) {
+        message.channel.send('Lähetä viesti palvelimen teksikanavalle')
+        return
+    }
 
-    if (name in loadedCustomSounds) {
+    const loadedCustomSounds = await readSoundData(message.guild)
+
+    if (soundCommandName in loadedCustomSounds) {
         message.channel.send('Nimi on jo toisella äänellä käytössä')
         return
     }
@@ -102,14 +115,14 @@ const executor: CommandExecutor = async (message, client, args) => {
 
     const newData = {
         ...loadedCustomSounds,
-        [name]: { name: name, addedBy: message.author.id, date: Date.now(), file: fileName }
+        [soundCommandName]: { name: soundCommandName, addedBy: message.author.id, date: Date.now(), file: fileName }
     }
 
-    await writeSoundData(newData)
+    await writeSoundData(message.guild, newData)
 
     let embed = Command.createEmbed()
-    embed.setTitle('Ääni luotu!')
-    embed.setDescription(PREFIX + name + ' pitäs toimii nyt :  >')
+    embed.setTitle(`Ääni luotu palvelimeen ${message.guild.name} !`)
+    embed.setDescription(`Komento \`${PREFIX}${soundCommandName}\` on nyt käytössä.`)
     message.channel.send(embed)
 }
 

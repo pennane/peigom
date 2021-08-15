@@ -31,7 +31,7 @@ const handler = {
             await fetchCommands()
         }
 
-        let customSounds = await readSoundData()
+        let customSounds = message.guild ? await readSoundData(message.guild) : null
 
         let hasBadWords = badWords.some((word) => message.content.includes(word))
         let hasPrefix = message.content.startsWith(prefix)
@@ -58,7 +58,7 @@ const handler = {
 
         let trigger = args[0].toLowerCase()
 
-        let customSoundCommand = customSounds[trigger]
+        let customSoundCommand = customSounds ? customSounds[trigger] : null
 
         if (!triggers.hasOwnProperty(trigger) && !customSoundCommand) return
 
