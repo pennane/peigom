@@ -14,9 +14,13 @@ const configuration: CommandConfiguration = {
 const executor: CommandExecutor = async (message, client, args) => {
     let SyntaxEmbed = Command.syntaxEmbed({ configuration })
     if (!args[2]) {
-        message.delete({ timeout: 10000 })
-        let syntax = await message.channel.send(SyntaxEmbed)
-        syntax.delete({ timeout: 15000 })
+        setTimeout(() => {
+            message.delete()
+        }, 10000)
+        let syntax = await message.channel.send({ embeds: [SyntaxEmbed] })
+        setTimeout(() => {
+            syntax.delete()
+        }, 15000)
 
         return
     }
@@ -24,10 +28,14 @@ const executor: CommandExecutor = async (message, client, args) => {
     let channelId = args[1].replace(/\D/g, '')
     let targetChannel = client.channels.cache.get(channelId) as Discord.TextChannel
 
-    if (!targetChannel || targetChannel.type !== 'text') {
-        message.delete({ timeout: 10000 })
-        let syntax = await message.channel.send(SyntaxEmbed)
-        syntax.delete({ timeout: 15000 })
+    if (!targetChannel || targetChannel.type !== 'GUILD_TEXT') {
+        setTimeout(() => {
+            message.delete()
+        }, 10000)
+        let syntax = await message.channel.send({ embeds: [SyntaxEmbed] })
+        setTimeout(() => {
+            syntax.delete()
+        }, 15000)
         return
     }
 
@@ -35,7 +43,9 @@ const executor: CommandExecutor = async (message, client, args) => {
 
     targetChannel.send(messageContent)
 
-    message.delete({ timeout: 10000 })
+    setTimeout(() => {
+        message.delete()
+    }, 10000)
 
     return
 }

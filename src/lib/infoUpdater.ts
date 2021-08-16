@@ -27,7 +27,7 @@ const setActivity = (activity: ClientActivity, client: Discord.Client) => {
     client.user.setPresence({
         status: 'online',
         afk: false,
-        activity: activityObject
+        activities: [activityObject]
     })
 }
 

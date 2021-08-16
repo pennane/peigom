@@ -1,6 +1,6 @@
 import names from '../../assets/badwords/badwords.json'
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
-import { Role } from 'discord.js'
+import { Role, Permissions } from 'discord.js'
 import { randomFromArray } from '../../lib/util'
 
 const configuration: CommandConfiguration = {
@@ -23,13 +23,13 @@ const executor: CommandExecutor = async (message, client, args) => {
         }**, ai rupeet vittuilee hä?`
     )
 
-    if (message.member.hasPermission('ADMINISTRATOR')) {
+    if (message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
         return message.reply('Oops, sori oot vissii joku admin kid.').catch((err) => console.info(err))
     }
 
     let clientMember = message.guild?.members.cache.get(client.user.id)
 
-    if (!clientMember || !clientMember.hasPermission('MANAGE_NICKNAMES')) {
+    if (!clientMember || !clientMember.permissions.has(Permissions.FLAGS.MANAGE_NICKNAMES)) {
         message.reply('Jaha, no eipä mulla ollukkaa oikeuksia pistää sua turpaa.')
         return
     }

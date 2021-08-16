@@ -1,5 +1,6 @@
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 import playSound from '../../sound_handling/playSound'
+import { getVoiceConnection } from '@discordjs/voice'
 
 const configuration: CommandConfiguration = {
     name: 'yike',
@@ -21,14 +22,17 @@ const executor: CommandExecutor = async (message, client, args) => {
         embed
             .setTitle(`Botin kommentti:`)
             .setDescription(`${message.author.username} ei tollasille voi antaa yikejä. (yike \<@user>)`)
-        message.channel.send(embed)
+        message.channel.send({ embeds: [embed] })
         return
     }
 
     let voiceChannel = targetUser.voice.channel
 
-    if (!voiceChannel || message.guild?.voice?.connection) {
-        message.channel.send(targetUser, {
+    let botVoiceConnection = getVoiceConnection(message.guild.id)
+
+    if (!voiceChannel || botVoiceConnection) {
+        message.channel.send({
+            content: targetUser.toString(),
             files: [
                 {
                     attachment: './assets/misc/yike/yike.jpg',
@@ -40,7 +44,8 @@ const executor: CommandExecutor = async (message, client, args) => {
     }
 
     playSound({ soundfile, message })
-    message.channel.send(targetUser, {
+    message.channel.send({
+        content: targetUser.toString(),
         files: [
             {
                 attachment: './assets/misc/yike/yike.jpg',

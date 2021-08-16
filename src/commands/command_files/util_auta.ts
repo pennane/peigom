@@ -207,8 +207,8 @@ const executor: CommandExecutor = async (message, client, args) => {
             )
             .addField(`:vertical_traffic_light: Versio:`, `${AppConfiguration.APP.VERSION}`, false)
 
-            .addField(`:1234: Komentojen määrä:`, commands.size, true)
-            .addField(`:file_cabinet: Serverien määrä:`, client.guilds.cache.size, true)
+            .addField(`:1234: Komentojen määrä:`, commands.size.toString(), true)
+            .addField(`:file_cabinet: Serverien määrä:`, client.guilds.cache.size.toString(), true)
             .addField(`:pencil: Kehittäjä:`, `@Susse#9999`, true)
         return embed
     }
@@ -243,17 +243,17 @@ const executor: CommandExecutor = async (message, client, args) => {
     }
 
     if (!action) {
-        return message.channel.send(createHomeEmbed())
+        return message.channel.send({ embeds: [createHomeEmbed()] })
     } else if (action === 'komennot' && !subAction) {
-        return message.channel.send(createTypesEmbed(types))
+        return message.channel.send({ embeds: [createTypesEmbed(types)] })
     } else if (action === 'komennot' && subAction && types[subAction]) {
         let commands = types[action]
-        return message.channel.send(createCommandTypeEmbed(action, commands))
+        return message.channel.send({ embeds: [createCommandTypeEmbed(action, commands)] })
     } else if (types[action]) {
         let commands = types[action]
-        return message.channel.send(createCommandTypeEmbed(action, commands))
+        return message.channel.send({ embeds: [createCommandTypeEmbed(action, commands)] })
     } else if (action === AppConfiguration.APP.NAME.toLowerCase()) {
-        return message.channel.send(createApplicationInformationEmbed())
+        return message.channel.send({ embeds: [createApplicationInformationEmbed()] })
     } else if (triggers.has(action)) {
         let name = triggers.get(action)
 
@@ -263,9 +263,9 @@ const executor: CommandExecutor = async (message, client, args) => {
 
         if (!command) throw new Error('action in triggers but trigger not in command')
 
-        message.channel.send(createCommandEmbed(command))
+        message.channel.send({ embeds: [createCommandEmbed(command)] })
     } else {
-        message.channel.send(createNoActionEmbed(action))
+        message.channel.send({ embeds: [createNoActionEmbed(action)] })
     }
 
     return

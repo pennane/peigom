@@ -1,5 +1,5 @@
 import * as AppConfiguration from './lib/config'
-import Discord from 'discord.js'
+import Discord, { Intents } from 'discord.js'
 import chalk from 'chalk'
 import messageHandler from './message_handling/handler'
 import infoUpdater from './lib/infoUpdater'
@@ -20,8 +20,18 @@ const createCommandMap = async () => {
 
 createCommandMap()
 
-const client = new Discord.Client()
+const intents = new Intents([
+    Intents.FLAGS.GUILDS,
+    // Intents.FLAGS.GUILD_MEMBERS,
+    Intents.FLAGS.GUILD_EMOJIS_AND_STICKERS,
+    Intents.FLAGS.GUILD_MESSAGES,
+    Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+    Intents.FLAGS.DIRECT_MESSAGE_REACTIONS,
+    Intents.FLAGS.DIRECT_MESSAGES,
+    Intents.FLAGS.GUILD_VOICE_STATES
+])
 
+const client = new Discord.Client({ intents })
 const timing = { timer: new Date(), completed: false }
 
 console.info(chalk.yellow(`Starting peigom-bot`))

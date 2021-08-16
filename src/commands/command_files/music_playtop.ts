@@ -22,9 +22,11 @@ const executor: CommandExecutor = async (message, client, args) => {
 
     if (!voiceChannel) return message.reply('Mene ensin jollekin puhekanavalle, kid.')
 
+    if (voiceChannel.type === 'GUILD_STAGE_VOICE') return
+
     if (!args[1]) {
         let embed = Command.syntaxEmbed({ configuration, heading: ':point_up: Missä hakusanat' })
-        message.channel.send(embed)
+        message.channel.send({ embeds: [embed] })
         return
     }
 

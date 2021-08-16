@@ -59,7 +59,7 @@ const executor: CommandExecutor = async (message, client, args) => {
 
     const sendHowToUse = () => {
         let embed = Command.syntaxEmbed({ configuration })
-        message.channel.send(embed).catch((err) => console.info(err))
+        message.channel.send({ embeds: [embed] }).catch((err) => console.info(err))
     }
 
     let soundCommandName = args[1]
@@ -123,7 +123,7 @@ const executor: CommandExecutor = async (message, client, args) => {
     let embed = Command.createEmbed()
     embed.setTitle(`Ääni luotu palvelimeen ${message.guild.name} !`)
     embed.setDescription(`Komento \`${PREFIX}${soundCommandName}\` on nyt käytössä.`)
-    message.channel.send(embed)
+    message.channel.send({ embeds: [embed] })
 }
 
 export default new Command({

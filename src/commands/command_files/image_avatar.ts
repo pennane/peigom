@@ -20,7 +20,7 @@ const executor: CommandExecutor = async (message, client, args) => {
         })
 
         embed.setTitle(`Käyttäjän ${user.username} avatari.`).setImage(image)
-        message.channel.send(embed)
+        message.channel.send({ embeds: [embed] })
         return
     }
 
@@ -30,13 +30,13 @@ const executor: CommandExecutor = async (message, client, args) => {
 
     if (!message.guild) return
 
-    let mention = message.mentions.members ? message.mentions.members.first() : null
+    let mentioned = message.mentions.members ? message.mentions.members.first() : null
 
-    if (!mention) {
+    if (!mentioned) {
         return message.reply(`Käyttäjä jonka tägäsit on rikki.`)
     }
 
-    let member = message.guild.member(mention)
+    let member = message.guild.members.cache.get(mentioned.id)
 
     if (!member) {
         return message.reply(`${args[1]} ei ole tällä severillä`)
@@ -51,7 +51,7 @@ const executor: CommandExecutor = async (message, client, args) => {
     embed.setTitle(`Käyttäjän ${member.displayName} avatari.`)
     embed.setImage(image)
 
-    message.channel.send(embed)
+    message.channel.send({ embeds: [embed] })
     return
 }
 

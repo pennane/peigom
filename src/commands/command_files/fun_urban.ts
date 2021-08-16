@@ -12,7 +12,7 @@ const configuration: CommandConfiguration = {
 
 const executor: CommandExecutor = async (message, client, args) => {
     if (!args[1]) {
-        message.channel.send(Command.syntaxEmbed({ configuration }))
+        message.channel.send({ embeds: [Command.syntaxEmbed({ configuration })] })
         return
     }
 
@@ -31,7 +31,7 @@ const executor: CommandExecutor = async (message, client, args) => {
         )
         embed.setFooter(entry.author, 'https://arttu.pennanen.org/file/thonk.gif')
         embed.setTimestamp()
-        message.channel.send(embed)
+        message.channel.send({ embeds: [embed] })
     } catch {
         message.channel.send(`Ei löytyny selitystä sanomalle ${toDefine}`)
     }

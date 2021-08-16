@@ -1,4 +1,5 @@
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
+import { getVoiceConnection } from '@discordjs/voice'
 
 const configuration: CommandConfiguration = {
     name: 'hus',
@@ -10,12 +11,10 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
-    if (message.guild?.voice?.connection?.dispatcher) {
-        message.guild.voice.connection.disconnect()
-    }
-    if (message.guild?.me?.voice.channel) {
-        message.guild.me.voice.channel.leave()
-    }
+    if (!message.guildId) return
+    const connection = getVoiceConnection(message.guildId)
+    if (!connection) return
+    connection.destroy()
 }
 
 export default new Command({

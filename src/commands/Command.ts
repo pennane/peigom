@@ -1,4 +1,4 @@
-import Discord from 'discord.js'
+import Discord, { Permissions } from 'discord.js'
 import activityLogger from '../lib/activityLogger'
 import * as AppConfiguration from '../lib/config'
 import SyntaxEmbed, { SyntaxEmbedOptions } from './syntaxEmbed'
@@ -149,7 +149,7 @@ class Command {
     static isMemberAdminAuthorized(message: Discord.Message): boolean {
         if (!message.member) return false
 
-        if (message.member.hasPermission('ADMINISTRATOR')) return true
+        if (message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) return true
 
         if (AppConfiguration.DISCORD.SUPER_ADMIN_AUTHORIZED.includes(message.author.id)) return true
 

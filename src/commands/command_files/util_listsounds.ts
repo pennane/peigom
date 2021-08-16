@@ -41,7 +41,7 @@ const executor: CommandExecutor = async (message, client, args) => {
     })
     embed.setFooter(`Sivu ${pageNumber + 1} / ${pageCount}`)
 
-    message.channel.send(embed)
+    message.channel.send({ embeds: [embed] })
 }
 
 export default new Command({

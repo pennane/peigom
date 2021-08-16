@@ -15,7 +15,7 @@ const executor: CommandExecutor = async (message, client, args) => {
 
     if (!client?.uptime) {
         embed.description = `Botti on kadonnut matriisiin, ja jostain syystä päälläoloaikaa ei ole saatavilla.`
-        message.channel.send(embed)
+        message.channel.send({ embeds: [embed] })
         return
     }
 
@@ -47,7 +47,7 @@ const executor: CommandExecutor = async (message, client, args) => {
 
     embed.setDescription(`Tää botti o ollu hereillä jo ${up.h}${up.m}${up.s} :hourglass_flowing_sand:`)
 
-    message.channel.send(embed)
+    message.channel.send({ embeds: [embed] })
 }
 
 export default new Command({

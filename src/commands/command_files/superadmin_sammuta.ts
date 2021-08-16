@@ -11,7 +11,7 @@ const configuration: CommandConfiguration = {
     type: ['admin']
 }
 const executor: CommandExecutor = async (message, client, args) => {
-    message.delete({ timeout: 1000 })
+    setTimeout(() => message.delete(), 1000)
     setTimeout(() => {
         client.destroy()
         process.exit()

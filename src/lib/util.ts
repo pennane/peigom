@@ -56,6 +56,7 @@ export function buildInitialServerQueue({
         voiceChannel: voiceChannel,
         guild: guild,
         connection: null,
+        player: null,
         tracks: [],
         options: {
             volume: 1

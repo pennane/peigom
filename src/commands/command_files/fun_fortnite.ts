@@ -2,6 +2,13 @@ import playSound from '../../sound_handling/playSound'
 import dancemoves from '../../assets/fortnite/dancemoves'
 import Command, { CommandExecutor } from '../Command'
 import { queueMethods } from '../../sound_handling/sound'
+import {
+    generateDependencyReport,
+    joinVoiceChannel,
+    createAudioPlayer,
+    createAudioResource,
+    AudioPlayerStatus
+} from '@discordjs/voice'
 
 const configuration = {
     name: 'fortnite',
@@ -24,24 +31,22 @@ const executor: CommandExecutor = async (message, client, args) => {
     if (!voiceChannel) {
         let embed = Command.createEmbed()
         embed.setTitle(`Botin kommentti:`).setDescription(`${user.username} mene eka jollekki voicechannelille, kid.`)
-        message.channel.send(embed)
+        message.channel.send({ embeds: [embed] })
         return
     }
 
     if (queueMethods.isPlaying({ guild: message.guild })) {
         let embed = Command.createEmbed()
         embed.setTitle(`Botin kommentti:`).setDescription(`${user.username} sul on jo musat tulilla, kid.`)
-        message.channel.send(embed)
+        message.channel.send({ embeds: [embed] })
         return
     }
 
-    voiceChannel.join().then(async (connection) => {
-        playSound({ soundfile, message })
-        dancemoves.forEach((move, i) => {
-            setTimeout(() => {
-                message.channel.send(move)
-            }, (7000 * i) / dancemoves.length + 500)
-        })
+    playSound({ soundfile, message })
+    dancemoves.forEach((move, i) => {
+        setTimeout(() => {
+            message.channel.send(move)
+        }, (7000 * i) / dancemoves.length + 500)
     })
 }
 

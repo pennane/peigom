@@ -1,5 +1,5 @@
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
-import Discord from 'discord.js'
+import Discord, { Permissions } from 'discord.js'
 
 const configuration: CommandConfiguration = {
     name: 'thonk',
@@ -13,21 +13,21 @@ const configuration: CommandConfiguration = {
 const executor: CommandExecutor = async (message, client, args) => {
     let hasEmoji = client.emojis.cache.some((emoji) => emoji.id === '443343009229045760')
 
-    let hasPermission: boolean
+    let hasPermissions: boolean
 
     if (message.guild) {
         let channel = message.channel as Discord.TextChannel
         let permissions = message.guild.me ? channel.permissionsFor(message.guild.me) : null
         if (!permissions) {
-            hasPermission = false
+            hasPermissions = false
         } else {
-            hasPermission = permissions.has('USE_EXTERNAL_EMOJIS')
+            hasPermissions = permissions.has(Permissions.FLAGS.USE_EXTERNAL_EMOJIS)
         }
     } else {
-        hasPermission = true
+        hasPermissions = true
     }
 
-    if (!hasEmoji || !hasPermission) {
+    if (!hasEmoji || !hasPermissions) {
         message.channel.send(':thinking:')
         return
     }

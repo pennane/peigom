@@ -1,3 +1,4 @@
+import { Util } from 'discord.js'
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 
 const configuration: CommandConfiguration = {
@@ -16,7 +17,10 @@ const executor: CommandExecutor = async (message, client, args) => {
         if (!emoji.available) return
         emojiMessage += `${emoji.toString()} `
     })
-    message.channel.send(emojiMessage, { split: { char: ' ' } })
+    let splitMessage = Util.splitMessage(emojiMessage, { char: ' ' })
+    splitMessage.forEach((content) => {
+        message.channel.send(content)
+    })
 }
 
 export default new Command({

@@ -15,7 +15,7 @@ const configuration: CommandConfiguration = {
 const executor: CommandExecutor = async (message, client, args) => {
     let guild = message.guild
     if (!guild) return
-    queueMethods.volume({ guild: guild, message: message, volume: args[1] })
+    // queueMethods.volume({ guild: guild, message: message, volume: args[1] })
 }
 
 export default new Command({

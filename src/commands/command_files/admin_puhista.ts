@@ -10,7 +10,7 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
-    if (message.channel.type !== 'text') return
+    if (message.channel.type !== 'GUILD_TEXT') return
 
     let embed = Command.createEmbed().setTitle('Botin kommentti:')
 
@@ -18,13 +18,13 @@ const executor: CommandExecutor = async (message, client, args) => {
 
     if (isNaN(amountToRemove) || !isFinite(amountToRemove) || amountToRemove < 1 || amountToRemove > 99) {
         let syntaxEmbed = Command.syntaxEmbed({ configuration })
-        message.channel.send(syntaxEmbed)
+        message.channel.send({ embeds: [syntaxEmbed] })
         return
     }
 
     await message.channel.bulkDelete(amountToRemove + 1)
     embed.setDescription(`Poistin ${amountToRemove} viestiä.`)
-    message.channel.send(embed).then((message) => message.delete({ timeout: 8000 }))
+    message.channel.send({ embeds: [embed] }).then((message) => setTimeout(() => message.delete(), 8000))
 }
 
 export default new Command({

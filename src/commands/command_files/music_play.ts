@@ -22,9 +22,11 @@ const executor: CommandExecutor = async (message, client, args) => {
 
     if (!voiceChannel) return message.reply('Mene ensin jollekin puhekanavalle, kid.')
 
+    if (voiceChannel.type === 'GUILD_STAGE_VOICE') return
+
     if (!args[1]) {
         let embed = Command.syntaxEmbed({ configuration, heading: ':point_up: Missä hakusanat' })
-        message.channel.send(embed)
+        message.channel.send({ embeds: [embed] })
         return
     }
 
@@ -42,7 +44,6 @@ const executor: CommandExecutor = async (message, client, args) => {
         } catch (err) {
             track = null
             console.error(err)
-            message.reply(":baby: Ei löy'y tollasta vidii bro")
         }
     } else {
         message.channel.send(`:mag: Etitään \`${url}\``)
@@ -50,7 +51,7 @@ const executor: CommandExecutor = async (message, client, args) => {
     }
 
     if (!track) {
-        return message.channel.send(':baby: Bro keissi keissi, ei toimi bro')
+        return message.reply(':baby: Bro keissi keissi, ei toimi bro')
     }
 
     track.requestedBy = message.member

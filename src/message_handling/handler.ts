@@ -76,7 +76,7 @@ const handler = {
 
         if (ignoreCommand) {
             let notifyMessage = await message.channel.send('Botti ei toimi tällä tekstikanavalla.')
-            notifyMessage.delete({ timeout: 10000 })
+            setTimeout(() => notifyMessage.delete(), 10000)
             return
         }
 

@@ -102,7 +102,7 @@ const executor: CommandExecutor = async (message, client, args) => {
     }
 
     if (!args[1]) {
-        message.channel.send(syntaxInfo())
+        message.channel.send({ embeds: [syntaxInfo()] })
         updateData(userObject)
         return
     }
@@ -119,13 +119,13 @@ const executor: CommandExecutor = async (message, client, args) => {
                     .setColor(0xf4e542)
                     .setTitle(`Käyttäjä ${message.author.username}, huomaa:`)
                     .setDescription(`Antamasi ukkeli ei ole uhkapelannut.`)
-                message.channel.send(embed).catch((error) => console.info(error))
+                message.channel.send({ embeds: [embed] }).catch((error) => console.info(error))
                 return
             }
 
             let embed = new Discord.MessageEmbed().setColor(0xf4e542)
             embed.setTitle(`${target.username} balanssi:`).setDescription(`${target.credits} kolea`)
-            message.channel.send(embed).catch((error) => console.info(error))
+            message.channel.send({ embeds: [embed] }).catch((error) => console.info(error))
             return
         }
         case 'uhkapeli': {
@@ -144,7 +144,7 @@ const executor: CommandExecutor = async (message, client, args) => {
                     .setColor(0xf4e542)
                     .setTitle(`Käyttäjä ${original.author.username} uhkapelaa ${gambleAmount} kolikolla. Lets mennään.`)
                     .setDescription(`:game_die: Voitto! Sait ${gambleAmount} kolikkoa :game_die:`)
-                message.edit(embed).catch((error) => console.info(error))
+                message.edit({ embeds: [embed] }).catch((error) => console.info(error))
                 userObject.credits = credits + gambleAmount
             }
 
@@ -154,7 +154,7 @@ const executor: CommandExecutor = async (message, client, args) => {
                     .setColor(0xf4e542)
                     .setTitle(`Käyttäjä ${original.author.username} uhkapelaa ${gambleAmount} kolikolla. Lets mennään.`)
                     .setDescription(`:game_die: Häviö! Hävisit ${args[2]} kolikkoa :game_die:`)
-                message.edit(embed).catch((error) => console.info(error))
+                message.edit({ embeds: [embed] }).catch((error) => console.info(error))
                 userObject.credits = credits - gambleAmount
             }
 
@@ -163,7 +163,7 @@ const executor: CommandExecutor = async (message, client, args) => {
                     .setColor(0xf4e542)
                     .setTitle(`Käyttäjä ${message.author.username}, huomaa:`)
                     .setDescription(`Asettamasi rahasumma on olematon tai ylihärö`)
-                message.channel.send(embed)
+                message.channel.send({ embeds: [embed] })
                 return
             }
 
@@ -172,7 +172,7 @@ const executor: CommandExecutor = async (message, client, args) => {
                     .setColor(0xf4e542)
                     .setTitle(`Käyttäjä ${message.author.username}, huomaa:`)
                     .setDescription(`Olet köyhimys. Rahasi eivät riitä.`)
-                message.channel.send(embed)
+                message.channel.send({ embeds: [embed] })
                 return
             }
 
@@ -181,7 +181,7 @@ const executor: CommandExecutor = async (message, client, args) => {
                 .setTitle(`Käyttäjä ${message.author.username} uhkapelaa ${gambleAmount} kolikolla. Lets mennään.`)
                 .setDescription(`:game_die:`)
 
-            message.channel.send(startMessage).then((sentMessage) => {
+            message.channel.send({ embeds: [startMessage] }).then((sentMessage) => {
                 let won = didWin()
                 setTimeout(() => {
                     if (!userObject) return
@@ -202,7 +202,7 @@ const executor: CommandExecutor = async (message, client, args) => {
                     .setColor(0xf4e542)
                     .setTitle(`Käyttäjä ${message.author.username}, huomaa:`)
                     .setDescription(`${PREFIX}raha lahjoita <@käyttäjä> <määrä>`)
-                message.channel.send(embed)
+                message.channel.send({ embeds: [embed] })
                 return
             }
 
@@ -213,7 +213,7 @@ const executor: CommandExecutor = async (message, client, args) => {
                     .setColor(0xf4e542)
                     .setTitle(`Käyttäjä ${message.author.username}, huomaa:`)
                     .setDescription(`${PREFIX}raha lahjoita <@käyttäjä> <määrä>`)
-                message.channel.send(embed)
+                message.channel.send({ embeds: [embed] })
                 return
             }
 
@@ -224,7 +224,7 @@ const executor: CommandExecutor = async (message, client, args) => {
                     .setColor(0xf4e542)
                     .setTitle(`Käyttäjä ${message.author.username}, huomaa:`)
                     .setDescription(`Olet köyhä. Köyhänä ei lahjoitella tuollaisia summia.`)
-                message.channel.send(embed)
+                message.channel.send({ embeds: [embed] })
                 return
             }
 
@@ -239,7 +239,7 @@ const executor: CommandExecutor = async (message, client, args) => {
                     .setDescription(
                         `Lahjoituksesi vastaanottajaa ei kiinnosta rahat. Houkuttele hänet ensin uhkapelaamaan.`
                     )
-                message.channel.send(embed)
+                message.channel.send({ embeds: [embed] })
                 return
             }
 
@@ -250,7 +250,7 @@ const executor: CommandExecutor = async (message, client, args) => {
                 .setColor(0xf4e542)
                 .setTitle(`${message.author.username}, huomaa:`)
                 .setDescription(`Lahjoitit ${parseInt(args[2])} kolikkoa onnistuneesti!`)
-            message.channel.send(embed).catch((error) => console.info(error))
+            message.channel.send({ embeds: [embed] }).catch((error) => console.info(error))
 
             updateData(userObject)
             updateData(receiver)
@@ -268,7 +268,7 @@ const executor: CommandExecutor = async (message, client, args) => {
                 embed
                     .setTitle(`${message.author.username}, huomaa:`)
                     .setDescription(`Vielä ${timeremaining} tuntia et saat kolikkeleita.`)
-                message.channel.send(embed).catch((error) => console.info(error))
+                message.channel.send({ embeds: [embed] }).catch((error) => console.info(error))
 
                 updateData(userObject)
                 return
@@ -279,7 +279,7 @@ const executor: CommandExecutor = async (message, client, args) => {
                 .setTitle(`${message.author.username}, huomaa:`)
                 .setDescription(`Sait päivän palkan, eli ${daily} kolikkelia.`)
 
-            message.channel.send(embed).catch((error) => console.info(error))
+            message.channel.send({ embeds: [embed] }).catch((error) => console.info(error))
             userObject.whenClaimed = Date.now()
             userObject.credits = userObject.credits + daily
 
@@ -288,7 +288,7 @@ const executor: CommandExecutor = async (message, client, args) => {
         }
 
         default:
-            message.channel.send(syntaxInfo()).catch((error) => console.info(error))
+            message.channel.send({ embeds: [syntaxInfo()] }).catch((error) => console.info(error))
             return
     }
 }

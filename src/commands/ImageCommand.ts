@@ -77,7 +77,7 @@ export class ImageCommand extends Command {
 
         if (fs.existsSync(temporaryImage)) {
             await message.channel.send({
-                embed: embed,
+                embeds: [embed],
                 files: [
                     {
                         attachment: temporaryImage,
@@ -101,7 +101,7 @@ export class ImageCommand extends Command {
         await this.manipulator(sharp(avatarFile), message, client, args).toFile(temporaryImage)
 
         await message.channel.send({
-            embed: embed,
+            embeds: [embed],
             files: [
                 {
                     attachment: temporaryImage,

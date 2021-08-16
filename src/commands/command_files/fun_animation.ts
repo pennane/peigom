@@ -36,7 +36,7 @@ const executor: CommandExecutor = async (message, client, args) => {
 
     if (Object.keys(animations).length === 0) {
         embed.setTitle(`Hupsista saatana`).setDescription(`Botilla ei ole yhtäkään animaatiota ladattuna.`)
-        message.channel.send(embed)
+        message.channel.send({ embeds: [embed] })
         return
     }
 
@@ -51,7 +51,7 @@ const executor: CommandExecutor = async (message, client, args) => {
             .setTitle(`Lista saatavailla olevista animaatioista:`)
             .setDescription(`\`${animationNames}\``)
             .setFooter('Esim: ' + PREFIX + configuration.name + ' ' + animationNames[0])
-        message.channel.send(embed)
+        message.channel.send({ embeds: [embed] })
         return
     }
 

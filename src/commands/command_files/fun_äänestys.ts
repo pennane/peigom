@@ -11,7 +11,7 @@ const configuration: CommandConfiguration = {
 
 const executor: CommandExecutor = async (message, client, args) => {
     if (args.length === 1) {
-        return message.channel.send(Command.syntaxEmbed({ configuration }))
+        return message.channel.send({ embeds: [Command.syntaxEmbed({ configuration })] })
     }
 
     let voteArgs = args.slice(1)
@@ -23,7 +23,7 @@ const executor: CommandExecutor = async (message, client, args) => {
         .setDescription(`${voteArgs.join(' ')}`)
         .setTimestamp()
 
-    let voteMessage = await message.channel.send(embed)
+    let voteMessage = await message.channel.send({ embeds: [embed] })
     message.deletable ? message.delete() : null
     await voteMessage.react('👍')
     voteMessage.react('👎')

@@ -29,7 +29,7 @@ function evaluateCode(code: string) {
 const executor: CommandExecutor = async (message, client, args) => {
     if (!args[1]) {
         let embed = syntaxEmbed({ configuration })
-        return message.reply(embed)
+        return message.reply({ embeds: [embed] })
     }
 
     let stringToBeEvaluated = [...args].splice(1).join(' ')
@@ -48,7 +48,7 @@ const executor: CommandExecutor = async (message, client, args) => {
         fields.forEach((field) => {
             embed.addField('\u200b', `\`\`\`js\n${field}\n\`\`\``)
         })
-        message.channel.send(embed)
+        message.channel.send({ embeds: [embed] })
     })
 
     return
