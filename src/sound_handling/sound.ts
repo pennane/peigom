@@ -231,9 +231,16 @@ export const queueMethods = {
         }
 
         message.channel.send(`:track_next: ${serverQueue.tracks[0].videoDetails.title} skipattu!`)
+        if (serverQueue.tracks.length <= 1) {
+            serverQueue?.player?.stop()
+            serverQueue.connection?.destroy()
+            QueueMap.delete(guild.id)
+            return
+        }
         const nextTrack = getNextResource(guild)
         if (!nextTrack) {
             serverQueue?.player?.stop()
+            serverQueue.connection?.destroy()
             QueueMap.delete(guild.id)
             return
         }

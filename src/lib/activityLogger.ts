@@ -99,7 +99,7 @@ export const log = ({ id, content, error }: { id: number; content?: string; erro
             break
         }
         case 11: {
-            console.log(
+            console.info(
                 c.bgBlack(longDate()) + ': ' + c.yellow('Command initiation failed') + ' ' + c.redBright(content)
             )
             message = buildMessage({ id, title: 'Command initiation failed', content, error })
@@ -118,31 +118,31 @@ export const log = ({ id, content, error }: { id: number; content?: string; erro
             break
         }
         case 20: {
-            console.log(
+            console.info(
                 c.bgBlack(longDate()) + ': ' + c.greenBright('Bot added to new guild') + ' ' + c.redBright(content)
             )
             message = buildMessage({ id, title: 'Bot added to new guild', content })
             break
         }
         case 21: {
-            console.log(
+            console.info(
                 c.bgBlack(longDate()) + ': ' + c.yellowBright('Bot added to new guild') + ' ' + c.redBright(content)
             )
             message = buildMessage({ id, title: 'Bot removed from guild', content })
             break
         }
         case 31: {
-            console.log(c.bgBlack(longDate()) + ': ' + c.red('Error in the process'))
+            console.info(c.bgBlack(longDate()) + ': ' + c.red('Error in the process'))
             message = buildMessage({ id, title: 'Error in the process', error })
             break
         }
         case 32: {
-            console.log(c.bgBlack(longDate()) + ': ' + c.red('Error in the discord client'))
+            console.info(c.bgBlack(longDate()) + ': ' + c.red('Error in the discord client'))
             message = buildMessage({ id, title: 'Error in the discord client', error })
             break
         }
         case 33: {
-            console.log(c.bgBlack(longDate()) + ': ' + c.red('Error in utilities / core'))
+            console.info(c.bgBlack(longDate()) + ': ' + c.red('Error in utilities / core'))
             message = buildMessage({ id, title: 'Error in utilities / core', error })
             break
         }

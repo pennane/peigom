@@ -10,8 +10,6 @@ import {
     AudioPlayerStatus
 } from '@discordjs/voice'
 
-console.log(generateDependencyReport())
-
 const play = async function ({ soundfile, message }: { soundfile: string; message: Discord.Message }) {
     try {
         if (!message.member || !message.guild) return
