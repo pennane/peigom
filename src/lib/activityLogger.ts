@@ -117,6 +117,10 @@ export const log = ({ id, content, error }: { id: number; content?: string; erro
             message = buildMessage({ id, title: 'Unauthorized command use', content })
             break
         }
+        case 15: {
+            message = buildMessage({ id, title: 'Tried to fuck shit seriously up', content })
+            break
+        }
         case 20: {
             console.info(
                 c.bgBlack(longDate()) + ': ' + c.greenBright('Bot added to new guild') + ' ' + c.redBright(content)

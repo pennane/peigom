@@ -4,6 +4,8 @@ import { fetchFile } from '../../lib/util'
 import getLoadedCommands from '../loader'
 import { PREFIX } from '../../lib/config'
 import { Guild } from 'discord.js'
+import FileType from 'file-type'
+import { log } from '../../lib/activityLogger'
 
 const configuration: CommandConfiguration = {
     name: 'luoääni',
@@ -106,10 +108,24 @@ const executor: CommandExecutor = async (message, client, args) => {
         message.channel.send('Nimi on jo toisella äänellä käytössä')
         return
     }
+
+    let soundFileType
     try {
         await fetchFile({ url: attachedSoundFile.url, target: target })
+        soundFileType = await FileType.fromFile(target)
+        if (soundFileType?.mime !== 'audio/mpeg') {
+            throw new Error()
+        }
     } catch (e) {
-        console.error(e)
+        message.channel.send('Ei perseillä. Pelkkiä mp3 tiedostoja.')
+        log({
+            id: 15,
+            content: `User ${
+                message.author.username + ' @' + message.author.id
+            } tried to upload file with this information: Name:${fileName} Ext:${soundFileType?.ext} Mime:${
+                soundFileType?.mime
+            }`
+        })
         return
     }
 
