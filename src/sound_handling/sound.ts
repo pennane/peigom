@@ -130,7 +130,7 @@ export const queueMethods = {
 
         message.channel.send({ embeds: [responseEmbed] })
 
-        if (!serverQueue.connection) {
+        if (!serverQueue.connection || !serverQueue.player) {
             serverQueue.tracks.push(track)
             dispatch(guild)
             return
