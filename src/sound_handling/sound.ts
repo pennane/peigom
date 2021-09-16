@@ -80,7 +80,6 @@ async function dispatch(guild: Discord.Guild) {
     }
 
     const stream = ytdl(track.videoDetails.video_url, { filter: 'audioonly', quality: 'lowest' })
-
     const player = createAudioPlayer()
     const resource = createAudioResource(stream)
 

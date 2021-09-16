@@ -15,10 +15,10 @@ const configuration = {
     type: ['utility']
 }
 
-function evaluateCode(code: string) {
+const evaluateCode = async (code: string): Promise<any> => {
     let output
     try {
-        output = inspect(eval(code))
+        output = inspect(await eval(code))
     } catch (err) {
         output = `Failed to evaluate: \n${err}`
     } finally {
@@ -34,7 +34,7 @@ const executor: CommandExecutor = async (message, client, args) => {
 
     let stringToBeEvaluated = [...args].splice(1).join(' ')
 
-    let evaluated = evaluateCode(stringToBeEvaluated)
+    let evaluated = await evaluateCode(stringToBeEvaluated)
 
     if (!evaluated) return
 
