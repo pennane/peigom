@@ -7,7 +7,8 @@ import {
     AudioPlayerStatus,
     VoiceConnectionStatus,
     VoiceConnection,
-    AudioPlayer
+    AudioPlayer,
+    AudioResource
 } from '@discordjs/voice'
 import ytdl, { videoInfo } from 'ytdl-core'
 import { buildInitialServerQueue, msToReadable, shuffleArray } from '../lib/util'
@@ -32,79 +33,6 @@ export interface ServerQueue {
     options: {
         volume: number
     }
-    searching: {
-        state: boolean
-        time: Date
-    }
-}
-
-function getNextResource(guild: Discord.Guild) {
-    let serverQueue = QueueMap.get(guild.id)
-    if (!serverQueue) return
-    serverQueue.tracks = serverQueue.tracks.slice(1)
-    const track = serverQueue.tracks[0]
-
-    if (!track) return
-
-    const stream = ytdl(track.videoDetails.video_url, { filter: 'audioonly', quality: 'lowest' })
-    const resource = createAudioResource(stream)
-
-    return resource
-}
-
-async function dispatch(guild: Discord.Guild) {
-    let serverQueue = QueueMap.get(guild.id)
-    if (!serverQueue) return
-
-    let connection = joinVoiceChannel({
-        guildId: serverQueue.voiceChannel.guild.id,
-        channelId: serverQueue.voiceChannel.id,
-        adapterCreator: serverQueue.voiceChannel.guild.voiceAdapterCreator
-    })
-
-    connection.on(VoiceConnectionStatus.Destroyed, () => {
-        QueueMap.delete(guild.id)
-        if (serverQueue?.tracks) {
-            serverQueue.tracks = []
-        }
-    })
-
-    serverQueue.connection = connection
-
-    let track = serverQueue.tracks[0]
-
-    if (!track) {
-        QueueMap.delete(guild.id)
-        setTimeout(() => {
-            if (!serverQueue?.voiceChannel) return
-            if (serverQueue.player) serverQueue.player.stop()
-            serverQueue.player = null
-            serverQueue.connection?.destroy()
-        }, 5 * 1000 * 60)
-        return
-    }
-
-    const stream = ytdl(track.videoDetails.video_url, { filter: 'audioonly', quality: 'lowest' })
-    const player = createAudioPlayer()
-    const resource = createAudioResource(stream)
-
-    player.play(resource)
-    serverQueue.player = player
-    serverQueue.connection.subscribe(player)
-
-    player.on(AudioPlayerStatus.Idle, () => {
-        const nextTrack = getNextResource(guild)
-        if (!nextTrack) {
-            const serverQueue = QueueMap.get(guild.id)
-
-            player.stop()
-            if (serverQueue?.player) serverQueue.player = null
-
-            return
-        }
-
-        player.play(nextTrack)
-    })
 }
 
 interface AddArguments {
@@ -114,15 +42,78 @@ interface AddArguments {
     track: Track
 }
 
+const shiftToNextResource = (guild: Discord.Guild): AudioResource<null> | null => {
+    const serverQueue = QueueMap.get(guild.id)
+    if (!serverQueue) return null
+
+    serverQueue.tracks = serverQueue.tracks.slice(1)
+
+    const track = serverQueue.tracks[0]
+    if (!track) return null
+
+    const stream = ytdl(track.videoDetails.video_url, { filter: 'audioonly', quality: 'lowest' })
+    const resource = createAudioResource(stream)
+
+    return resource
+}
+
+const dispatchGuild = async (guild: Discord.Guild): Promise<void> => {
+    const serverQueue = QueueMap.get(guild.id)
+    if (!serverQueue) return
+
+    const connection = joinVoiceChannel({
+        guildId: serverQueue.voiceChannel.guild.id,
+        channelId: serverQueue.voiceChannel.id,
+        adapterCreator: serverQueue.voiceChannel.guild.voiceAdapterCreator
+    })
+
+    serverQueue.connection = connection
+
+    connection.on(VoiceConnectionStatus.Destroyed, () => {
+        QueueMap.delete(guild.id)
+    })
+
+    const track = serverQueue.tracks[0]
+
+    if (!track) {
+        if (serverQueue.player) {
+            serverQueue.player.stop()
+            serverQueue.player = null
+        }
+        serverQueue.connection?.destroy()
+        QueueMap.delete(guild.id)
+        return
+    }
+
+    const stream = ytdl(track.videoDetails.video_url, { filter: 'audioonly', quality: 'lowest' })
+    const player = createAudioPlayer()
+    const resource = createAudioResource(stream)
+
+    serverQueue.player = player
+    serverQueue.player.play(resource)
+    serverQueue.connection.subscribe(player)
+
+    serverQueue.player.on(AudioPlayerStatus.Idle, () => {
+        const nextResource = shiftToNextResource(guild)
+        if (!nextResource) {
+            const serverQueue = QueueMap.get(guild.id)
+            if (!serverQueue) return
+            serverQueue.player?.stop()
+            serverQueue.player = null
+            return
+        }
+
+        player.play(nextResource)
+    })
+}
+
 export const queueMethods = {
     add: async function ({ guild, message, voiceChannel, track }: AddArguments) {
-        let serverQueue: ServerQueue
         if (!QueueMap.has(guild.id)) {
-            serverQueue = buildInitialServerQueue({ guild, voiceChannel })
-            QueueMap.set(guild.id, serverQueue)
-        } else {
-            serverQueue = QueueMap.get(guild.id) as ServerQueue
+            QueueMap.set(guild.id, buildInitialServerQueue({ guild, voiceChannel }))
         }
+
+        const serverQueue = QueueMap.get(guild.id) as ServerQueue
 
         const trackDuration = msToReadable(Number(track.videoDetails.lengthSeconds) * 1000)
 
@@ -140,27 +131,28 @@ export const queueMethods = {
         message.channel.send({ embeds: [responseEmbed] })
 
         if (!serverQueue.connection || !serverQueue.player) {
-            serverQueue.tracks.push(track)
-            dispatch(guild)
+            serverQueue.tracks = serverQueue.tracks.concat(track)
+            dispatchGuild(guild)
             return
         }
 
         if (track.toTop) {
             serverQueue.tracks = [serverQueue.tracks[0], track, ...serverQueue.tracks.slice(1)]
-        } else {
-            serverQueue.tracks.push(track)
-        }
-    },
-    show: function ({ guild, message }: { guild: Discord.Guild; message: Discord.Message }) {
-        let serverQueue = QueueMap.get(guild.id)
-        if (!serverQueue || serverQueue.tracks.length === 0) {
-            message.channel.send(':hand_splayed: Bro, ei täällä soi mikään.')
             return
         }
 
-        let trackLength = msToReadable(Number(serverQueue.tracks[0].videoDetails.lengthSeconds) * 1000)
+        serverQueue.tracks.push(track)
+    },
+    show: function ({ guild, message }: { guild: Discord.Guild; message: Discord.Message }) {
+        const serverQueue = QueueMap.get(guild.id)
 
-        let responseEmbed = new Discord.MessageEmbed()
+        if (!serverQueue || serverQueue.tracks.length === 0) {
+            return message.channel.send(':hand_splayed: Bro, ei täällä soi mikään.')
+        }
+
+        const trackLength = msToReadable(Number(serverQueue.tracks[0].videoDetails.lengthSeconds) * 1000)
+
+        const responseEmbed = new Discord.MessageEmbed()
             .setColor('#2f3136')
             .addField(
                 `Nyt soi:`,
@@ -171,47 +163,49 @@ export const queueMethods = {
             )
             .addField('Biisiä toivo:', serverQueue.tracks[0].requestedBy?.toString() || '?', true)
             .setURL(serverQueue.tracks[0].videoDetails.video_url)
-        if (serverQueue.tracks[0].videoDetails.thumbnails[0].url) {
+
+        if (serverQueue?.tracks[0]?.videoDetails?.thumbnails[0]?.url) {
             responseEmbed.setThumbnail(serverQueue.tracks[0].videoDetails.thumbnails[0].url)
         }
 
-        if (serverQueue.tracks[1]) {
-            let tracks = serverQueue.tracks
-                .slice(1)
-                .map((track, i) => `\`${i + 1}\`: [${track.videoDetails.title}](${track.videoDetails.video_url})`)
-            let tracksMessage = tracks.join('\n')
-            let [first, ...rest] = Util.splitMessage(tracksMessage, { maxLength: 950 })
-            rest = rest.slice(0, 2)
+        if (!serverQueue.tracks[1]) {
+            message.channel.send({ embeds: [responseEmbed] })
+            return
+        }
 
-            responseEmbed.addField('Seuraavana', first)
+        const tracks = serverQueue.tracks
+            .slice(1)
+            .map((track, i) => `\`${i + 1}\`: [${track.videoDetails.title}](${track.videoDetails.video_url})`)
+        const tracksMessage = tracks.join('\n')
+        let [first, ...rest] = Util.splitMessage(tracksMessage, { maxLength: 950 })
+        rest = rest.slice(0, 2)
 
-            if (rest) {
-                for (let part of rest) {
-                    responseEmbed.addField('\u200b', part)
-                }
-            }
+        responseEmbed.addField('Seuraavana', first)
+
+        if (!rest) {
+            message.channel.send({ embeds: [responseEmbed] })
+            return
+        }
+
+        for (let part of rest) {
+            responseEmbed.addField('\u200b', part)
         }
 
         message.channel.send({ embeds: [responseEmbed] })
+
         return
     },
     nowPlaying: function ({ guild, message }: { guild: Discord.Guild; message: Discord.Message }) {
-        let serverQueue = QueueMap.get(guild.id)
+        const serverQueue = QueueMap.get(guild.id)
 
-        if (!serverQueue) {
+        if (!serverQueue || serverQueue.tracks.length === 0) {
             message.channel.send(':hand_splayed: Bro, ei täällä soi mikään.')
             return
         }
 
-        if (serverQueue.tracks.length === 0) {
-            return message.channel.send(':hand_splayed: Bro, ei täällä soi mikään.')
-        }
-
-        let responseEmbed = new Discord.MessageEmbed()
-
-        let track = serverQueue.tracks[0]
-
-        let trackLength = msToReadable(Number(serverQueue.tracks[0].videoDetails.lengthSeconds) * 1000)
+        const responseEmbed = new Discord.MessageEmbed()
+        const track = serverQueue.tracks[0]
+        const trackLength = msToReadable(Number(serverQueue.tracks[0].videoDetails.lengthSeconds) * 1000)
 
         responseEmbed
             .addField(
@@ -224,7 +218,7 @@ export const queueMethods = {
             .setColor('#2f3136')
             .addField('Biisiä toivo:', track.requestedBy?.toString() || '?', true)
 
-        if (track.videoDetails.thumbnails[0].url) {
+        if (track?.videoDetails?.thumbnails[0]?.url) {
             responseEmbed.setThumbnail(track.videoDetails.thumbnails[0].url)
         }
 
@@ -232,30 +226,36 @@ export const queueMethods = {
         return
     },
     skip: function ({ guild, message }: { guild: Discord.Guild; message: Discord.Message }) {
-        let serverQueue = QueueMap.get(guild.id)
-        if (!serverQueue || !serverQueue.player) {
+        const serverQueue = QueueMap.get(guild.id)
+        if (!serverQueue || !serverQueue.player || serverQueue.tracks.length === 0) {
             message.channel.send(':hand_splayed: Bro, ei täällä soi mikään.')
             return
         }
 
         message.channel.send(`:track_next: ${serverQueue.tracks[0].videoDetails.title} skipattu!`)
+
         if (serverQueue.tracks.length <= 1) {
             serverQueue?.player?.stop()
             serverQueue.connection?.destroy()
             QueueMap.delete(guild.id)
             return
         }
-        const nextTrack = getNextResource(guild)
-        if (!nextTrack) {
+
+        const resource = shiftToNextResource(guild)
+
+        if (!resource) {
             serverQueue?.player?.stop()
             serverQueue.connection?.destroy()
             QueueMap.delete(guild.id)
             return
         }
-        serverQueue.player.play(nextTrack)
+
+        serverQueue.player.play(resource)
+
+        return
     },
     disconnect: function ({ guild, message }: { guild: Discord.Guild; message: Discord.Message }) {
-        let serverQueue = QueueMap.get(guild.id)
+        const serverQueue = QueueMap.get(guild.id)
 
         if (!serverQueue || !serverQueue.connection) return message.channel.send(':x: En edes ollut kiusaamassa.')
 
@@ -265,7 +265,7 @@ export const queueMethods = {
         return message.channel.send(':wave: Ilosesti böneen!')
     },
     clear: function ({ guild, message }: { guild: Discord.Guild; message: Discord.Message }) {
-        let serverQueue = QueueMap.get(guild.id)
+        const serverQueue = QueueMap.get(guild.id)
 
         if (!serverQueue || serverQueue.tracks.length <= 1) {
             message.channel.send(':x: Ei ollut mitään mitä puhdistaa, >:^U')
@@ -276,7 +276,7 @@ export const queueMethods = {
         message.channel.send(':wastebasket:  Musiikkijono tyhjennetty!')
     },
     shuffle: function ({ guild, message }: { guild: Discord.Guild; message: Discord.Message }) {
-        let serverQueue = QueueMap.get(guild.id)
+        const serverQueue = QueueMap.get(guild.id)
 
         if (!serverQueue || serverQueue.tracks.length < 3) {
             message.channel.send(':hand_splayed: Bro, ei pyge sekottaa')
@@ -295,7 +295,7 @@ export const queueMethods = {
         message: Discord.Message
         toRemove: number
     }) {
-        let serverQueue = QueueMap.get(guild.id)
+        const serverQueue = QueueMap.get(guild.id)
 
         if (!serverQueue) {
             return message.channel.send(':hand_splayed: Bro, ei voi poistaa. Duunasikko oikein?')
@@ -307,7 +307,7 @@ export const queueMethods = {
         return
     },
     pause: function ({ guild }: { guild: Discord.Guild }) {
-        let serverQueue = QueueMap.get(guild.id)
+        const serverQueue = QueueMap.get(guild.id)
 
         if (!serverQueue) return
         if (!serverQueue?.player) return
@@ -318,7 +318,7 @@ export const queueMethods = {
         serverQueue.player.pause()
     },
     resume: function ({ guild }: { guild: Discord.Guild }) {
-        let serverQueue = QueueMap.get(guild.id)
+        const serverQueue = QueueMap.get(guild.id)
 
         if (!serverQueue) return
         if (!serverQueue?.player) return
@@ -328,7 +328,7 @@ export const queueMethods = {
         }
     },
     // volume: function ({ guild, message, volume }: { guild: Discord.Guild; message: Discord.Message; volume: string }) {
-    //     let serverQueue = QueueMap.get(guild.id)
+    //     const serverQueue = QueueMap.get(guild.id)
 
     //     if (!serverQueue?.connection?.dispatcher) return
 

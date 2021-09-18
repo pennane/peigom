@@ -60,10 +60,6 @@ export function buildInitialServerQueue({
         tracks: [],
         options: {
             volume: 1
-        },
-        searching: {
-            state: false,
-            time: new Date()
         }
     }
 }
