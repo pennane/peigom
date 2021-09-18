@@ -109,6 +109,8 @@ const dispatchGuild = async (guild: Discord.Guild): Promise<void> => {
 
 export const queueMethods = {
     add: async function ({ guild, message, voiceChannel, track }: AddArguments) {
+        if (!track) return
+
         if (!QueueMap.has(guild.id)) {
             QueueMap.set(guild.id, buildInitialServerQueue({ guild, voiceChannel }))
         }
@@ -149,7 +151,6 @@ export const queueMethods = {
         if (!serverQueue || serverQueue.tracks.length === 0) {
             return message.channel.send(':hand_splayed: Bro, ei täällä soi mikään.')
         }
-
         const trackLength = msToReadable(Number(serverQueue.tracks[0].videoDetails.lengthSeconds) * 1000)
 
         const responseEmbed = new Discord.MessageEmbed()
@@ -301,7 +302,16 @@ export const queueMethods = {
             return message.channel.send(':hand_splayed: Bro, ei voi poistaa. Duunasikko oikein?')
         }
 
-        let track = [...serverQueue.tracks][toRemove]
+        if (toRemove < 1) {
+            return message.channel.send(':hand_splayed: Bro, ei voi poistaa ekaa biisii. Koita vaik skippaa?')
+        } else if (toRemove > serverQueue.tracks.length) {
+            return message.channel.send(':hand_splayed: Bro, ei voi poistaa biisiä mitä ei oo.')
+        }
+
+        const track = [...serverQueue.tracks][toRemove]
+        if (!track) {
+            return message.channel.send(':hand_splayed: Bro, ultra mankeli')
+        }
         serverQueue.tracks = serverQueue.tracks.filter((_track, i) => i !== toRemove)
         message.channel.send(`:ok: Kappale \`${track.videoDetails.title}\` on poistettu jonosta.`)
         return
