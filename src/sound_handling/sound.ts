@@ -64,6 +64,8 @@ const dispatchGuild = async (guild: Discord.Guild): Promise<void> => {
     const serverQueue = QueueMap.get(guild.id)
     if (!serverQueue) return
 
+    serverQueue.options.volume = 1
+
     const connection = joinVoiceChannel({
         guildId: serverQueue.voiceChannel.guild.id,
         channelId: serverQueue.voiceChannel.id,
