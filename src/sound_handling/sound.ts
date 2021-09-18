@@ -29,6 +29,7 @@ export interface ServerQueue {
     guild: Discord.Guild
     connection: VoiceConnection | null
     player: AudioPlayer | null
+    resource: AudioResource<null> | null
     tracks: Track[]
     options: {
         volume: number
@@ -52,7 +53,9 @@ const shiftToNextResource = (guild: Discord.Guild): AudioResource<null> | null =
     if (!track) return null
 
     const stream = ytdl(track.videoDetails.video_url, { filter: 'audioonly', quality: 'lowest' })
-    const resource = createAudioResource(stream)
+    const resource = createAudioResource(stream, { inlineVolume: true })
+    resource.volume?.setVolume(serverQueue.options.volume)
+    serverQueue.resource = resource
 
     return resource
 }
@@ -87,8 +90,10 @@ const dispatchGuild = async (guild: Discord.Guild): Promise<void> => {
 
     const stream = ytdl(track.videoDetails.video_url, { filter: 'audioonly', quality: 'lowest' })
     const player = createAudioPlayer()
-    const resource = createAudioResource(stream)
+    const resource = createAudioResource(stream, { inlineVolume: true })
+    resource.volume?.setVolume(serverQueue.options.volume)
 
+    serverQueue.resource = resource
     serverQueue.player = player
     serverQueue.player.play(resource)
     serverQueue.connection.subscribe(player)
@@ -152,14 +157,13 @@ export const queueMethods = {
             return message.channel.send(':hand_splayed: Bro, ei täällä soi mikään.')
         }
         const trackLength = msToReadable(Number(serverQueue.tracks[0].videoDetails.lengthSeconds) * 1000)
+        const playedLength = msToReadable(serverQueue.resource?.playbackDuration || 0)
 
         const responseEmbed = new Discord.MessageEmbed()
             .setColor('#2f3136')
             .addField(
                 `Nyt soi:`,
-                `[${serverQueue.tracks[0].videoDetails.title}](${
-                    serverQueue.tracks[0].videoDetails.video_url
-                })\n${'???'} / ${trackLength}`,
+                `[${serverQueue.tracks[0].videoDetails.title}](${serverQueue.tracks[0].videoDetails.video_url})\n${playedLength} / ${trackLength}`,
                 true
             )
             .addField('Biisiä toivo:', serverQueue.tracks[0].requestedBy?.toString() || '?', true)
@@ -207,13 +211,12 @@ export const queueMethods = {
         const responseEmbed = new Discord.MessageEmbed()
         const track = serverQueue.tracks[0]
         const trackLength = msToReadable(Number(serverQueue.tracks[0].videoDetails.lengthSeconds) * 1000)
+        const playedLength = msToReadable(serverQueue.resource?.playbackDuration || 0)
 
         responseEmbed
             .addField(
                 `Nyt soi:`,
-                `[${serverQueue.tracks[0].videoDetails.title}](${
-                    serverQueue.tracks[0].videoDetails.video_url
-                })\n${'???'} / ${trackLength}`,
+                `[${serverQueue.tracks[0].videoDetails.title}](${serverQueue.tracks[0].videoDetails.video_url})\n${playedLength} / ${trackLength}`,
                 true
             )
             .setColor('#2f3136')
@@ -337,28 +340,30 @@ export const queueMethods = {
             serverQueue.player.unpause()
         }
     },
-    // volume: function ({ guild, message, volume }: { guild: Discord.Guild; message: Discord.Message; volume: string }) {
-    //     const serverQueue = QueueMap.get(guild.id)
+    volume: function ({ guild, message, volume }: { guild: Discord.Guild; message: Discord.Message; volume: string }) {
+        const serverQueue = QueueMap.get(guild.id)
 
-    //     if (!serverQueue?.connection?.dispatcher) return
+        if (!serverQueue) return
 
-    //     if (!volume) {
-    //         message.channel.send('Tän hetkinen volyymi on ' + serverQueue.options.volume)
-    //         return
-    //     }
+        if (!volume) {
+            message.channel.send('Tän hetkinen volyymi on ' + serverQueue.options.volume)
+            return
+        }
 
-    //     let computedVolume = parseFloat(volume.replace(',', '.'))
+        const computedVolume = parseFloat(volume.replace(',', '.'))
 
-    //     if (computedVolume >= 0) {
-    //         serverQueue.connection.dispatcher.setVolume(computedVolume)
-    //         serverQueue.options.volume = computedVolume
-    //         message.channel.send('Volyymiks asetettu ' + computedVolume)
-    //         return
-    //     } else {
-    //         message.channel.send('Tän hetkinen volyymi on ' + serverQueue.options.volume)
-    //         return
-    //     }
-    // },
+        if (computedVolume < 0) {
+            message.channel.send('Tän hetkinen volyymi on ' + serverQueue.options.volume + '. Nollan alle se ei mene.')
+            return
+        }
+
+        serverQueue.options.volume = computedVolume
+
+        serverQueue.resource?.volume?.setVolume(computedVolume)
+
+        message.channel.send('Volyymiks asetettu ' + computedVolume)
+        return
+    },
     isPlaying: function ({ guild }: { guild: Discord.Guild }) {
         if (!guild) {
             return false
