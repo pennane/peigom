@@ -43,6 +43,9 @@ function getNextResource(guild: Discord.Guild) {
     if (!serverQueue) return
     serverQueue.tracks = serverQueue.tracks.slice(1)
     const track = serverQueue.tracks[0]
+
+    if (!track) return
+
     const stream = ytdl(track.videoDetails.video_url, { filter: 'audioonly', quality: 'lowest' })
     const resource = createAudioResource(stream)
 
@@ -74,6 +77,8 @@ async function dispatch(guild: Discord.Guild) {
         QueueMap.delete(guild.id)
         setTimeout(() => {
             if (!serverQueue?.voiceChannel) return
+            if (serverQueue.player) serverQueue.player.stop()
+            serverQueue.player = null
             serverQueue.connection?.destroy()
         }, 5 * 1000 * 60)
         return
@@ -90,7 +95,11 @@ async function dispatch(guild: Discord.Guild) {
     player.on(AudioPlayerStatus.Idle, () => {
         const nextTrack = getNextResource(guild)
         if (!nextTrack) {
+            const serverQueue = QueueMap.get(guild.id)
+
             player.stop()
+            if (serverQueue?.player) serverQueue.player = null
+
             return
         }
 

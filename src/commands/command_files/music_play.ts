@@ -46,7 +46,6 @@ const executor: CommandExecutor = async (message, client, args) => {
             console.error(err)
         }
     } else {
-        message.channel.send(`:mag: Etitään \`${url}\``)
         track = await ytdl.getBasicInfo(url)
     }
 
