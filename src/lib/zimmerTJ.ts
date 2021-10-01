@@ -2,7 +2,7 @@ import Discord from 'discord.js'
 import schedule from 'node-schedule'
 
 const zimmerChannelId = '759808413877796966'
-const zimmerDate = new Date(`Oct 3, 2021 19:00:00`).getTime()
+const zimmerDate = new Date(`Sep 23, 2022 19:00:00`).getTime()
 
 function calculateTimeDifference(d: number, ad: number) {
     let dateDistance = Math.abs(d - ad)
