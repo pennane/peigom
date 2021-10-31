@@ -5,7 +5,7 @@ import { readSoundData } from './admin_createsound'
 
 const configuration: CommandConfiguration = {
     name: 'listaaäänet',
-    admin: true,
+    admin: false,
     syntax: 'listaaäänet (sivunro)',
     desc: 'Näyttää palvelimella käytössä olevat custom äänet',
     triggers: ['listaaäänet', 'listsounds'],

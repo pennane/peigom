@@ -37,6 +37,7 @@ export const readSoundData = async (guild: Guild): Promise<SoundData> => {
     } catch {}
 
     let file
+
     try {
         file = await fs.open(guildSoundDataPath, 'r')
     } catch {
