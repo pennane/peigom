@@ -12,3 +12,4 @@ assets/createsound/files/*
 !assets/createsound/files/.weight
 assets/createsound/guilds/*
 !assets/createsound/guilds/.weight
+*/commandMetaMap.json
