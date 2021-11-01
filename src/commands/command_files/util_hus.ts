@@ -6,7 +6,7 @@ const configuration: CommandConfiguration = {
     admin: false,
     syntax: 'hus',
     desc: 'Heittää botin pois äänikanavalta.',
-    triggers: ['hus'],
+    triggers: ['hus', 'hys'],
     type: ['utility']
 }
 
