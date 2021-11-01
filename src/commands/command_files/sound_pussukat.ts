@@ -6,7 +6,7 @@ import { arrayToChunks, randomFromArray } from '../../lib/util'
 const configuration: CommandConfiguration = {
     name: 'pussukat',
     admin: false,
-    syntax: 'pussukat < -i | --infinite > | < -l | --list > | < filename >',
+    syntax: 'pussukat -i | --infinite | lista | <tiedosto_nimi>',
     desc: 'Soittaa kappaleen botin pussukkakansiosta',
     triggers: ['pussukat', 'pussukka'],
     type: ['sound']
@@ -31,7 +31,7 @@ const executor: CommandExecutor = async (message, client, args) => {
     const embed = Command.createEmbed()
     embed.setTitle('Pussukka')
 
-    if (args[1] === '-l' || args[1] === '--list') {
+    if (args[1] === 'list' || args[1] === 'l' || args[1] == 'lista') {
         let pageNumber = parseInt(args[2]) - 1 || 0
 
         if (pageNumber < 0) pageNumber = 0
@@ -50,7 +50,7 @@ const executor: CommandExecutor = async (message, client, args) => {
         !isInfinite &&
         args[1] &&
         !args[1].startsWith('.') &&
-        fileArray.some((f) => f.toLowerCase().endsWith(args[1].toLowerCase()))
+        fileArray.some((f) => f.toLowerCase().endsWith(args.slice(1).join(' ').toLowerCase()))
 
     if (!isInfinite && !isSpecificTrack) {
         const fileName = getSoundFileName()
@@ -62,7 +62,7 @@ const executor: CommandExecutor = async (message, client, args) => {
         playSound({ soundfile, message, exitAfter: true })
         return
     } else if (!isInfinite && isSpecificTrack) {
-        const fileName = args[1]
+        const fileName = args.slice(1).join(' ')
         const soundfile = soundRoot + fileName
 
         embed.setDescription(fileName)
