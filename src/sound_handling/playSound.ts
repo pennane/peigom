@@ -25,7 +25,7 @@ const play = function ({
 
         let user = message.member.user
 
-        if (!voiceChannel) {
+        if (!voiceChannel || !voiceChannel.isVoice()) {
             let embed = Command.createEmbed()
             embed
                 .setTitle(`Botin kommentti:`)

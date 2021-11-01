@@ -51,6 +51,10 @@ let activities: ClientActivity[] = [
         type: 'LISTENING'
     },
     {
+        text: PREFIX + 'pussukat',
+        type: 'LISTENING'
+    },
+    {
         text: 'pullava',
         type: 'WATCHING'
     },
