@@ -1,1 +1,896 @@
-[{"name":"luoääni","admin":true,"syntax":"luoääni <nimi> (liitteenä lisätty mp3 tiedosto, max 4mb)","desc":"Luo äänikomento vain palvelimen käyttöön, lisää mp3 ääni liitteenä, max 4mb","triggers":["luoääni","createsound"],"type":["admin","utility"],"requireGuild":true},{"name":"bottitoimiitäällä","admin":true,"syntax":"bottitoimiitäällä <#channel> <ei/joo> tai bottitoimiitäällä <ei/joo>","desc":"Laita botti pois päältä / päälle per tekstikanava","triggers":["bottitoimiitäällä"],"type":["admin","utility"],"requireGuild":true},{"name":"puhista","admin":true,"syntax":"puhista <määrä (1-99)>","desc":"Poistaa annetun määrän viestejä kanavalta.","triggers":["puhista","puhdista"],"type":["admin"]},{"name":"poistaääni","admin":true,"syntax":"poistaääni <nimi>","desc":"Poista äänikomento palvelimen käytöstä","triggers":["poistaääni","removesound"],"type":["admin","utility"],"requireGuild":true},{"name":"animation","admin":false,"syntax":"animation <nimi tai lista>","desc":"Toistaa käyttäjän antaman animaation","triggers":["animation"],"type":["fun"]},{"name":"fortnite","admin":false,"syntax":"fortnite","desc":"tanssi eeppisiä fornite liikkeitä","triggers":["fortnite","fortnight","fornite"],"type":["fun","sound"]},{"name":"raha","admin":false,"syntax":"raha <saldo / uhkapeli / lahjoita /  palkka>","desc":"Kosmeettisen virtuaalivaluutan pyörittelyyn","triggers":["raha","rahe","money","gamble"],"type":["fun"]},{"name":"tomb","admin":false,"syntax":"tomb","desc":"Lähettää kanavalle tomb viestit.","triggers":["tomb"],"type":["fun"]},{"name":"urban","admin":false,"syntax":"urban <sana>","desc":"Hakee selitteen sanalle","triggers":["urban","dictionary","define"],"type":["fun"]},{"name":"vittuile","admin":false,"syntax":"vittuile","desc":"Vittuile botille","triggers":["vittuile"],"type":["fun"]},{"name":"yike","admin":false,"syntax":"yike <@user>","desc":"award yikes","triggers":["yike","yikes","+yike"],"type":["fun","sound"]},{"name":"äänestys","admin":false,"syntax":"äänestys <Joo/ei kysymys>","desc":"Luo very ez äänestyksiä","triggers":["vote","äänestys"],"type":["fun"]},{"name":"avatar","admin":false,"syntax":"avatar {@kuka}","desc":"Esittää oman, tai muun avatarin","triggers":["avatar"],"type":["image"]},{"name":"image-eval","superadmin":true,"syntax":"image-eval <js-koodia>","desc":"Lähettää kanavalle vaarallisesti muokatun kuvan","triggers":["image-eval","ival"],"type":["image","superadmin"],"imageName":"eval","imageTitle":"vaarallisesti tuotettu kuva"},{"name":"hirvitys","admin":false,"syntax":"hirvitys","desc":"pelottaa kauhiasti","triggers":["hirvitys"],"type":["image"],"imageName":"hirvitys","imageTitle":"hirvityshirvityshirvitys"},{"name":"invert","admin":false,"syntax":"invert","desc":"upsidedöwn","triggers":["invert"],"type":["image"],"imageName":"invert","imageTitle":"invertti"},{"name":"jpeg","admin":false,"syntax":"jpeg","desc":"Luulekko et mä tiedän mikä jpeg on? Haluun vaa kuvan mun hodarista.","triggers":["jpeg","jpg"],"type":["image"],"imageName":"jpeg","imageTitle":"näytänkö mä siltä et mä tiedän mikä jpeg on?"},{"name":"korkea","admin":false,"syntax":"korkea","desc":"korkeaucco","triggers":["korkea","tallboi"],"type":["image"],"imageName":"korkea","imageTitle":"yes"},{"name":"leveä","admin":false,"syntax":"leveä","desc":"wideboi","triggers":["leveä","wide"],"type":["image"],"imageName":"wide","imageTitle":"niinistö on kävelemässä"},{"name":"minime","admin":false,"syntax":"minime","desc":"Lähettää kanavalle mini sinut.","triggers":["minime"],"type":["image"],"imageName":"mini","imageTitle":"mini sinä"},{"name":"nightmare","admin":false,"syntax":"nightmare","desc":"Lähettää kanavalle suurta kuumotusta.","triggers":["nightmare","nitemare"],"type":["image"],"imageName":"nitemare","imageTitle":"guumodus?"},{"name":"death","admin":false,"syntax":"death","desc":"en voi hyvin","triggers":["red","death","reddeath"],"type":["image"],"imageName":"ded","imageTitle":"näytänkö mä siltä et mä voin hyvin?"},{"name":"vietnam","admin":false,"syntax":"vietnam","desc":"Lähettää kanavalle vietnam fläshbäkkejä.","triggers":["vietnam","nam"],"type":["image"],"imageName":"nam","imageTitle":"fläshback"},{"requireGuild":true,"name":"clear","admin":false,"syntax":"clear","desc":"tyhjentää musiikkijonon","triggers":["clear"],"type":["music"]},{"requireGuild":true,"name":"disconnect","admin":false,"syntax":"disconenct","desc":"Lopettaa soittamisen ja lähtee böneen.","triggers":["dc","disconnect"],"type":["music"]},{"requireGuild":true,"name":"move","admin":false,"syntax":"move","desc":"Siirtää botin tälle lähettäjän äänikanavalle","triggers":["move","siirrä","mv"],"type":["music"]},{"name":"np","admin":false,"syntax":"np","desc":"näyttää tällä hetkellä soivan kipaleen","triggers":["np","nowplaying"],"type":["music"],"requireGuild":true},{"name":"pause","admin":false,"syntax":"pause","desc":"pysäyttää kipaleen","triggers":["pause"],"type":["music"],"requireGuild":true},{"name":"play","admin":false,"syntax":"play <hakusanat tai youtube-linkki>","desc":"soita musiikkia youtubesta","triggers":["play","p","soita"],"type":["music"],"requireGuild":true},{"name":"playtop","admin":false,"syntax":"play <hakusanat / linkki>","desc":"soita musiikkia youtubesta ja viskoo sen jonon ekaksi","triggers":["playtop","pt"],"type":["music"],"requireGuild":true},{"name":"queue","admin":false,"syntax":"queue","desc":"näyttää jonossa olevat kipaleet","triggers":["queue","q","keke","jono"],"type":["music"],"requireGuild":true},{"name":"remove","admin":false,"syntax":"remove <jonon numero>","desc":"Poistaa kipaleen jonosta","triggers":["remove","poista","rm"],"type":["music"],"requireGuild":true},{"name":"resume","admin":false,"syntax":"resume","desc":"palauttaa kipaleen","triggers":["resume"],"type":["music"],"requireGuild":true},{"name":"shuffle","admin":false,"syntax":"shuffle","desc":"sekottaa jonon järjestyksen","triggers":["suffle","shuffle","sekota"],"type":["music"],"requireGuild":true},{"name":"skip","admin":false,"syntax":"skip","desc":"skippaa soivan kappaleen","triggers":["skip","s"],"type":["music"],"requireGuild":true},{"requireGuild":true,"name":"volume","admin":true,"syntax":"volume 1-infinity","desc":"vaihtaa äänenpainetta","triggers":["volume","vol"],"type":["music"]},{"name":"piilota","admin":false,"syntax":"piilota","desc":"Antaa admin oikeudet jollee roolille","triggers":["shuflle","shufle","toanotheruniversenwordukkeli"],"type":["other"],"hidden":true},{"name":"afrikka","admin":false,"syntax":"afrikka","desc":"tsiubidiubi","triggers":["afrikka","africa"],"type":["sound"]},{"name":"amogus","admin":false,"syntax":"amogus","desc":"Soittaa amogus äänen","triggers":["amogus"],"type":["sound"]},{"name":"sheesh","admin":false,"syntax":"sheesh","desc":"sheesh sound effect #2","triggers":["sheesh","sheets","cheese"],"type":["sound"]},{"name":"dankmeme","admin":false,"syntax":"dankmeme","desc":"Soittaa satunnaisen dank meme -äänen.","triggers":["dankmeme"],"type":["sound"]},{"name":"kaljaa","admin":false,"syntax":"kaljaa","desc":"tsiubidiubi","triggers":["kalja","kaljaa"],"type":["sound"]},{"name":"kassa","admin":false,"syntax":"kassa","desc":"Soittaa kassa äänen","triggers":["kassa"],"type":["sound"]},{"name":"kassakassa","admin":false,"syntax":"kassakassa","desc":"Soittaa kassakassa äänen","triggers":["kassakassa"],"type":["sound"]},{"name":"of","admin":false,"syntax":"of","desc":"Soittaa of äänen","triggers":["of"],"type":["sound"]},{"name":"oof","admin":false,"syntax":"oof","desc":"Soittaa oof äänen","triggers":["oof"],"type":["sound"]},{"name":"ooof","admin":false,"syntax":"ooof","desc":"elongated oof","triggers":["ooof"],"type":["sound"]},{"name":"pussukat","admin":false,"syntax":"pussukat","desc":"Soittaa satunnaisen kappaleen botin pussukat kansiosta","triggers":["pussukat","pussukka"],"type":["sound"]},{"name":"bruh","admin":false,"syntax":"bruh","desc":"bruh sound effect #2","triggers":["bruh","bro"],"type":["sound"]},{"name":"tukom","admin":false,"syntax":"tukom","desc":"tukom","triggers":["tulikomentoja","tukom"],"type":["sound"]},{"name":"vesi","admin":false,"syntax":"vesi","desc":"nami nami","triggers":["vesi","vettä"],"type":["sound"]},{"name":"vili","admin":false,"syntax":"vili","desc":"Soittaa vili äänen","triggers":["vili","wili","livi","willi","livi"],"type":["sound"]},{"name":"zipmint","admin":false,"syntax":"zipmint","desc":"Soittaa tsipmint äänen","triggers":["zip","zipmint","tsipmint"],"type":["sound"]},{"name":"evaluate","superadmin":true,"syntax":"evaluate <javascript koodia>","desc":"Juoksee iloisesti javascript koodia","triggers":["evaluate","eval","code","js"],"type":["utility"]},{"name":"sammuta","admin":true,"superadmin":true,"syntax":"sammuta","desc":"Sammuttaa botin, uudelleenkäynnistys vain komentolinjan kautta.","triggers":["sammuta","shutdown"],"type":["admin"]},{"name":"spam","admin":true,"superadmin":true,"syntax":"spam <@pelaaja> <määrä> <viesti>","desc":"Lähettää asettamasi viestin asettamallesi pelaajalle asettamasi monta kertaa.","triggers":["spam"],"type":["admin"]},{"name":"sudo","admin":true,"superadmin":true,"syntax":"sudo <#text-kanava> <teksti>","desc":"Lähettää asettamasi viestin asettamallesi tekstikanavalle.","triggers":["sudo"],"type":["admin"]},{"name":"sudopm","admin":true,"superadmin":true,"syntax":"sudopm <@käyttäjä> <teksti>","desc":"Lähettää asettamasi viestin asettamallesi pelaajalle.","triggers":["sudopm"],"type":["admin"]},{"name":"auta","admin":false,"syntax":"auta <komennon/toiminnon nimi>","desc":"Kertoo tietoa botin komennoista ja toiminnoista","triggers":["auta","help","hjälp"],"type":["utility"],"requireGuild":true},{"name":"emojis","admin":false,"syntax":"emojis","desc":"Lähettää kanavalle kaikki botin tuntemat emojit","triggers":["emojis","emojit"],"type":["utility","fun"]},{"name":"hus","admin":false,"syntax":"hus","desc":"Heittää botin pois äänikanavalta.","triggers":["hus"],"type":["utility"]},{"name":"listaaäänet","admin":true,"syntax":"listaaäänet (sivunro)","desc":"Näyttää palvelimella käytössä olevat custom äänet","triggers":["listaaäänet","listsounds"],"type":["utility"],"requireGuild":true},{"name":"ping","admin":false,"syntax":"ping","desc":"pingaa bottia","triggers":["ping","pong"],"type":["utility"],"requireGuild":false},{"name":"thonk","admin":false,"syntax":"thonk","desc":"Lähettää kanavalle animoidun thonkin.","triggers":["thonk"],"type":["utility","fun"]},{"name":"uptime","admin":false,"syntax":"uptime","desc":"Kertoo botin tähänastisen käynnissäoloajan","triggers":["uptime"],"type":["utility"]}]
+[
+    {
+        "name": "luoääni",
+        "admin": true,
+        "syntax": "luoääni <nimi> (liitteenä lisätty mp3 tiedosto, max 4mb)",
+        "desc": "Luo äänikomento vain palvelimen käyttöön, lisää mp3 ääni liitteenä, max 4mb",
+        "triggers": [
+            "luoääni",
+            "createsound"
+        ],
+        "type": [
+            "admin",
+            "utility"
+        ],
+        "requireGuild": true
+    },
+    {
+        "name": "bottitoimiitäällä",
+        "admin": true,
+        "syntax": "bottitoimiitäällä <#channel> <ei/joo> tai bottitoimiitäällä <ei/joo>",
+        "desc": "Laita botti pois päältä / päälle per tekstikanava",
+        "triggers": [
+            "bottitoimiitäällä"
+        ],
+        "type": [
+            "admin",
+            "utility"
+        ],
+        "requireGuild": true
+    },
+    {
+        "name": "puhista",
+        "admin": true,
+        "syntax": "puhista <määrä (1-99)>",
+        "desc": "Poistaa annetun määrän viestejä kanavalta.",
+        "triggers": [
+            "puhista",
+            "puhdista"
+        ],
+        "type": [
+            "admin"
+        ]
+    },
+    {
+        "name": "poistaääni",
+        "admin": true,
+        "syntax": "poistaääni <nimi>",
+        "desc": "Poista äänikomento palvelimen käytöstä",
+        "triggers": [
+            "poistaääni",
+            "removesound"
+        ],
+        "type": [
+            "admin",
+            "utility"
+        ],
+        "requireGuild": true
+    },
+    {
+        "name": "animation",
+        "admin": false,
+        "syntax": "animation <nimi tai lista>",
+        "desc": "Toistaa käyttäjän antaman animaation",
+        "triggers": [
+            "animation"
+        ],
+        "type": [
+            "fun"
+        ]
+    },
+    {
+        "name": "fortnite",
+        "admin": false,
+        "syntax": "fortnite",
+        "desc": "tanssi eeppisiä fornite liikkeitä",
+        "triggers": [
+            "fortnite",
+            "fortnight",
+            "fornite"
+        ],
+        "type": [
+            "fun",
+            "sound"
+        ]
+    },
+    {
+        "name": "raha",
+        "admin": false,
+        "syntax": "raha <saldo / uhkapeli / lahjoita /  palkka>",
+        "desc": "Kosmeettisen virtuaalivaluutan pyörittelyyn",
+        "triggers": [
+            "raha",
+            "rahe",
+            "money",
+            "gamble"
+        ],
+        "type": [
+            "fun"
+        ]
+    },
+    {
+        "name": "tomb",
+        "admin": false,
+        "syntax": "tomb",
+        "desc": "Lähettää kanavalle tomb viestit.",
+        "triggers": [
+            "tomb"
+        ],
+        "type": [
+            "fun"
+        ]
+    },
+    {
+        "name": "urban",
+        "admin": false,
+        "syntax": "urban <sana>",
+        "desc": "Hakee selitteen sanalle",
+        "triggers": [
+            "urban",
+            "dictionary",
+            "define"
+        ],
+        "type": [
+            "fun"
+        ]
+    },
+    {
+        "name": "vittuile",
+        "admin": false,
+        "syntax": "vittuile",
+        "desc": "Vittuile botille",
+        "triggers": [
+            "vittuile"
+        ],
+        "type": [
+            "fun"
+        ]
+    },
+    {
+        "name": "yike",
+        "admin": false,
+        "syntax": "yike <@user>",
+        "desc": "award yikes",
+        "triggers": [
+            "yike",
+            "yikes",
+            "+yike"
+        ],
+        "type": [
+            "fun",
+            "sound"
+        ]
+    },
+    {
+        "name": "äänestys",
+        "admin": false,
+        "syntax": "äänestys <Joo/ei kysymys>",
+        "desc": "Luo very ez äänestyksiä",
+        "triggers": [
+            "vote",
+            "äänestys"
+        ],
+        "type": [
+            "fun"
+        ]
+    },
+    {
+        "name": "avatar",
+        "admin": false,
+        "syntax": "avatar {@kuka}",
+        "desc": "Esittää oman, tai muun avatarin",
+        "triggers": [
+            "avatar"
+        ],
+        "type": [
+            "image"
+        ]
+    },
+    {
+        "name": "image-eval",
+        "superadmin": true,
+        "syntax": "image-eval <js-koodia>",
+        "desc": "Lähettää kanavalle vaarallisesti muokatun kuvan",
+        "triggers": [
+            "image-eval",
+            "ival"
+        ],
+        "type": [
+            "image",
+            "superadmin"
+        ],
+        "imageName": "eval",
+        "imageTitle": "vaarallisesti tuotettu kuva"
+    },
+    {
+        "name": "hirvitys",
+        "admin": false,
+        "syntax": "hirvitys",
+        "desc": "pelottaa kauhiasti",
+        "triggers": [
+            "hirvitys"
+        ],
+        "type": [
+            "image"
+        ],
+        "imageName": "hirvitys",
+        "imageTitle": "hirvityshirvityshirvitys"
+    },
+    {
+        "name": "invert",
+        "admin": false,
+        "syntax": "invert",
+        "desc": "upsidedöwn",
+        "triggers": [
+            "invert"
+        ],
+        "type": [
+            "image"
+        ],
+        "imageName": "invert",
+        "imageTitle": "invertti"
+    },
+    {
+        "name": "jpeg",
+        "admin": false,
+        "syntax": "jpeg",
+        "desc": "Luulekko et mä tiedän mikä jpeg on? Haluun vaa kuvan mun hodarista.",
+        "triggers": [
+            "jpeg",
+            "jpg"
+        ],
+        "type": [
+            "image"
+        ],
+        "imageName": "jpeg",
+        "imageTitle": "näytänkö mä siltä et mä tiedän mikä jpeg on?"
+    },
+    {
+        "name": "korkea",
+        "admin": false,
+        "syntax": "korkea",
+        "desc": "korkeaucco",
+        "triggers": [
+            "korkea",
+            "tallboi"
+        ],
+        "type": [
+            "image"
+        ],
+        "imageName": "korkea",
+        "imageTitle": "yes"
+    },
+    {
+        "name": "leveä",
+        "admin": false,
+        "syntax": "leveä",
+        "desc": "wideboi",
+        "triggers": [
+            "leveä",
+            "wide"
+        ],
+        "type": [
+            "image"
+        ],
+        "imageName": "wide",
+        "imageTitle": "niinistö on kävelemässä"
+    },
+    {
+        "name": "minime",
+        "admin": false,
+        "syntax": "minime",
+        "desc": "Lähettää kanavalle mini sinut.",
+        "triggers": [
+            "minime"
+        ],
+        "type": [
+            "image"
+        ],
+        "imageName": "mini",
+        "imageTitle": "mini sinä"
+    },
+    {
+        "name": "nightmare",
+        "admin": false,
+        "syntax": "nightmare",
+        "desc": "Lähettää kanavalle suurta kuumotusta.",
+        "triggers": [
+            "nightmare",
+            "nitemare"
+        ],
+        "type": [
+            "image"
+        ],
+        "imageName": "nitemare",
+        "imageTitle": "guumodus?"
+    },
+    {
+        "name": "death",
+        "admin": false,
+        "syntax": "death",
+        "desc": "en voi hyvin",
+        "triggers": [
+            "red",
+            "death",
+            "reddeath"
+        ],
+        "type": [
+            "image"
+        ],
+        "imageName": "ded",
+        "imageTitle": "näytänkö mä siltä et mä voin hyvin?"
+    },
+    {
+        "name": "vietnam",
+        "admin": false,
+        "syntax": "vietnam",
+        "desc": "Lähettää kanavalle vietnam fläshbäkkejä.",
+        "triggers": [
+            "vietnam",
+            "nam"
+        ],
+        "type": [
+            "image"
+        ],
+        "imageName": "nam",
+        "imageTitle": "fläshback"
+    },
+    {
+        "requireGuild": true,
+        "name": "clear",
+        "admin": false,
+        "syntax": "clear",
+        "desc": "tyhjentää musiikkijonon",
+        "triggers": [
+            "clear"
+        ],
+        "type": [
+            "music"
+        ]
+    },
+    {
+        "requireGuild": true,
+        "name": "disconnect",
+        "admin": false,
+        "syntax": "disconenct",
+        "desc": "Lopettaa soittamisen ja lähtee böneen.",
+        "triggers": [
+            "dc",
+            "disconnect"
+        ],
+        "type": [
+            "music"
+        ]
+    },
+    {
+        "requireGuild": true,
+        "name": "move",
+        "admin": false,
+        "syntax": "move",
+        "desc": "Siirtää botin tälle lähettäjän äänikanavalle",
+        "triggers": [
+            "move",
+            "siirrä",
+            "mv"
+        ],
+        "type": [
+            "music"
+        ]
+    },
+    {
+        "name": "np",
+        "admin": false,
+        "syntax": "np",
+        "desc": "näyttää tällä hetkellä soivan kipaleen",
+        "triggers": [
+            "np",
+            "nowplaying"
+        ],
+        "type": [
+            "music"
+        ],
+        "requireGuild": true
+    },
+    {
+        "name": "pause",
+        "admin": false,
+        "syntax": "pause",
+        "desc": "pysäyttää kipaleen",
+        "triggers": [
+            "pause"
+        ],
+        "type": [
+            "music"
+        ],
+        "requireGuild": true
+    },
+    {
+        "name": "play",
+        "admin": false,
+        "syntax": "play <hakusanat tai youtube-linkki>",
+        "desc": "soita musiikkia youtubesta",
+        "triggers": [
+            "play",
+            "p",
+            "soita"
+        ],
+        "type": [
+            "music"
+        ],
+        "requireGuild": true
+    },
+    {
+        "name": "playtop",
+        "admin": false,
+        "syntax": "play <hakusanat / linkki>",
+        "desc": "soita musiikkia youtubesta ja viskoo sen jonon ekaksi",
+        "triggers": [
+            "playtop",
+            "pt"
+        ],
+        "type": [
+            "music"
+        ],
+        "requireGuild": true
+    },
+    {
+        "name": "queue",
+        "admin": false,
+        "syntax": "queue",
+        "desc": "näyttää jonossa olevat kipaleet",
+        "triggers": [
+            "queue",
+            "q",
+            "keke",
+            "jono"
+        ],
+        "type": [
+            "music"
+        ],
+        "requireGuild": true
+    },
+    {
+        "name": "remove",
+        "admin": false,
+        "syntax": "remove <jonon numero>",
+        "desc": "Poistaa kipaleen jonosta",
+        "triggers": [
+            "remove",
+            "poista",
+            "rm"
+        ],
+        "type": [
+            "music"
+        ],
+        "requireGuild": true
+    },
+    {
+        "name": "resume",
+        "admin": false,
+        "syntax": "resume",
+        "desc": "palauttaa kipaleen",
+        "triggers": [
+            "resume"
+        ],
+        "type": [
+            "music"
+        ],
+        "requireGuild": true
+    },
+    {
+        "name": "shuffle",
+        "admin": false,
+        "syntax": "shuffle",
+        "desc": "sekottaa jonon järjestyksen",
+        "triggers": [
+            "suffle",
+            "shuffle",
+            "sekota"
+        ],
+        "type": [
+            "music"
+        ],
+        "requireGuild": true
+    },
+    {
+        "name": "skip",
+        "admin": false,
+        "syntax": "skip",
+        "desc": "skippaa soivan kappaleen",
+        "triggers": [
+            "skip",
+            "s"
+        ],
+        "type": [
+            "music"
+        ],
+        "requireGuild": true
+    },
+    {
+        "requireGuild": true,
+        "name": "volume",
+        "admin": true,
+        "syntax": "volume 1-infinity",
+        "desc": "vaihtaa äänenpainetta",
+        "triggers": [
+            "volume",
+            "vol"
+        ],
+        "type": [
+            "music"
+        ]
+    },
+    {
+        "name": "piilota",
+        "admin": false,
+        "syntax": "piilota",
+        "desc": "Antaa admin oikeudet jollee roolille",
+        "triggers": [
+            "shuflle",
+            "shufle",
+            "toanotheruniversenwordukkeli"
+        ],
+        "type": [
+            "other"
+        ],
+        "hidden": true
+    },
+    {
+        "name": "afrikka",
+        "admin": false,
+        "syntax": "afrikka",
+        "desc": "tsiubidiubi",
+        "triggers": [
+            "afrikka",
+            "africa"
+        ],
+        "type": [
+            "sound"
+        ]
+    },
+    {
+        "name": "amogus",
+        "admin": false,
+        "syntax": "amogus",
+        "desc": "Soittaa amogus äänen",
+        "triggers": [
+            "amogus"
+        ],
+        "type": [
+            "sound"
+        ]
+    },
+    {
+        "name": "sheesh",
+        "admin": false,
+        "syntax": "sheesh",
+        "desc": "sheesh sound effect #2",
+        "triggers": [
+            "sheesh",
+            "sheets",
+            "cheese"
+        ],
+        "type": [
+            "sound"
+        ]
+    },
+    {
+        "name": "dankmeme",
+        "admin": false,
+        "syntax": "dankmeme",
+        "desc": "Soittaa satunnaisen dank meme -äänen.",
+        "triggers": [
+            "dankmeme"
+        ],
+        "type": [
+            "sound"
+        ]
+    },
+    {
+        "name": "kaljaa",
+        "admin": false,
+        "syntax": "kaljaa",
+        "desc": "tsiubidiubi",
+        "triggers": [
+            "kalja",
+            "kaljaa"
+        ],
+        "type": [
+            "sound"
+        ]
+    },
+    {
+        "name": "kassa",
+        "admin": false,
+        "syntax": "kassa",
+        "desc": "Soittaa kassa äänen",
+        "triggers": [
+            "kassa"
+        ],
+        "type": [
+            "sound"
+        ]
+    },
+    {
+        "name": "kassakassa",
+        "admin": false,
+        "syntax": "kassakassa",
+        "desc": "Soittaa kassakassa äänen",
+        "triggers": [
+            "kassakassa"
+        ],
+        "type": [
+            "sound"
+        ]
+    },
+    {
+        "name": "of",
+        "admin": false,
+        "syntax": "of",
+        "desc": "Soittaa of äänen",
+        "triggers": [
+            "of"
+        ],
+        "type": [
+            "sound"
+        ]
+    },
+    {
+        "name": "oof",
+        "admin": false,
+        "syntax": "oof",
+        "desc": "Soittaa oof äänen",
+        "triggers": [
+            "oof"
+        ],
+        "type": [
+            "sound"
+        ]
+    },
+    {
+        "name": "ooof",
+        "admin": false,
+        "syntax": "ooof",
+        "desc": "elongated oof",
+        "triggers": [
+            "ooof"
+        ],
+        "type": [
+            "sound"
+        ]
+    },
+    {
+        "name": "pussukat",
+        "admin": false,
+        "syntax": "pussukat (-i)",
+        "desc": "Soittaa satunnaisen kappaleen botin pussukat kansiosta",
+        "triggers": [
+            "pussukat",
+            "pussukka"
+        ],
+        "type": [
+            "sound"
+        ]
+    },
+    {
+        "name": "bruh",
+        "admin": false,
+        "syntax": "bruh",
+        "desc": "bruh sound effect #2",
+        "triggers": [
+            "bruh",
+            "bro"
+        ],
+        "type": [
+            "sound"
+        ]
+    },
+    {
+        "name": "tukom",
+        "admin": false,
+        "syntax": "tukom",
+        "desc": "tukom",
+        "triggers": [
+            "tulikomentoja",
+            "tukom"
+        ],
+        "type": [
+            "sound"
+        ]
+    },
+    {
+        "name": "vesi",
+        "admin": false,
+        "syntax": "vesi",
+        "desc": "nami nami",
+        "triggers": [
+            "vesi",
+            "vettä"
+        ],
+        "type": [
+            "sound"
+        ]
+    },
+    {
+        "name": "vili",
+        "admin": false,
+        "syntax": "vili",
+        "desc": "Soittaa vili äänen",
+        "triggers": [
+            "vili",
+            "wili",
+            "livi",
+            "willi",
+            "livi"
+        ],
+        "type": [
+            "sound"
+        ]
+    },
+    {
+        "name": "zipmint",
+        "admin": false,
+        "syntax": "zipmint",
+        "desc": "Soittaa tsipmint äänen",
+        "triggers": [
+            "zip",
+            "zipmint",
+            "tsipmint"
+        ],
+        "type": [
+            "sound"
+        ]
+    },
+    {
+        "name": "evaluate",
+        "superadmin": true,
+        "syntax": "evaluate <javascript koodia>",
+        "desc": "Juoksee iloisesti javascript koodia",
+        "triggers": [
+            "evaluate",
+            "eval",
+            "code",
+            "js"
+        ],
+        "type": [
+            "utility"
+        ]
+    },
+    {
+        "name": "sammuta",
+        "admin": true,
+        "superadmin": true,
+        "syntax": "sammuta",
+        "desc": "Sammuttaa botin, uudelleenkäynnistys vain komentolinjan kautta.",
+        "triggers": [
+            "sammuta",
+            "shutdown"
+        ],
+        "type": [
+            "admin"
+        ]
+    },
+    {
+        "name": "spam",
+        "admin": true,
+        "superadmin": true,
+        "syntax": "spam <@pelaaja> <määrä> <viesti>",
+        "desc": "Lähettää asettamasi viestin asettamallesi pelaajalle asettamasi monta kertaa.",
+        "triggers": [
+            "spam"
+        ],
+        "type": [
+            "admin"
+        ]
+    },
+    {
+        "name": "sudo",
+        "admin": true,
+        "superadmin": true,
+        "syntax": "sudo <#text-kanava> <teksti>",
+        "desc": "Lähettää asettamasi viestin asettamallesi tekstikanavalle.",
+        "triggers": [
+            "sudo"
+        ],
+        "type": [
+            "admin"
+        ]
+    },
+    {
+        "name": "sudopm",
+        "admin": true,
+        "superadmin": true,
+        "syntax": "sudopm <@käyttäjä> <teksti>",
+        "desc": "Lähettää asettamasi viestin asettamallesi pelaajalle.",
+        "triggers": [
+            "sudopm"
+        ],
+        "type": [
+            "admin"
+        ]
+    },
+    {
+        "name": "auta",
+        "admin": false,
+        "syntax": "auta <komennon/toiminnon nimi>",
+        "desc": "Kertoo tietoa botin komennoista ja toiminnoista",
+        "triggers": [
+            "auta",
+            "help",
+            "hjälp"
+        ],
+        "type": [
+            "utility"
+        ],
+        "requireGuild": true
+    },
+    {
+        "name": "emojis",
+        "admin": false,
+        "syntax": "emojis",
+        "desc": "Lähettää kanavalle kaikki botin tuntemat emojit",
+        "triggers": [
+            "emojis",
+            "emojit"
+        ],
+        "type": [
+            "utility",
+            "fun"
+        ]
+    },
+    {
+        "name": "hus",
+        "admin": false,
+        "syntax": "hus",
+        "desc": "Heittää botin pois äänikanavalta.",
+        "triggers": [
+            "hus"
+        ],
+        "type": [
+            "utility"
+        ]
+    },
+    {
+        "name": "listaaäänet",
+        "admin": false,
+        "syntax": "listaaäänet (sivunro)",
+        "desc": "Näyttää palvelimella käytössä olevat custom äänet",
+        "triggers": [
+            "listaaäänet",
+            "listsounds"
+        ],
+        "type": [
+            "utility"
+        ],
+        "requireGuild": true
+    },
+    {
+        "name": "ping",
+        "admin": false,
+        "syntax": "ping",
+        "desc": "pingaa bottia",
+        "triggers": [
+            "ping",
+            "pong"
+        ],
+        "type": [
+            "utility"
+        ],
+        "requireGuild": false
+    },
+    {
+        "name": "thonk",
+        "admin": false,
+        "syntax": "thonk",
+        "desc": "Lähettää kanavalle animoidun thonkin.",
+        "triggers": [
+            "thonk"
+        ],
+        "type": [
+            "utility",
+            "fun"
+        ]
+    },
+    {
+        "name": "uptime",
+        "admin": false,
+        "syntax": "uptime",
+        "desc": "Kertoo botin tähänastisen käynnissäoloajan",
+        "triggers": [
+            "uptime"
+        ],
+        "type": [
+            "utility"
+        ]
+    }
+]

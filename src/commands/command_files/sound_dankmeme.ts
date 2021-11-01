@@ -15,7 +15,7 @@ let fileArray = ['./assets/sound/meme.mp3', './assets/sound/meme2.mp3', './asset
 
 const executor: CommandExecutor = async (message, client, args) => {
     let soundfile = `./assets/sound/${randomFromArray(fileArray)}`
-    playSound({ soundfile, message })
+    playSound({ soundfile, message, exitAfter: true })
 }
 
 export default new Command({

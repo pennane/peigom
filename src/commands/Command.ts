@@ -9,8 +9,8 @@ export interface CommandConfiguration {
     name: string
     syntax: string
     desc: string
-    triggers: Array<string>
-    type: Array<string>
+    triggers: readonly string[]
+    type: readonly string[]
     admin?: boolean
     superadmin?: boolean
     hidden?: boolean

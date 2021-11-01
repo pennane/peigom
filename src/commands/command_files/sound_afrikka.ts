@@ -13,7 +13,7 @@ const configuration: CommandConfiguration = {
 const soundfile = './assets/sound/afrikka.mp3'
 
 const executor: CommandExecutor = async (message, client, args) => {
-    playSound({ soundfile, message })
+    playSound({ soundfile, message, exitAfter: true })
 }
 
 export default new Command({

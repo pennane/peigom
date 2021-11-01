@@ -43,7 +43,7 @@ const executor: CommandExecutor = async (message, client, args) => {
         return
     }
 
-    playSound({ soundfile, message })
+    playSound({ soundfile, message, exitAfter: true })
     message.channel.send({
         content: targetUser.toString(),
         files: [

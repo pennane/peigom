@@ -13,5 +13,5 @@ export const executor: SoundCommandExecutor = async (message, client, args, soun
     const guild = message.guild
     if (!guild) return
     const fileName = `./assets/createsound/guilds/${guild.id}/${sound.file}`
-    playSound({ soundfile: fileName, message })
+    playSound({ soundfile: fileName, message, exitAfter: true })
 }

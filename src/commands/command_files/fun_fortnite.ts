@@ -2,13 +2,6 @@ import playSound from '../../sound_handling/playSound'
 import dancemoves from '../../assets/fortnite/dancemoves'
 import Command, { CommandExecutor } from '../Command'
 import { queueMethods } from '../../sound_handling/sound'
-import {
-    generateDependencyReport,
-    joinVoiceChannel,
-    createAudioPlayer,
-    createAudioResource,
-    AudioPlayerStatus
-} from '@discordjs/voice'
 
 const configuration = {
     name: 'fortnite',
@@ -42,7 +35,7 @@ const executor: CommandExecutor = async (message, client, args) => {
         return
     }
 
-    playSound({ soundfile, message })
+    playSound({ soundfile, message, exitAfter: true })
     dancemoves.forEach((move, i) => {
         setTimeout(() => {
             message.channel.send(move)
