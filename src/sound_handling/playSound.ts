@@ -1,17 +1,24 @@
 import Discord from 'discord.js'
-import activityLogger from '../lib/activityLogger'
 import { queueMethods } from './sound'
 import Command from '../commands/Command'
 import {
-    generateDependencyReport,
     joinVoiceChannel,
     createAudioPlayer,
     createAudioResource,
-    AudioPlayerStatus
+    AudioPlayerStatus,
+    VoiceConnectionStatus
 } from '@discordjs/voice'
 
-const play = async function ({ soundfile, message }: { soundfile: string; message: Discord.Message }) {
-    try {
+const play = function ({
+    soundfile,
+    message,
+    exitAfter
+}: {
+    soundfile: string
+    message: Discord.Message
+    exitAfter: boolean
+}) {
+    return new Promise<void>((resolve, reject) => {
         if (!message.member || !message.guild) return
 
         let voiceChannel = message.member?.voice.channel
@@ -54,20 +61,21 @@ const play = async function ({ soundfile, message }: { soundfile: string; messag
 
         connection.subscribe(player)
 
-        player.on('error', (error) => {
-            throw error
+        connection.on(VoiceConnectionStatus.Destroyed, (a) => {
+            return reject()
         })
 
-        player.on(AudioPlayerStatus.Idle, () => {
-            if (connection) {
+        connection.on(VoiceConnectionStatus.Disconnected, (a) => {
+            return reject()
+        })
+
+        player.on(AudioPlayerStatus.Idle, (a) => {
+            if (connection && exitAfter) {
                 connection.destroy()
             }
+            return resolve()
         })
-    } catch (error) {
-        activityLogger.log({ id: 32, content: 'Error in playsound', error })
-    } finally {
-        return
-    }
+    })
 }
 
 export default play
