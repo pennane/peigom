@@ -6,7 +6,7 @@ import { arrayToChunks, randomFromArray } from '../../lib/util'
 const configuration: CommandConfiguration = {
     name: 'pussukat',
     admin: false,
-    syntax: 'pussukat -i | --infinite | lista | <tiedosto_nimi>',
+    syntax: 'pussukat -i | infinite | lista | <tiedosto_nimi> | next',
     desc: 'Soittaa kappaleen botin pussukkakansiosta',
     triggers: ['pussukat', 'pussukka'],
     type: ['sound']
@@ -27,9 +27,18 @@ const getSoundFileName = () => {
 const fileChunks = arrayToChunks(embedFileArray, 18)
 const pageCount = fileChunks.length
 
+const guildPlayCount: Map<string, number> = new Map()
+const guildPlayDate: Map<string, number> = new Map()
+
 const executor: CommandExecutor = async (message, client, args) => {
+    if (!message.guild) return
+
     const embed = Command.createEmbed()
     embed.setTitle('Pussukka')
+
+    const now = Date.now()
+
+    guildPlayDate.set(message.guild.id, now)
 
     if (args[1] === 'list' || args[1] === 'l' || args[1] == 'lista') {
         let pageNumber = parseInt(args[2]) - 1 || 0
@@ -45,7 +54,7 @@ const executor: CommandExecutor = async (message, client, args) => {
     }
 
     const voiceChannel = message.member?.voice.channel
-    const isInfinite = args[1] === '-i' || args[1] === '--infinite'
+    const isInfinite = args[1] === '-i' || args[1] === 'infinite' || args[1] === 'next'
     const isSpecificTrack =
         !isInfinite &&
         args[1] &&
@@ -71,9 +80,20 @@ const executor: CommandExecutor = async (message, client, args) => {
         return
     }
 
-    let plays = 0
+    let plays: number
+
+    if (args[1] === 'next') {
+        plays = guildPlayCount.get(message.guild.id) || 0
+    } else {
+        plays = 0
+        guildPlayCount.set(message.guild.id, 0)
+    }
 
     const handleEnd = () => {
+        if (!message.guild) return
+        if (now !== guildPlayDate.get(message.guild.id)) return
+        guildPlayCount.set(message.guild.id, 0)
+
         if (plays > 1) {
             message.channel.send('Sheeesh, soitin just ' + plays + ' yhtenäistä pussukkaa')
         }
@@ -93,6 +113,9 @@ const executor: CommandExecutor = async (message, client, args) => {
         }
 
         plays++
+        if (message.guild) {
+            guildPlayCount.set(message.guild.id, plays)
+        }
 
         try {
             embed.setDescription(fileName)
