@@ -63,7 +63,7 @@ const executor: CommandExecutor = async (message, client, args) => {
 
     function syntaxInfo() {
         let embed = new Discord.MessageEmbed().setColor(0xf4e542)
-        embed.setTitle(`Komento ${configuration.name} toimii näin:`).setDescription(`\`${syntax}\``)
+        embed.setTitle(`Komento ${configuration.name} toimii näin:`).setDescription(`\`${PREFIX}${syntax}\``)
         return embed
     }
 
