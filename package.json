@@ -31,7 +31,7 @@
     "node-schedule": "^2.0.0",
     "sharp": "^0.28.3",
     "simple-youtube-api": "^5.2.1",
-    "urban-dictionary": "^3.0.1",
+    "urban-dictionary": "^3.0.2",
     "ytdl-core": "^4.9.1"
   },
   "devDependencies": {
