@@ -40,18 +40,26 @@ const executor: CommandExecutor = async (message, client, args) => {
         return
     }
 
-    let animationName = args[1].toLowerCase()
-
     let animationNames = animations.map((animation) => animation.name.toLowerCase())
 
+    if (!args[1]) {
+        embed
+            .setTitle(`Lista saatavailla olevista animaatioista:`)
+            .setDescription(`\`${animationNames}\``)
+            .setFooter('Käyttöesimerkki: ' + PREFIX + configuration.name + ' ' + animationNames[0])
+        await message.channel.send({ embeds: [embed] })
+        return
+    }
+
+    let animationName = args[1].toLowerCase()
     let animation = animations.find((animation) => animation.name.toLowerCase() === animationName.toLowerCase())
 
     if (!animation) {
         embed
             .setTitle(`Lista saatavailla olevista animaatioista:`)
             .setDescription(`\`${animationNames}\``)
-            .setFooter('Esim: ' + PREFIX + configuration.name + ' ' + animationNames[0])
-        message.channel.send({ embeds: [embed] })
+            .setFooter('Käyttöesimerkki: ' + PREFIX + configuration.name + ' ' + animationNames[0])
+        await message.channel.send({ embeds: [embed] })
         return
     }
 
