@@ -4,6 +4,7 @@ import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 const configuration: CommandConfiguration = {
     name: 'emojis',
     admin: false,
+    superadmin: true,
     syntax: 'emojis',
     desc: 'Lähettää kanavalle kaikki botin tuntemat emojit',
     triggers: ['emojis', 'emojit'],
