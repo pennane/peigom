@@ -41,7 +41,7 @@ client.on('ready', () => {
     infoUpdater.init({ client, timing })
 })
 
-client.on('message', async (message) => {
+client.on('messageCreate', async (message) => {
     if (message.author.bot || message.guild === null) return
     messageHandler.parse(message, client)
 })
