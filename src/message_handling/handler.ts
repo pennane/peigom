@@ -85,8 +85,6 @@ const handler = {
         } else if (viableCommand) {
             ;(command as Command).execute(message, client, args)
         }
-
-        return
     }
 }
 

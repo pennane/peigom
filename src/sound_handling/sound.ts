@@ -1,5 +1,5 @@
 import { YOUTUBE_API_KEY } from '../lib/config'
-import Discord, { Util } from 'discord.js'
+import Discord, { Util, Snowflake } from 'discord.js'
 import {
     joinVoiceChannel,
     createAudioPlayer,
@@ -17,7 +17,7 @@ const Youtube = require('simple-youtube-api')
 
 export const yt = new Youtube(YOUTUBE_API_KEY)
 
-const QueueMap: Map<string, ServerQueue> = new Map()
+const QueueMap: Map<Snowflake, ServerQueue> = new Map()
 
 export interface Track extends videoInfo {
     requestedBy?: Discord.GuildMember
@@ -43,7 +43,7 @@ interface AddArguments {
     track: Track
 }
 
-const shiftToNextResource = (guild: Discord.Guild): AudioResource<null> | null => {
+const shiftToNextResource = (guild: Discord.Guild): AudioResource | null => {
     const serverQueue = QueueMap.get(guild.id)
     if (!serverQueue) return null
 
