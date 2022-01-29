@@ -29,10 +29,10 @@
     "js-beautify": "^1.14.0",
     "libsodium-wrappers": "^0.7.9",
     "node-schedule": "^2.0.0",
-    "sharp": "^0.28.3",
+    "sharp": "^0.29.3",
     "simple-youtube-api": "^5.2.1",
     "urban-dictionary": "^3.0.2",
-    "ytdl-core": "^4.9.1"
+    "ytdl-core": "^4.10.0"
   },
   "devDependencies": {
     "@types/js-beautify": "^1.13.2",
