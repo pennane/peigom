@@ -20,7 +20,7 @@
     "url": "https://github.com/Pennane/peigom-bot.git"
   },
   "dependencies": {
-    "@discordjs/opus": "^0.5.3",
+    "@discordjs/opus": "^0.8.0",
     "@discordjs/voice": "^0.6.0",
     "chalk": "^4.1.2",
     "discord.js": "^13.1.0",
