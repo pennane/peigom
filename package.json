@@ -25,7 +25,7 @@
     "chalk": "^4.1.2",
     "discord.js": "^13.1.0",
     "dotenv": "^10.0.0",
-    "file-type": "^16.5.3",
+    "file-type": "^16.5.4",
     "js-beautify": "^1.14.0",
     "libsodium-wrappers": "^0.7.9",
     "node-schedule": "^2.0.0",
