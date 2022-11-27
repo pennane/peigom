@@ -5,7 +5,7 @@ if (!fs.existsSync('./data/disabledChannels/channels.json')) {
     fs.writeFileSync('./data/disabledChannels/channels.json', '{}')
 }
 
-export let disabledChannels = JSON.parse(fs.readFileSync('./data/disabledChannels/channels.json', 'utf8'))
+export const disabledChannels = JSON.parse(fs.readFileSync('./data/disabledChannels/channels.json', 'utf8'))
 
 const configuration: CommandConfiguration = {
     name: 'bottitoimiitäällä',
@@ -19,7 +19,7 @@ const configuration: CommandConfiguration = {
 
 const executor: CommandExecutor = async (message, client, args) => {
     const sendHowToUse = () => {
-        let embed = Command.syntaxEmbed({ configuration })
+        const embed = Command.syntaxEmbed({ configuration })
         message.channel.send({ embeds: [embed] }).catch((err) => console.info(err))
     }
 
@@ -35,12 +35,12 @@ const executor: CommandExecutor = async (message, client, args) => {
     if (!args[2]) {
         channelId = message.channel.id
     } else {
-        let matched = args[1].match(/\d+/)
+        const matched = args[1].match(/\d+/)
         if (!matched) return sendHowToUse()
         channelId = matched[0]
     }
 
-    let targetChannel = message.guild.channels.cache.find((channel) => channel.id === channelId)
+    const targetChannel = message.guild.channels.cache.find((channel) => channel.id === channelId)
 
     if (!targetChannel) {
         sendHowToUse()

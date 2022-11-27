@@ -14,7 +14,7 @@ const configuration: ImageCommandConfiguration = {
 const manipulator: CommandBaseImageManipulator = (sharp, message, client, args) => {
     if (!args[1]) return sharp
 
-    let stringToBeEvaluated = [...args].splice(2).join(' ')
+    const stringToBeEvaluated = [...args].splice(2).join(' ')
 
     let s
 

@@ -62,7 +62,7 @@ const executor: CommandExecutor = async (message, client, args) => {
     const daily = rahaConfiguration.daily
 
     function syntaxInfo() {
-        let embed = new Discord.MessageEmbed().setColor(0xf4e542)
+        const embed = new Discord.MessageEmbed().setColor(0xf4e542)
         embed.setTitle(`Komento ${configuration.name} toimii näin:`).setDescription(`\`${PREFIX}${syntax}\``)
         return embed
     }
@@ -86,11 +86,11 @@ const executor: CommandExecutor = async (message, client, args) => {
         }
     }
 
-    let userId = message.author.id
+    const userId = message.author.id
     let userObject = userData.find((user) => user.id === userId)
 
     if (!userObject) {
-        let newUserObject = createUserObject({ id: message.author.id, username: message.author.username })
+        const newUserObject = createUserObject({ id: message.author.id, username: message.author.username })
         userData.push(newUserObject)
         userObject = userData.find((user) => user.id === userId)
     }
@@ -107,15 +107,15 @@ const executor: CommandExecutor = async (message, client, args) => {
         return
     }
 
-    let command = args[1].toLowerCase()
+    const command = args[1].toLowerCase()
 
     switch (command) {
         case 'saldo': {
-            let targetId = args[2] ? args[2].replace(/\D/g, '') : undefined
-            let target = targetId ? userData.find((user) => user.id === targetId) : userObject
+            const targetId = args[2] ? args[2].replace(/\D/g, '') : undefined
+            const target = targetId ? userData.find((user) => user.id === targetId) : userObject
 
             if (!target) {
-                let embed = new Discord.MessageEmbed()
+                const embed = new Discord.MessageEmbed()
                     .setColor(0xf4e542)
                     .setTitle(`Käyttäjä ${message.author.username}, huomaa:`)
                     .setDescription(`Antamasi ukkeli ei ole uhkapelannut.`)
@@ -123,24 +123,24 @@ const executor: CommandExecutor = async (message, client, args) => {
                 return
             }
 
-            let embed = new Discord.MessageEmbed().setColor(0xf4e542)
+            const embed = new Discord.MessageEmbed().setColor(0xf4e542)
             embed.setTitle(`${target.username} balanssi:`).setDescription(`${target.credits} kolea`)
             message.channel.send({ embeds: [embed] }).catch((error) => console.info(error))
             return
         }
         case 'uhkapeli': {
             function didWin() {
-                let result = Math.round(Math.random())
+                const result = Math.round(Math.random())
                 return result === 1
             }
 
-            let credits = Number(userObject.credits)
+            const credits = Number(userObject.credits)
 
-            let gambleAmount = parseInt(args[2])
+            const gambleAmount = parseInt(args[2])
 
             function handleWin(message: Discord.Message, original: Discord.Message) {
                 if (!userObject) return
-                let embed = new Discord.MessageEmbed()
+                const embed = new Discord.MessageEmbed()
                     .setColor(0xf4e542)
                     .setTitle(`Käyttäjä ${original.author.username} uhkapelaa ${gambleAmount} kolikolla. Lets mennään.`)
                     .setDescription(`:game_die: Voitto! Sait ${gambleAmount} kolikkoa :game_die:`)
@@ -150,7 +150,7 @@ const executor: CommandExecutor = async (message, client, args) => {
 
             function handleLose(message: Discord.Message, original: Discord.Message) {
                 if (!userObject) return
-                let embed = new Discord.MessageEmbed()
+                const embed = new Discord.MessageEmbed()
                     .setColor(0xf4e542)
                     .setTitle(`Käyttäjä ${original.author.username} uhkapelaa ${gambleAmount} kolikolla. Lets mennään.`)
                     .setDescription(`:game_die: Häviö! Hävisit ${args[2]} kolikkoa :game_die:`)
@@ -159,7 +159,7 @@ const executor: CommandExecutor = async (message, client, args) => {
             }
 
             if (!gambleAmount || gambleAmount <= 0) {
-                let embed = new Discord.MessageEmbed()
+                const embed = new Discord.MessageEmbed()
                     .setColor(0xf4e542)
                     .setTitle(`Käyttäjä ${message.author.username}, huomaa:`)
                     .setDescription(`Asettamasi rahasumma on olematon tai ylihärö`)
@@ -168,7 +168,7 @@ const executor: CommandExecutor = async (message, client, args) => {
             }
 
             if (gambleAmount > credits) {
-                let embed = new Discord.MessageEmbed()
+                const embed = new Discord.MessageEmbed()
                     .setColor(0xf4e542)
                     .setTitle(`Käyttäjä ${message.author.username}, huomaa:`)
                     .setDescription(`Olet köyhimys. Rahasi eivät riitä.`)
@@ -176,13 +176,13 @@ const executor: CommandExecutor = async (message, client, args) => {
                 return
             }
 
-            let startMessage = new Discord.MessageEmbed()
+            const startMessage = new Discord.MessageEmbed()
                 .setColor(0xf4e542)
                 .setTitle(`Käyttäjä ${message.author.username} uhkapelaa ${gambleAmount} kolikolla. Lets mennään.`)
                 .setDescription(`:game_die:`)
 
             message.channel.send({ embeds: [startMessage] }).then((sentMessage) => {
-                let won = didWin()
+                const won = didWin()
                 setTimeout(() => {
                     if (!userObject) return
 
@@ -198,7 +198,7 @@ const executor: CommandExecutor = async (message, client, args) => {
         }
         case 'lahjoita': {
             if (!args[3]) {
-                let embed = new Discord.MessageEmbed()
+                const embed = new Discord.MessageEmbed()
                     .setColor(0xf4e542)
                     .setTitle(`Käyttäjä ${message.author.username}, huomaa:`)
                     .setDescription(`${PREFIX}raha lahjoita <@käyttäjä> <määrä>`)
@@ -206,10 +206,10 @@ const executor: CommandExecutor = async (message, client, args) => {
                 return
             }
 
-            let donationAmount = parseInt(args[3])
+            const donationAmount = parseInt(args[3])
 
             if (!donationAmount || donationAmount <= 0) {
-                let embed = new Discord.MessageEmbed()
+                const embed = new Discord.MessageEmbed()
                     .setColor(0xf4e542)
                     .setTitle(`Käyttäjä ${message.author.username}, huomaa:`)
                     .setDescription(`${PREFIX}raha lahjoita <@käyttäjä> <määrä>`)
@@ -217,10 +217,10 @@ const executor: CommandExecutor = async (message, client, args) => {
                 return
             }
 
-            let credits = Number(userObject.credits)
+            const credits = Number(userObject.credits)
 
             if (donationAmount > credits) {
-                let embed = new Discord.MessageEmbed()
+                const embed = new Discord.MessageEmbed()
                     .setColor(0xf4e542)
                     .setTitle(`Käyttäjä ${message.author.username}, huomaa:`)
                     .setDescription(`Olet köyhä. Köyhänä ei lahjoitella tuollaisia summia.`)
@@ -228,12 +228,12 @@ const executor: CommandExecutor = async (message, client, args) => {
                 return
             }
 
-            let receiverId = args[2].replace(/\D/g, '')
+            const receiverId = args[2].replace(/\D/g, '')
 
-            let receiver = userData.find((user) => user.id === receiverId)
+            const receiver = userData.find((user) => user.id === receiverId)
 
             if (!receiver) {
-                let embed = new Discord.MessageEmbed()
+                const embed = new Discord.MessageEmbed()
                     .setColor(0xf4e542)
                     .setTitle(`Käyttäjä ${message.author.username}, huomaa:`)
                     .setDescription(
@@ -246,7 +246,7 @@ const executor: CommandExecutor = async (message, client, args) => {
             receiver.credits = receiver.credits + donationAmount
             userObject.credits = userObject.credits - donationAmount
 
-            let embed = new Discord.MessageEmbed()
+            const embed = new Discord.MessageEmbed()
                 .setColor(0xf4e542)
                 .setTitle(`${message.author.username}, huomaa:`)
                 .setDescription(`Lahjoitit ${parseInt(args[2])} kolikkoa onnistuneesti!`)
@@ -258,11 +258,11 @@ const executor: CommandExecutor = async (message, client, args) => {
             return
         }
         case 'palkka': {
-            let claimedInLast24h = Date.now() - userObject.whenClaimed < 86400000
+            const claimedInLast24h = Date.now() - userObject.whenClaimed < 86400000
 
             if (claimedInLast24h) {
-                let embed = new Discord.MessageEmbed().setColor(0xf4e542)
-                let timeremaining = Math.round(
+                const embed = new Discord.MessageEmbed().setColor(0xf4e542)
+                const timeremaining = Math.round(
                     (((userObject.whenClaimed + 86400000 - Date.now()) / 1000 / 60 / 60) * 100) / 100
                 )
                 embed
@@ -274,7 +274,7 @@ const executor: CommandExecutor = async (message, client, args) => {
                 return
             }
 
-            let embed = new Discord.MessageEmbed()
+            const embed = new Discord.MessageEmbed()
                 .setColor(0xf4e542)
                 .setTitle(`${message.author.username}, huomaa:`)
                 .setDescription(`Sait päivän palkan, eli ${daily} kolikkelia.`)

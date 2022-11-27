@@ -10,7 +10,7 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
-    let embed = Command.createEmbed()
+    const embed = Command.createEmbed()
     embed.setTitle('Botin uptime:')
 
     if (!client?.uptime) {
@@ -19,13 +19,13 @@ const executor: CommandExecutor = async (message, client, args) => {
         return
     }
 
-    let totalSeconds = client.uptime / 1000,
+    const totalSeconds = client.uptime / 1000,
         h = Math.trunc(totalSeconds / 3600),
         totalRemainder = totalSeconds % 3600,
         m = Math.trunc(totalRemainder / 60),
         s = Math.trunc(totalRemainder % 60)
 
-    let up = {
+    const up = {
         h: '',
         m: '',
         s: ''

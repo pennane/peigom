@@ -28,23 +28,23 @@ const evaluateCode = async (code: string): Promise<any> => {
 
 const executor: CommandExecutor = async (message, client, args) => {
     if (!args[1]) {
-        let embed = syntaxEmbed({ configuration })
+        const embed = syntaxEmbed({ configuration })
         return message.reply({ embeds: [embed] })
     }
 
-    let stringToBeEvaluated = [...args].splice(1).join(' ')
+    const stringToBeEvaluated = [...args].splice(1).join(' ')
 
-    let evaluated = await evaluateCode(stringToBeEvaluated)
+    const evaluated = await evaluateCode(stringToBeEvaluated)
 
     if (!evaluated) return
 
-    let beautified = beautify(evaluated)
+    const beautified = beautify(evaluated)
 
-    let parts = Util.splitMessage(beautified, { maxLength: 5000 })
+    const parts = Util.splitMessage(beautified, { maxLength: 5000 })
 
     parts.forEach((part, i) => {
-        let embed = Command.createEmbed()
-        let fields = Util.splitMessage(part, { maxLength: 1000 })
+        const embed = Command.createEmbed()
+        const fields = Util.splitMessage(part, { maxLength: 1000 })
         fields.forEach((field) => {
             embed.addField('\u200b', `\`\`\`js\n${field}\n\`\`\``)
         })

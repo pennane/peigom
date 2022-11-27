@@ -16,12 +16,12 @@ const executor: CommandExecutor = async (message, client, args) => {
         return
     }
 
-    let toDefine = args.slice(1).join(' ')
+    const toDefine = args.slice(1).join(' ')
 
     try {
-        let results = await dictionary.define(toDefine)
-        let entry = results[0]
-        let embed = Command.createEmbed()
+        const results = await dictionary.define(toDefine)
+        const entry = results[0]
+        const embed = Command.createEmbed()
         embed.setTitle('Urbanaba Sanababa')
         embed.addField(
             toDefine,

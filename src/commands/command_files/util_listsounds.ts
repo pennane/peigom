@@ -18,7 +18,7 @@ const executor: CommandExecutor = async (message, client, args) => {
     const customSounds = await readSoundData(message.guild)
     const soundNames = Object.keys(customSounds)
 
-    let embed = Command.createEmbed()
+    const embed = Command.createEmbed()
 
     if (soundNames.length === 0) {
         message.channel.send('Ei custom äänikomentoja.')
@@ -33,7 +33,7 @@ const executor: CommandExecutor = async (message, client, args) => {
     if (pageNumber < 0) pageNumber = 0
     else if (pageNumber > pageCount - 1) pageNumber = pageNumber - 1
 
-    let currentPageSoundNames = soundNameChunks[pageNumber]
+    const currentPageSoundNames = soundNameChunks[pageNumber]
 
     embed.setTitle('Custom äänikomennot')
     currentPageSoundNames.forEach((soundName) => {

@@ -27,21 +27,21 @@ const executor: CommandExecutor = async (message, client, args) => {
         return message.reply('Oops, sori oot vissii joku admin kid.').catch((err) => console.info(err))
     }
 
-    let clientMember = message.guild?.members.cache.get(client.user.id)
+    const clientMember = message.guild?.members.cache.get(client.user.id)
 
     if (!clientMember || !clientMember.permissions.has(Permissions.FLAGS.MANAGE_NICKNAMES)) {
         message.reply('Jaha, no eipä mulla ollukkaa oikeuksia pistää sua turpaa.')
         return
     }
 
-    let clientHierarchy = clientMember.roles.cache.reduce((a: number, c: Role) => (c.position > a ? c.position : a), 0)
+    const clientHierarchy = clientMember.roles.cache.reduce((a: number, c: Role) => (c.position > a ? c.position : a), 0)
 
     if (message.member.roles.cache.some((role) => role.position > clientHierarchy)) {
         message.reply('Jaha, no eipä mulla ollukkaa oikeuksia pistää sua turpaa.')
         return
     }
 
-    let nickName = randomFromArray(names)
+    const nickName = randomFromArray(names)
 
     await message.member.setNickname(nickName)
     message.reply(`Miltäs uusi kaunis nimesi '${nickName}' tuntuu, hä?`)

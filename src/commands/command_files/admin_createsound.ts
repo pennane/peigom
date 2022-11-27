@@ -61,18 +61,18 @@ const executor: CommandExecutor = async (message, client, args) => {
     const soundFileExtensions = ['mp3']
 
     const sendHowToUse = () => {
-        let embed = Command.syntaxEmbed({ configuration })
+        const embed = Command.syntaxEmbed({ configuration })
         message.channel.send({ embeds: [embed] }).catch((err) => console.info(err))
     }
 
-    let soundCommandName = args[1]
+    const soundCommandName = args[1]
 
     if (!soundCommandName || soundCommandName === null) {
         sendHowToUse()
         return
     }
 
-    let attachedSoundFile = message.attachments.find((file) =>
+    const attachedSoundFile = message.attachments.find((file) =>
         soundFileExtensions.some((ext) => file.name?.toLowerCase()?.endsWith(ext.toLocaleLowerCase()))
     )
 
@@ -89,9 +89,9 @@ const executor: CommandExecutor = async (message, client, args) => {
     const loadedCommands = await getLoadedCommands()
     const loadedBaseTriggers = loadedCommands.triggers
 
-    let identifier = Date.now() + '-' + Math.round(Math.random() * 100000)
-    let fileName = `${args[1].toLowerCase()}-${identifier}.mp3`
-    let target = `./assets/createsound/guilds/${message.guild.id}/${fileName}`
+    const identifier = Date.now() + '-' + Math.round(Math.random() * 100000)
+    const fileName = `${args[1].toLowerCase()}-${identifier}.mp3`
+    const target = `./assets/createsound/guilds/${message.guild.id}/${fileName}`
 
     if (soundCommandName in loadedBaseTriggers) {
         message.channel.send('Nimi on jo käytössä')
@@ -137,7 +137,7 @@ const executor: CommandExecutor = async (message, client, args) => {
 
     await writeSoundData(message.guild, newData)
 
-    let embed = Command.createEmbed()
+    const embed = Command.createEmbed()
     embed.setTitle(`Ääni luotu palvelimeen ${message.guild.name} !`)
     embed.setDescription(`Komento \`${PREFIX}${soundCommandName}\` on nyt käytössä.`)
     message.channel.send({ embeds: [embed] })

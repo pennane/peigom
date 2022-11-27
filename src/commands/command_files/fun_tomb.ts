@@ -10,12 +10,12 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
-    let embed = Command.createEmbed()
+    const embed = Command.createEmbed()
     embed.setTitle(`OLET TEHNYT TUHMUUKSIA!`).setDescription('NYT RIITTAEAE VANDALISOINTI')
-    let sentMessage = await message.channel.send({ embeds: [embed] })
+    const sentMessage = await message.channel.send({ embeds: [embed] })
     setTimeout(async () => {
         embed.setDescription('NYT RIITTAEAE VANDALISOINTI\nTAEAE ON NYT TEIKAEN HAUTA')
-        let editedMessage = await sentMessage.edit({ embeds: [embed] })
+        const editedMessage = await sentMessage.edit({ embeds: [embed] })
         setTimeout(function () {
             embed.setDescription('NYT RIITTAEAE VANDALISOINTI\nTAEAE ON NYT TEIKAEN HAUTA\nOLET HERAETTYNYT MEIDAET')
             editedMessage.edit({ embeds: [embed] })

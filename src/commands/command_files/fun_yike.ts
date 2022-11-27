@@ -11,14 +11,14 @@ const configuration: CommandConfiguration = {
     type: ['fun', 'sound']
 }
 
-let soundfile = './assets/misc/yike/yike.mp3'
+const soundfile = './assets/misc/yike/yike.mp3'
 
 const executor: CommandExecutor = async (message, client, args) => {
     if (!message.guild) return
 
-    let targetUser = args[1] ? message.guild.members.cache.get(args[1].replace(/\D/g, '')) : false
+    const targetUser = args[1] ? message.guild.members.cache.get(args[1].replace(/\D/g, '')) : false
     if (!targetUser) {
-        let embed = Command.createEmbed()
+        const embed = Command.createEmbed()
         embed
             .setTitle(`Botin kommentti:`)
             .setDescription(`${message.author.username} ei tollasille voi antaa yikejä. (yike \<@user>)`)
@@ -26,9 +26,9 @@ const executor: CommandExecutor = async (message, client, args) => {
         return
     }
 
-    let voiceChannel = targetUser.voice.channel
+    const voiceChannel = targetUser.voice.channel
 
-    let botVoiceConnection = getVoiceConnection(message.guild.id)
+    const botVoiceConnection = getVoiceConnection(message.guild.id)
 
     if (!voiceChannel || botVoiceConnection) {
         message.channel.send({

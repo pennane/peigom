@@ -14,16 +14,16 @@ const executor: CommandExecutor = async (message, client, args) => {
         return message.channel.send({ embeds: [Command.syntaxEmbed({ configuration })] })
     }
 
-    let voteArgs = args.slice(1)
+    const voteArgs = args.slice(1)
 
-    let embed = Command.createEmbed()
+    const embed = Command.createEmbed()
 
     embed
         .setTitle(`Käyttäjän ${message.author.username} äänestys`)
         .setDescription(`${voteArgs.join(' ')}`)
         .setTimestamp()
 
-    let voteMessage = await message.channel.send({ embeds: [embed] })
+    const voteMessage = await message.channel.send({ embeds: [embed] })
     message.deletable ? message.delete() : null
     await voteMessage.react('👍')
     voteMessage.react('👎')

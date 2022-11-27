@@ -12,13 +12,13 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
-    let emojis = client.emojis.cache
+    const emojis = client.emojis.cache
     let emojiMessage = ''
     emojis.forEach((emoji) => {
         if (!emoji.available) return
         emojiMessage += `${emoji.toString()} `
     })
-    let splitMessage = Util.splitMessage(emojiMessage, { char: ' ' })
+    const splitMessage = Util.splitMessage(emojiMessage, { char: ' ' })
     splitMessage.forEach((content) => {
         message.channel.send(content)
     })

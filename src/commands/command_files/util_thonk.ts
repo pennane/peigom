@@ -11,13 +11,13 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
-    let hasEmoji = client.emojis.cache.some((emoji) => emoji.id === '443343009229045760')
+    const hasEmoji = client.emojis.cache.some((emoji) => emoji.id === '443343009229045760')
 
     let hasPermissions: boolean
 
     if (message.guild) {
-        let channel = message.channel as Discord.TextChannel
-        let permissions = message.guild.me ? channel.permissionsFor(message.guild.me) : null
+        const channel = message.channel as Discord.TextChannel
+        const permissions = message.guild.me ? channel.permissionsFor(message.guild.me) : null
         if (!permissions) {
             hasPermissions = false
         } else {

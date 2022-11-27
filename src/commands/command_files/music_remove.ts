@@ -13,11 +13,11 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
-    let guild = message.guild
+    const guild = message.guild
 
     if (!guild) return
 
-    let toRemove = Number(args[1])
+    const toRemove = Number(args[1])
     if (isNaN(toRemove)) return
     queueMethods.remove({ guild: guild, message: message, toRemove: toRemove })
 }

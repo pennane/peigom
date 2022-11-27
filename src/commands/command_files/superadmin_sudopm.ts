@@ -11,13 +11,13 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
-    let SyntaxEmbed = Command.syntaxEmbed({ configuration })
+    const SyntaxEmbed = Command.syntaxEmbed({ configuration })
 
     if (!args[2]) {
         setTimeout(() => {
             message.delete()
         }, 10000)
-        let notifyMessage = await message.channel.send({ embeds: [SyntaxEmbed] })
+        const notifyMessage = await message.channel.send({ embeds: [SyntaxEmbed] })
         setTimeout(() => {
             notifyMessage.delete()
         }, 15000)
@@ -25,22 +25,22 @@ const executor: CommandExecutor = async (message, client, args) => {
         return
     }
 
-    let userId = args[1].replace(/\D/g, '')
+    const userId = args[1].replace(/\D/g, '')
 
-    let sudoUser = message.guild?.members.cache.get(userId)
+    const sudoUser = message.guild?.members.cache.get(userId)
 
     if (!sudoUser) {
         setTimeout(() => {
             message.delete()
         }, 1200)
-        let notifyMessage = await message.channel.send({ embeds: [SyntaxEmbed] })
+        const notifyMessage = await message.channel.send({ embeds: [SyntaxEmbed] })
         setTimeout(() => {
             notifyMessage.delete()
         }, 15000)
         return
     }
 
-    let messageContent = args.slice(2).join(' ')
+    const messageContent = args.slice(2).join(' ')
 
     sudoUser.send(messageContent)
     setTimeout(() => {

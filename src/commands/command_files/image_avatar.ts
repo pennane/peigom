@@ -10,10 +10,10 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
-    let embed = Command.createEmbed()
+    const embed = Command.createEmbed()
     if (args.length === 1) {
-        let user = message.author
-        let image = user.displayAvatarURL({
+        const user = message.author
+        const image = user.displayAvatarURL({
             format: 'png',
             dynamic: true,
             size: 4096
@@ -30,19 +30,19 @@ const executor: CommandExecutor = async (message, client, args) => {
 
     if (!message.guild) return
 
-    let mentioned = message.mentions.members ? message.mentions.members.first() : null
+    const mentioned = message.mentions.members ? message.mentions.members.first() : null
 
     if (!mentioned) {
         return message.reply(`Käyttäjä jonka tägäsit on rikki.`)
     }
 
-    let member = message.guild.members.cache.get(mentioned.id)
+    const member = message.guild.members.cache.get(mentioned.id)
 
     if (!member) {
         return message.reply(`${args[1]} ei ole tällä severillä`)
     }
 
-    let image = member.user.displayAvatarURL({
+    const image = member.user.displayAvatarURL({
         format: 'png',
         dynamic: true,
         size: 4096

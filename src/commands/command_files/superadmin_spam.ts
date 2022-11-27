@@ -11,10 +11,10 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
-    let SyntaxEmbed = Command.syntaxEmbed({ configuration })
+    const SyntaxEmbed = Command.syntaxEmbed({ configuration })
 
     if (!args[3]) {
-        let syntax = await message.channel.send({ embeds: [SyntaxEmbed] })
+        const syntax = await message.channel.send({ embeds: [SyntaxEmbed] })
         setTimeout(() => {
             syntax.delete()
             message.delete()
@@ -22,10 +22,10 @@ const executor: CommandExecutor = async (message, client, args) => {
         return
     }
 
-    let messageAmount = Number(args[2])
+    const messageAmount = Number(args[2])
 
     if (isNaN(messageAmount) || messageAmount > 100) {
-        let embed = await message.channel.send({
+        const embed = await message.channel.send({
             embeds: [Command.createEmbed().setTitle('Epäkelpo määrä viestejä').setDescription('ettäs tiedät')]
         })
         setTimeout(() => {
@@ -36,10 +36,10 @@ const executor: CommandExecutor = async (message, client, args) => {
         return
     }
 
-    let userid = args[1].replace(/\D/g, '')
+    const userid = args[1].replace(/\D/g, '')
 
     if (!message.guild?.members.cache.get(userid)) {
-        let syntax = await message.channel.send({ embeds: [SyntaxEmbed] })
+        const syntax = await message.channel.send({ embeds: [SyntaxEmbed] })
         setTimeout(() => {
             syntax.delete()
             message.delete()
@@ -47,12 +47,12 @@ const executor: CommandExecutor = async (message, client, args) => {
         return
     }
 
-    let messageContent = args.slice(3).join(' ')
+    const messageContent = args.slice(3).join(' ')
 
-    let targetUser = message.guild.members.cache.get(userid)
+    const targetUser = message.guild.members.cache.get(userid)
 
     if (!targetUser) {
-        let embed = await message.channel.send({
+        const embed = await message.channel.send({
             embeds: [Command.createEmbed().setTitle('Epäkelpo vastaanottaja').setDescription('ettäs tiedät')]
         })
         setTimeout(() => {

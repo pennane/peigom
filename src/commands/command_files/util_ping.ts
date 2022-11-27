@@ -11,7 +11,7 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
-    let embed = Command.createEmbed()
+    const embed = Command.createEmbed()
     embed.setTitle('Pong!').setDescription(Date.now() - message.createdTimestamp + 'ms')
     message.channel.send({ embeds: [embed] })
 }

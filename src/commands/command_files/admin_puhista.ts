@@ -12,12 +12,12 @@ const configuration: CommandConfiguration = {
 const executor: CommandExecutor = async (message, client, args) => {
     if (message.channel.type !== 'GUILD_TEXT') return
 
-    let embed = Command.createEmbed().setTitle('Botin kommentti:')
+    const embed = Command.createEmbed().setTitle('Botin kommentti:')
 
-    let amountToRemove = Number(args[1])
+    const amountToRemove = Number(args[1])
 
     if (isNaN(amountToRemove) || !isFinite(amountToRemove) || amountToRemove < 1 || amountToRemove > 99) {
-        let syntaxEmbed = Command.syntaxEmbed({ configuration })
+        const syntaxEmbed = Command.syntaxEmbed({ configuration })
         message.channel.send({ embeds: [syntaxEmbed] })
         return
     }

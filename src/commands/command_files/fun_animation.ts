@@ -32,7 +32,7 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
-    let embed = Command.createEmbed()
+    const embed = Command.createEmbed()
 
     if (Object.keys(animations).length === 0) {
         embed.setTitle(`Hupsista saatana`).setDescription(`Botilla ei ole yhtäkään animaatiota ladattuna.`)
@@ -40,7 +40,7 @@ const executor: CommandExecutor = async (message, client, args) => {
         return
     }
 
-    let animationNames = animations.map((animation) => animation.name.toLowerCase())
+    const animationNames = animations.map((animation) => animation.name.toLowerCase())
 
     if (!args[1]) {
         embed
@@ -51,8 +51,8 @@ const executor: CommandExecutor = async (message, client, args) => {
         return
     }
 
-    let animationName = args[1].toLowerCase()
-    let animation = animations.find((animation) => animation.name.toLowerCase() === animationName.toLowerCase())
+    const animationName = args[1].toLowerCase()
+    const animation = animations.find((animation) => animation.name.toLowerCase() === animationName.toLowerCase())
 
     if (!animation) {
         embed
@@ -63,7 +63,7 @@ const executor: CommandExecutor = async (message, client, args) => {
         return
     }
 
-    let animationMessage = await message.channel.send(animation.keyframes[0])
+    const animationMessage = await message.channel.send(animation.keyframes[0])
 
     animation.keyframes.slice(1).forEach((frame, i) => {
         if (!animation) return

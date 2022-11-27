@@ -9,7 +9,7 @@ const configuration: CommandConfiguration = {
     triggers: ['zip', 'zipmint', 'tsipmint'],
     type: ['sound']
 }
-let soundfile = './assets/sound/zipmint.mp3'
+const soundfile = './assets/sound/zipmint.mp3'
 
 const executor: CommandExecutor = async (message, client, args) => {
     playSound({ soundfile, message, exitAfter: true })

@@ -10,7 +10,7 @@ const configuration: CommandConfiguration = {
     type: ['sound']
 }
 
-let soundfile = './assets/sound/tukom.wav'
+const soundfile = './assets/sound/tukom.wav'
 
 const executor: CommandExecutor = async (message, client, args) => {
     playSound({ soundfile, message, exitAfter: true })

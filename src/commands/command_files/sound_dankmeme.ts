@@ -11,10 +11,10 @@ const configuration: CommandConfiguration = {
     type: ['sound']
 }
 
-let fileArray = ['./assets/sound/meme.mp3', './assets/sound/meme2.mp3', './assets/sound/meme3.mp3']
+const fileArray = ['./assets/sound/meme.mp3', './assets/sound/meme2.mp3', './assets/sound/meme3.mp3']
 
 const executor: CommandExecutor = async (message, client, args) => {
-    let soundfile = `./assets/sound/${randomFromArray(fileArray)}`
+    const soundfile = `./assets/sound/${randomFromArray(fileArray)}`
     playSound({ soundfile, message, exitAfter: true })
 }
 

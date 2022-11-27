@@ -14,7 +14,7 @@ const configuration: CommandConfiguration = {
 
 const executor: CommandExecutor = async (message, client, args) => {
     const sendHowToUse = () => {
-        let embed = Command.syntaxEmbed({ configuration })
+        const embed = Command.syntaxEmbed({ configuration })
         message.channel.send({ embeds: [embed] }).catch((err) => console.info(err))
     }
 
@@ -34,7 +34,7 @@ const executor: CommandExecutor = async (message, client, args) => {
         return
     }
 
-    let soundCommand = customSoundCommands[soundToRemove]
+    const soundCommand = customSoundCommands[soundToRemove]
 
     if (soundCommand.addedBy !== message.author.id && message.author.id !== message.guild.ownerId) {
         message.channel.send('Voit poistaa vain omia ääniä ellet ole palvelimen omistaja.')

@@ -9,8 +9,8 @@ import fs from 'fs'
 import commadData from './commands/loader'
 
 const createCommandMap = async () => {
-    let { commands } = await commadData()
-    let commandMetaMap: {}[] = []
+    const { commands } = await commadData()
+    const commandMetaMap: {}[] = []
     commands.forEach((command) => {
         commandMetaMap.push(command._configuration)
     })

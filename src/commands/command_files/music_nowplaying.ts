@@ -13,7 +13,7 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
-    let guild = message.guild
+    const guild = message.guild
     if (!guild) return
     queueMethods.nowPlaying({ guild: guild, message: message })
 }

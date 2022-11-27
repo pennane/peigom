@@ -23,9 +23,9 @@ const embedConfiguration = {
 }
 
 async function loadCommandData() {
-    let { commands: loadedCommands } = await commandLoader()
-    let triggers: Map<string, string> = new Map()
-    let types: {
+    const { commands: loadedCommands } = await commandLoader()
+    const triggers: Map<string, string> = new Map()
+    const types: {
         [type: string]: Command[]
     } = {}
 
@@ -47,13 +47,13 @@ async function loadCommandData() {
     return { commands: loadedCommands, triggers, types }
 }
 
-let commandData = loadCommandData()
+const commandData = loadCommandData()
 
 const executor: CommandExecutor = async (message, client, args) => {
-    let { commands, triggers, types } = await commandData
+    const { commands, triggers, types } = await commandData
 
-    let action = args[1] ? args[1].toLowerCase() : null
-    let subAction = args[2] ? args[2].toLowerCase() : null
+    const action = args[1] ? args[1].toLowerCase() : null
+    const subAction = args[2] ? args[2].toLowerCase() : null
 
     function createBaseEmbed() {
         const embed = new Discord.MessageEmbed()
@@ -68,7 +68,7 @@ const executor: CommandExecutor = async (message, client, args) => {
     }
 
     function createNoActionEmbed(action: string): Discord.MessageEmbed {
-        let embed = createBaseEmbed()
+        const embed = createBaseEmbed()
 
         embed
             .setTitle(':eyes: Hupsista')
@@ -81,8 +81,8 @@ const executor: CommandExecutor = async (message, client, args) => {
     }
 
     function createHomeEmbed() {
-        let embed = createBaseEmbed()
-        let adminAuthorized = Command.isMemberSuperAdminAuthorized(message)
+        const embed = createBaseEmbed()
+        const adminAuthorized = Command.isMemberSuperAdminAuthorized(message)
 
         embed.addField(`:mega: Tietoa komennoista:`, `\`${prefix}${configuration.name} komennot\``, false)
         if (adminAuthorized) {
@@ -103,12 +103,12 @@ const executor: CommandExecutor = async (message, client, args) => {
     }
 
     function createTypesEmbed(loadedTypes: { [type: string]: Command[] }): Discord.MessageEmbed {
-        let embed = createBaseEmbed()
+        const embed = createBaseEmbed()
         let types = Object.keys(loadedTypes)
-        let variants = Command.variants()
+        const variants = Command.variants()
 
-        let adminAuthorized = Command.isMemberAdminAuthorized(message)
-        let superadminAuthorized = Command.isMemberSuperAdminAuthorized(message)
+        const adminAuthorized = Command.isMemberAdminAuthorized(message)
+        const superadminAuthorized = Command.isMemberSuperAdminAuthorized(message)
 
         if (!adminAuthorized) {
             types = types.filter((type) => type !== 'admin')
@@ -122,8 +122,8 @@ const executor: CommandExecutor = async (message, client, args) => {
         embed.setDescription('Kaikki eri komentotyypit listattuna')
 
         types.forEach((type) => {
-            let variant = variants[type]
-            let amountOfCommands = loadedTypes[type].length
+            const variant = variants[type]
+            const amountOfCommands = loadedTypes[type].length
             embed.addField(
                 `${variant.emoji} ${variant.name}`,
                 `\`${prefix}${configuration.name} ${type}\`\n${
@@ -141,13 +141,13 @@ const executor: CommandExecutor = async (message, client, args) => {
     }
 
     function createCommandTypeEmbed(type: string, typeCommands: Command[]): Discord.MessageEmbed {
-        let embed = createBaseEmbed()
+        const embed = createBaseEmbed()
 
         embed.setTitle(`Tyypin \`${type}\` komennot`)
         embed.setDescription(`Kaikki antamasi tyypin \`${type}\` komennot`)
 
-        let isAdmin = Command.isMemberAdminAuthorized(message)
-        let isSuperAdmin = Command.isMemberSuperAdminAuthorized(message)
+        const isAdmin = Command.isMemberAdminAuthorized(message)
+        const isSuperAdmin = Command.isMemberSuperAdminAuthorized(message)
 
         if (type.toLowerCase() === 'admin' && !isAdmin) {
             embed.addField(':sos: Tsot tsot', 'et sä saa näitä nähdä.')
@@ -192,8 +192,8 @@ const executor: CommandExecutor = async (message, client, args) => {
     }
 
     function createApplicationInformationEmbed(): Discord.MessageEmbed {
-        let embed = createBaseEmbed()
-        let avatarURL = client.user?.avatarURL()
+        const embed = createBaseEmbed()
+        const avatarURL = client.user?.avatarURL()
         if (avatarURL) {
             embed.setThumbnail(avatarURL)
         }
@@ -214,10 +214,10 @@ const executor: CommandExecutor = async (message, client, args) => {
     }
 
     function createCommandEmbed(command: Command): Discord.MessageEmbed {
-        let isAdmin = Command.isMemberAdminAuthorized(message)
-        let isSuperAdmin = Command.isMemberSuperAdminAuthorized(message)
+        const isAdmin = Command.isMemberAdminAuthorized(message)
+        const isSuperAdmin = Command.isMemberSuperAdminAuthorized(message)
 
-        let embed = createBaseEmbed()
+        const embed = createBaseEmbed()
 
         if (command.types.includes('admin') && !isAdmin) {
             embed.addField(':sos: tsot tsot', 'et sina nähdä tänne')
@@ -247,19 +247,19 @@ const executor: CommandExecutor = async (message, client, args) => {
     } else if (action === 'komennot' && !subAction) {
         return message.channel.send({ embeds: [createTypesEmbed(types)] })
     } else if (action === 'komennot' && subAction && types[subAction]) {
-        let commands = types[action]
+        const commands = types[action]
         return message.channel.send({ embeds: [createCommandTypeEmbed(action, commands)] })
     } else if (types[action]) {
-        let commands = types[action]
+        const commands = types[action]
         return message.channel.send({ embeds: [createCommandTypeEmbed(action, commands)] })
     } else if (action === AppConfiguration.APP.NAME.toLowerCase()) {
         return message.channel.send({ embeds: [createApplicationInformationEmbed()] })
     } else if (triggers.has(action)) {
-        let name = triggers.get(action)
+        const name = triggers.get(action)
 
         if (!name) throw new Error('this simply can not happen')
 
-        let command = commands.get(name)
+        const command = commands.get(name)
 
         if (!command) throw new Error('action in triggers but trigger not in command')
 
