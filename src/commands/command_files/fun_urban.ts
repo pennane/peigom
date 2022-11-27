@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const dictionary = require('urban-dictionary')
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 

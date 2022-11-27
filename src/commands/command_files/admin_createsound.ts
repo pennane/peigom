@@ -34,7 +34,9 @@ export const readSoundData = async (guild: Guild): Promise<SoundData> => {
 
   try {
     await fs.mkdir(guildDataDirectory)
-  } catch {}
+  } catch {
+    //
+  }
 
   let file
 

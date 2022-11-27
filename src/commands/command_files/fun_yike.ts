@@ -24,7 +24,7 @@ const executor: CommandExecutor = async (message, client, args) => {
     embed
       .setTitle(`Botin kommentti:`)
       .setDescription(
-        `${message.author.username} ei tollasille voi antaa yikejä. (yike \<@user>)`
+        `${message.author.username} ei tollasille voi antaa yikejä. (yike <@user>)`
       )
     message.channel.send({ embeds: [embed] })
     return

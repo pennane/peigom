@@ -57,6 +57,60 @@ const configuration: CommandConfiguration = {
 
 const { PREFIX } = AppConfiguration
 
+function createUserObject({ id, username }: NewUserObject) {
+  return {
+    credits: 200,
+    id: id,
+    whenClaimed: Date.now() - 86400000,
+    username: username
+  }
+}
+function handleWin(
+  message: Discord.Message,
+  original: Discord.Message,
+  userObject: UserData | undefined,
+  gambleAmount: number,
+  credits: number
+) {
+  if (!userObject) return
+  const embed = new Discord.MessageEmbed()
+    .setColor(0xf4e542)
+    .setTitle(
+      `Käyttäjä ${original.author.username} uhkapelaa ${gambleAmount} kolikolla. Lets mennään.`
+    )
+    .setDescription(
+      `:game_die: Voitto! Sait ${gambleAmount} kolikkoa :game_die:`
+    )
+  message.edit({ embeds: [embed] }).catch((error) => console.info(error))
+  userObject.credits = credits + gambleAmount
+}
+
+function handleLose(
+  message: Discord.Message,
+  original: Discord.Message,
+  userObject: UserData | undefined,
+  gambleAmount: number,
+  credits: number,
+  lostAmount: number
+) {
+  if (!userObject) return
+  const embed = new Discord.MessageEmbed()
+    .setColor(0xf4e542)
+    .setTitle(
+      `Käyttäjä ${original.author.username} uhkapelaa ${gambleAmount} kolikolla. Lets mennään.`
+    )
+    .setDescription(
+      `:game_die: Häviö! Hävisit ${lostAmount} kolikkoa :game_die:`
+    )
+  message.edit({ embeds: [embed] }).catch((error) => console.info(error))
+  userObject.credits = credits - gambleAmount
+}
+
+function didWin() {
+  const result = Math.round(Math.random())
+  return result === 1
+}
+
 const executor: CommandExecutor = async (message, client, args) => {
   if (message.author.bot) return
 
@@ -85,15 +139,6 @@ const executor: CommandExecutor = async (message, client, args) => {
         }
       }
     )
-  }
-
-  function createUserObject({ id, username }: NewUserObject) {
-    return {
-      credits: 200,
-      id: id,
-      whenClaimed: Date.now() - 86400000,
-      username: username
-    }
   }
 
   const userId = message.author.id
@@ -150,42 +195,9 @@ const executor: CommandExecutor = async (message, client, args) => {
       return
     }
     case 'uhkapeli': {
-      function didWin() {
-        const result = Math.round(Math.random())
-        return result === 1
-      }
-
       const credits = Number(userObject.credits)
 
       const gambleAmount = parseInt(args[2])
-
-      function handleWin(message: Discord.Message, original: Discord.Message) {
-        if (!userObject) return
-        const embed = new Discord.MessageEmbed()
-          .setColor(0xf4e542)
-          .setTitle(
-            `Käyttäjä ${original.author.username} uhkapelaa ${gambleAmount} kolikolla. Lets mennään.`
-          )
-          .setDescription(
-            `:game_die: Voitto! Sait ${gambleAmount} kolikkoa :game_die:`
-          )
-        message.edit({ embeds: [embed] }).catch((error) => console.info(error))
-        userObject.credits = credits + gambleAmount
-      }
-
-      function handleLose(message: Discord.Message, original: Discord.Message) {
-        if (!userObject) return
-        const embed = new Discord.MessageEmbed()
-          .setColor(0xf4e542)
-          .setTitle(
-            `Käyttäjä ${original.author.username} uhkapelaa ${gambleAmount} kolikolla. Lets mennään.`
-          )
-          .setDescription(
-            `:game_die: Häviö! Hävisit ${args[2]} kolikkoa :game_die:`
-          )
-        message.edit({ embeds: [embed] }).catch((error) => console.info(error))
-        userObject.credits = credits - gambleAmount
-      }
 
       if (!gambleAmount || gambleAmount <= 0) {
         const embed = new Discord.MessageEmbed()
@@ -218,9 +230,16 @@ const executor: CommandExecutor = async (message, client, args) => {
           if (!userObject) return
 
           if (won) {
-            handleWin(sentMessage, message)
+            handleWin(sentMessage, message, userObject, gambleAmount, credits)
           } else {
-            handleLose(sentMessage, message)
+            handleLose(
+              sentMessage,
+              message,
+              userObject,
+              gambleAmount,
+              credits,
+              args[2]
+            )
           }
           updateData(userObject)
         }, 1600)
