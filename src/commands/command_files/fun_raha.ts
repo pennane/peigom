@@ -238,7 +238,7 @@ const executor: CommandExecutor = async (message, client, args) => {
               userObject,
               gambleAmount,
               credits,
-              args[2]
+              Number(args[2])
             )
           }
           updateData(userObject)
