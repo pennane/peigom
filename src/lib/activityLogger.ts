@@ -64,6 +64,9 @@ const saveActivity = (message: string) => {
 
   ensureFiles({ year, month, day })
   fs.appendFileSync(`./log/${year}/${month}/${day}.txt`, message)
+  if (process.env.NODE_ENV === 'development') {
+    console.info(message)
+  }
 }
 
 const saveError = (message: string) => {
@@ -71,6 +74,9 @@ const saveError = (message: string) => {
 
   ensureFiles({ year, month, day, error: true })
   fs.appendFileSync(`./log/${year}/${month}/${day}.error.txt`, message)
+  if (process.env.NODE_ENV === 'development') {
+    console.error(message)
+  }
 }
 
 const shortDate = (): string => {
@@ -92,7 +98,7 @@ const buildMessage = ({
   id: number
   title: string
   content?: string
-  error?: Error
+  error?: any
 }) => {
   return `${shortDate()} »〔${id}:${title}〕${content ? ` » ${content}` : ''}${
     error?.name ? ` » '${error.name}'` : ''
@@ -108,7 +114,7 @@ export const log = ({
 }: {
   id: number
   content?: string
-  error?: Error
+  error?: any
 }) => {
   // Return if config has been set to not log commands
   const isCommandId = id === 12 || id === 14
@@ -117,103 +123,107 @@ export const log = ({
   let message: string
 
   switch (id) {
-  case 0: {
-    message = buildMessage({ id, title: 'Client Connected' })
-    break
-  }
-  case 1: {
-    message = buildMessage({ id, title: 'Client Reconnected' })
-    break
-  }
-  case 11: {
-    console.info(
-      c.bgBlack(longDate()) +
+    case 0: {
+      message = buildMessage({ id, title: 'Client Connected' })
+      break
+    }
+    case 1: {
+      message = buildMessage({ id, title: 'Client Reconnected' })
+      break
+    }
+    case 11: {
+      console.info(
+        c.bgBlack(longDate()) +
           ': ' +
           c.yellow('Command initiation failed') +
           ' ' +
           c.redBright(content)
-    )
-    message = buildMessage({
-      id,
-      title: 'Command initiation failed',
-      content,
-      error
-    })
-    break
-  }
-  case 12: {
-    message = buildMessage({ id, title: 'Command used', content })
-    break
-  }
-  case 13: {
-    message = buildMessage({
-      id,
-      title: 'Command failed on use',
-      content,
-      error
-    })
-    break
-  }
-  case 14: {
-    message = buildMessage({ id, title: 'Unauthorized command use', content })
-    break
-  }
-  case 15: {
-    message = buildMessage({
-      id,
-      title: 'Tried to fuck shit seriously up',
-      content
-    })
-    break
-  }
-  case 20: {
-    console.info(
-      c.bgBlack(longDate()) +
+      )
+      message = buildMessage({
+        id,
+        title: 'Command initiation failed',
+        content,
+        error
+      })
+      break
+    }
+    case 12: {
+      message = buildMessage({ id, title: 'Command used', content })
+      break
+    }
+    case 13: {
+      message = buildMessage({
+        id,
+        title: 'Command failed on use',
+        content,
+        error
+      })
+      break
+    }
+    case 14: {
+      message = buildMessage({
+        id,
+        title: 'Unauthorized command use',
+        content
+      })
+      break
+    }
+    case 15: {
+      message = buildMessage({
+        id,
+        title: 'Tried to fuck shit seriously up',
+        content
+      })
+      break
+    }
+    case 20: {
+      console.info(
+        c.bgBlack(longDate()) +
           ': ' +
           c.greenBright('Bot added to new guild') +
           ' ' +
           c.redBright(content)
-    )
-    message = buildMessage({ id, title: 'Bot added to new guild', content })
-    break
-  }
-  case 21: {
-    console.info(
-      c.bgBlack(longDate()) +
+      )
+      message = buildMessage({ id, title: 'Bot added to new guild', content })
+      break
+    }
+    case 21: {
+      console.info(
+        c.bgBlack(longDate()) +
           ': ' +
           c.yellowBright('Bot added to new guild') +
           ' ' +
           c.redBright(content)
-    )
-    message = buildMessage({ id, title: 'Bot removed from guild', content })
-    break
-  }
-  case 31: {
-    console.info(c.bgBlack(longDate()) + ': ' + c.red('Error in the process'))
-    message = buildMessage({ id, title: 'Error in the process', error })
-    break
-  }
-  case 32: {
-    console.info(
-      c.bgBlack(longDate()) + ': ' + c.red('Error in the discord client')
-    )
-    message = buildMessage({
-      id,
-      title: 'Error in the discord client',
-      error
-    })
-    break
-  }
-  case 33: {
-    console.info(
-      c.bgBlack(longDate()) + ': ' + c.red('Error in utilities / core')
-    )
-    message = buildMessage({ id, title: 'Error in utilities / core', error })
-    break
-  }
+      )
+      message = buildMessage({ id, title: 'Bot removed from guild', content })
+      break
+    }
+    case 31: {
+      console.info(c.bgBlack(longDate()) + ': ' + c.red('Error in the process'))
+      message = buildMessage({ id, title: 'Error in the process', error })
+      break
+    }
+    case 32: {
+      console.info(
+        c.bgBlack(longDate()) + ': ' + c.red('Error in the discord client')
+      )
+      message = buildMessage({
+        id,
+        title: 'Error in the discord client',
+        error
+      })
+      break
+    }
+    case 33: {
+      console.info(
+        c.bgBlack(longDate()) + ': ' + c.red('Error in utilities / core')
+      )
+      message = buildMessage({ id, title: 'Error in utilities / core', error })
+      break
+    }
 
-  default:
-    return
+    default:
+      return
   }
 
   if (error) {

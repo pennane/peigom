@@ -14,7 +14,7 @@ let PREFIX = ','
 
 export interface ClientActivity {
   text: string
-  type: Discord.ActivityType
+  type: Exclude<Discord.ActivityType, 'CUSTOM'>
 }
 
 const activities: ClientActivity[] = [

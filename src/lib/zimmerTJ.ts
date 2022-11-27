@@ -17,7 +17,7 @@ function editZimmerChannel(channel: Discord.VoiceChannel) {
   if (!channel) return console.info('zimmer channel not available')
   const remaining = calculateTimeDifference(zimmerDate, Date.now())
   if (!remaining.days) return console.info('could not resolve tj')
-  if (!channel.editable) return console.info('zimmer channel not editable')
+  if (!channel.manageable) return console.info('zimmer channel not editable')
 
   const oldTJ = parseInt(channel.name.replace('Hans Zimmer TJ: ', ''))
 

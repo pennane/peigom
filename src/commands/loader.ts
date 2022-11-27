@@ -7,14 +7,21 @@ const directory = fs.readdirSync(path.resolve(__dirname, commandDirectoryName))
 
 import activityLogger from '../lib/activityLogger'
 
-const reservedNames = ['työkalut', 'komennot', 'hauskat', 'kuvat', 'admin', 'muut']
+const reservedNames = [
+  'työkalut',
+  'komennot',
+  'hauskat',
+  'kuvat',
+  'admin',
+  'muut'
+]
 
 const loadedTriggers: Map<string, Array<string>> = new Map()
 const loadedCommands: Map<string, Command> = new Map()
 
 interface CommandTarget {
-    file: string
-    directory: string
+  file: string
+  directory: string
 }
 
 const loadCommand = async (target: CommandTarget) => {
@@ -24,12 +31,17 @@ const loadCommand = async (target: CommandTarget) => {
   try {
     importedCommand = await import(`${directory}/${file}`)
   } catch (error) {
-    activityLogger.log({ id: 11, content: 'Failed to load command ' + file, error })
+    activityLogger.log({
+      id: 11,
+      content: 'Failed to load command ' + file,
+      error
+    })
   }
 
   const command: Command = importedCommand.default
 
-  if (!command) throw new Error(`Failed to load command from ${directory}/${file}`)
+  if (!command)
+    throw new Error(`Failed to load command from ${directory}/${file}`)
   const triggers: Array<string> = []
 
   try {
@@ -54,7 +66,11 @@ const loadCommand = async (target: CommandTarget) => {
     loadedCommands.set(command.name, command)
     loadedTriggers.set(command.name, triggers)
   } catch (error) {
-    activityLogger.log({ id: 11, content: 'Conflicting triggers ' + file, error })
+    activityLogger.log({
+      id: 11,
+      content: 'Conflicting triggers ' + file,
+      error
+    })
   }
 }
 
@@ -70,7 +86,11 @@ directory.forEach((file: string) => {
       })
     )
   } catch (error) {
-    activityLogger.log({ id: 11, content: 'Failed to push load promise to commandPromises ' + file, error })
+    activityLogger.log({
+      id: 11,
+      content: 'Failed to push load promise to commandPromises ' + file,
+      error
+    })
   }
 })
 

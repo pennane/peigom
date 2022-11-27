@@ -1,21 +1,8 @@
 import { YOUTUBE_API_KEY } from '../lib/config'
 import Discord, { Util, Snowflake } from 'discord.js'
-import {
-  joinVoiceChannel,
-  createAudioPlayer,
-  createAudioResource,
-  AudioPlayerStatus,
-  VoiceConnectionStatus,
-  VoiceConnection,
-  AudioPlayer,
-  AudioResource
-} from '@discordjs/voice'
-import ytdl, { videoInfo } from 'ytdl-core'
-import {
-  buildInitialServerQueue,
-  msToReadable,
-  shuffleArray
-} from '../lib/util'
+import { AudioPlayerStatus } from '@discordjs/voice'
+import { videoInfo } from 'ytdl-core'
+import { msToReadable, ServerQueue, shuffleArray } from '../lib/util'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Youtube = require('simple-youtube-api')
@@ -28,19 +15,6 @@ export interface Track extends videoInfo {
   requestedBy?: Discord.GuildMember
   toTop?: boolean
 }
-
-export interface ServerQueue {
-  voiceChannel: Discord.VoiceChannel
-  guild: Discord.Guild
-  connection: VoiceConnection | null
-  player: AudioPlayer | null
-  resource: AudioResource<null> | null
-  tracks: Track[]
-  options: {
-    volume: number
-  }
-}
-
 interface AddArguments {
   guild: Discord.Guild
   message: Discord.Message
@@ -48,89 +22,14 @@ interface AddArguments {
   track: Track
 }
 
-const shiftToNextResource = (guild: Discord.Guild): AudioResource | null => {
-  const serverQueue = QueueMap.get(guild.id)
-  if (!serverQueue) return null
-
-  serverQueue.tracks = serverQueue.tracks.slice(1)
-
-  const track = serverQueue.tracks[0]
-  if (!track) return null
-
-  const stream = ytdl(track.videoDetails.video_url, {
-    filter: 'audioonly',
-    quality: 'lowest'
-  })
-  const resource = createAudioResource(stream, { inlineVolume: true })
-  resource.volume?.setVolume(serverQueue.options.volume)
-  serverQueue.resource = resource
-
-  return resource
-}
-
-const dispatchGuild = async (guild: Discord.Guild): Promise<void> => {
-  const serverQueue = QueueMap.get(guild.id)
-  if (!serverQueue) return
-
-  serverQueue.options.volume = 1
-
-  const connection = joinVoiceChannel({
-    guildId: serverQueue.voiceChannel.guild.id,
-    channelId: serverQueue.voiceChannel.id,
-    adapterCreator: serverQueue.voiceChannel.guild.voiceAdapterCreator
-  })
-
-  serverQueue.connection = connection
-
-  connection.on(VoiceConnectionStatus.Destroyed, () => {
-    QueueMap.delete(guild.id)
-  })
-
-  const track = serverQueue.tracks[0]
-
-  if (!track) {
-    if (serverQueue.player) {
-      serverQueue.player.stop()
-      serverQueue.player = null
-    }
-    serverQueue.connection?.destroy()
-    QueueMap.delete(guild.id)
-    return
-  }
-
-  const stream = ytdl(track.videoDetails.video_url, {
-    filter: 'audioonly',
-    quality: 'lowest'
-  })
-  const player = createAudioPlayer()
-  const resource = createAudioResource(stream, { inlineVolume: true })
-  resource.volume?.setVolume(serverQueue.options.volume)
-
-  serverQueue.resource = resource
-  serverQueue.player = player
-  serverQueue.player.play(resource)
-  serverQueue.connection.subscribe(player)
-
-  serverQueue.player.on(AudioPlayerStatus.Idle, () => {
-    const nextResource = shiftToNextResource(guild)
-    if (!nextResource) {
-      const serverQueue = QueueMap.get(guild.id)
-      if (!serverQueue) return
-      serverQueue.player?.stop()
-      serverQueue.player = null
+export const queueMethods = {
+  add: async function ({ guild, message, voiceChannel, track }: AddArguments) {
+    if (!track) {
       return
     }
 
-    player.play(nextResource)
-  })
-}
-
-export const queueMethods = {
-  add: async function ({ guild, message, voiceChannel, track }: AddArguments) {
-    if (!track) return
-
     if (!QueueMap.has(guild.id)) {
-      QueueMap.set(guild.id, buildInitialServerQueue({ guild, voiceChannel }))
+      QueueMap.set(guild.id, new ServerQueue({ guild, voiceChannel }))
     }
 
     const serverQueue = QueueMap.get(guild.id) as ServerQueue
@@ -155,22 +54,18 @@ export const queueMethods = {
 
     message.channel.send({ embeds: [responseEmbed] })
 
-    if (!serverQueue.connection || !serverQueue.player) {
-      serverQueue.tracks = serverQueue.tracks.concat(track)
-      dispatchGuild(guild)
+    if (!serverQueue.getIsPlaying()) {
+      serverQueue.addTrack(track)
+      serverQueue.playNextResource(false)
       return
     }
 
     if (track.toTop) {
-      serverQueue.tracks = [
-        serverQueue.tracks[0],
-        track,
-        ...serverQueue.tracks.slice(1)
-      ]
+      serverQueue.addTrackToTop(track)
       return
     }
 
-    serverQueue.tracks.push(track)
+    serverQueue.addTrack(track)
   },
   show: function ({
     guild,
@@ -291,38 +186,16 @@ export const queueMethods = {
     message: Discord.Message
   }) {
     const serverQueue = QueueMap.get(guild.id)
-    if (
-      !serverQueue ||
-      !serverQueue.player ||
-      serverQueue.tracks.length === 0
-    ) {
+    if (!serverQueue?.getIsPlaying()) {
       message.channel.send(':hand_splayed: Bro, ei täällä soi mikään.')
       return
     }
 
     message.channel.send(
-      `:track_next: ${serverQueue.tracks[0].videoDetails.title} skipattu!`
+      `:track_next: skipataan ${serverQueue.tracks[0].videoDetails.title}`
     )
 
-    if (serverQueue.tracks.length <= 1) {
-      serverQueue?.player?.stop()
-      serverQueue.connection?.destroy()
-      QueueMap.delete(guild.id)
-      return
-    }
-
-    const resource = shiftToNextResource(guild)
-
-    if (!resource) {
-      serverQueue?.player?.stop()
-      serverQueue.connection?.destroy()
-      QueueMap.delete(guild.id)
-      return
-    }
-
-    serverQueue.player.play(resource)
-
-    return
+    serverQueue.playNextResource(true)
   },
   disconnect: function ({
     guild,
@@ -333,11 +206,10 @@ export const queueMethods = {
   }) {
     const serverQueue = QueueMap.get(guild.id)
 
-    if (!serverQueue || !serverQueue.connection)
+    if (!serverQueue?.getIsConnected())
       return message.channel.send(':x: En edes ollut kiusaamassa.')
 
-    serverQueue.connection?.destroy()
-    serverQueue.player?.stop()
+    serverQueue.disconnect()
     QueueMap.delete(guild.id)
     return message.channel.send(':wave: Ilosesti böneen!')
   },
@@ -355,7 +227,7 @@ export const queueMethods = {
       return
     }
 
-    serverQueue.tracks = [serverQueue.tracks[0]]
+    serverQueue.clearQueue()
     message.channel.send(':wastebasket:  Musiikkijono tyhjennetty!')
   },
   shuffle: function ({
@@ -421,21 +293,19 @@ export const queueMethods = {
     const serverQueue = QueueMap.get(guild.id)
 
     if (!serverQueue) return
-    if (!serverQueue?.player) return
-    if (serverQueue.player.state.status === AudioPlayerStatus.Paused) {
+    if (serverQueue.getPlayer().state.status === AudioPlayerStatus.Paused) {
       return
     }
 
-    serverQueue.player.pause()
+    serverQueue.getPlayer().pause()
   },
   resume: function ({ guild }: { guild: Discord.Guild }) {
     const serverQueue = QueueMap.get(guild.id)
 
     if (!serverQueue) return
-    if (!serverQueue?.player) return
 
-    if (serverQueue.player.state.status === AudioPlayerStatus.Paused) {
-      serverQueue.player.unpause()
+    if (serverQueue.getPlayer().state.status === AudioPlayerStatus.Paused) {
+      serverQueue.getPlayer().unpause()
     }
   },
   volume: function ({
@@ -483,15 +353,7 @@ export const queueMethods = {
 
     const serverQueue = QueueMap.get(guild.id)
 
-    if (!serverQueue) {
-      return false
-    }
-
-    if (serverQueue.tracks.length === 0 || !serverQueue.connection) {
-      return false
-    }
-
-    return true
+    return serverQueue?.getIsPlaying()
   },
   readOnlyQueue: function ({ guild }: { guild: Discord.Guild }) {
     const serverQueue = QueueMap.get(guild.id)
@@ -516,17 +378,7 @@ export const queueMethods = {
 
     if (newChannel.type === 'GUILD_STAGE_VOICE') return
 
-    if (!serverQueue?.player) return
-
-    const newConnection = joinVoiceChannel({
-      guildId: newChannel.guild.id,
-      channelId: newChannel.id,
-      adapterCreator: serverQueue.voiceChannel.guild.voiceAdapterCreator
-    })
-
-    newConnection.subscribe(serverQueue.player)
-    serverQueue.connection = newConnection
-    serverQueue.voiceChannel = newChannel
+    serverQueue.updateVoicechannel(newChannel)
 
     return
   }
