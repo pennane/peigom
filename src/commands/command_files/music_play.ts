@@ -38,8 +38,6 @@ const executor: CommandExecutor = async (message, client, args) => {
   const query = args.slice(1).join(' ')
 
   message.channel.send(`:mag: Etitään \`${query}\``)
-  console.log('trying to fetch with query', query)
-  const test = setTimeout(() => console.log('should have aborted'), 11_000)
   let track: Track
   try {
     const fetchedTrack = await getYoutubeVideo(query)
@@ -48,10 +46,7 @@ const executor: CommandExecutor = async (message, client, args) => {
     return message.reply(
       ':baby: Youtube salee ratelimittaa. Chillaile pyyntöjen kans.'
     )
-  } finally {
-    clearTimeout(test)
   }
-  console.log('block after')
 
   if (!track) {
     return message.reply(':baby: Bro keissi keissi, ei toimi bro')
