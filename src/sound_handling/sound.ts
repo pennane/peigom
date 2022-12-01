@@ -18,7 +18,7 @@ export interface Track extends videoInfo {
 interface AddArguments {
   guild: Discord.Guild
   message: Discord.Message
-  voiceChannel: Discord.VoiceChannel
+  voiceChannel: Discord.VoiceBasedChannel
   track: Track
 }
 
@@ -29,7 +29,10 @@ export const queueMethods = {
     }
 
     if (!QueueMap.has(guild.id)) {
-      QueueMap.set(guild.id, new ServerQueue({ guild, voiceChannel }))
+      QueueMap.set(
+        guild.id,
+        new ServerQueue({ guild, voiceChannel, map: QueueMap })
+      )
     }
 
     const serverQueue = QueueMap.get(guild.id) as ServerQueue
@@ -56,7 +59,11 @@ export const queueMethods = {
 
     if (!serverQueue.getIsPlaying()) {
       serverQueue.addTrack(track)
-      serverQueue.playNextResource(false)
+      serverQueue.playNextResource({
+        shift: false,
+        forceNewConnection: true,
+        voiceChannel: message.member?.voice.channel || undefined
+      })
       return
     }
 
@@ -195,7 +202,7 @@ export const queueMethods = {
       `:track_next: skipataan ${serverQueue.tracks[0].videoDetails.title}`
     )
 
-    serverQueue.playNextResource(true)
+    serverQueue.playNextResource({ shift: true })
   },
   disconnect: function ({
     guild,
@@ -377,7 +384,6 @@ export const queueMethods = {
     if (serverQueue.voiceChannel.id === newChannel.id) return
 
     if (newChannel.type === 'GUILD_STAGE_VOICE') return
-
     serverQueue.updateVoicechannel(newChannel)
 
     return

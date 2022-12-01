@@ -33,9 +33,9 @@ const executor: CommandExecutor = async (message, client, args) => {
   }
 
   const query = args.slice(1).join(' ')
-  message.channel.send(`:mag: Etitään \`${query}\``)
 
-  let track: Track
+  message.channel.send(`:mag: Etitään \`${query}\``)
+  let track: Track | null
   try {
     const fetchedTrack = await getYoutubeVideo(query)
     track = fetchedTrack
@@ -46,7 +46,9 @@ const executor: CommandExecutor = async (message, client, args) => {
   }
 
   if (!track) {
-    return message.reply(':baby: Bro keissi keissi, ei toimi bro')
+    return message.reply(
+      ':baby: Bro keissi keissi, huonot hakusanat. Ei löydy muute yhtää mitää.'
+    )
   }
 
   track.requestedBy = message.member

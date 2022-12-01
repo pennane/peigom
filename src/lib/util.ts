@@ -1,4 +1,4 @@
-import Discord from 'discord.js'
+import Discord, { Snowflake, VoiceBasedChannel } from 'discord.js'
 import { Track, yt } from '../sound_handling/sound'
 import fs from 'fs'
 import https from 'https'
@@ -67,7 +67,7 @@ export function randomFromArray<T>(array: T[]): T {
 
 export class ServerQueue {
   guild: Discord.Guild
-  voiceChannel: Discord.VoiceChannel
+  voiceChannel: Discord.VoiceBasedChannel
   audioPlayer: AudioPlayer
   resource: AudioResource<null> | null
   tracks: Track[]
@@ -75,13 +75,16 @@ export class ServerQueue {
     volume: number
   }
   subscription?: PlayerSubscription
+  map: Map<Snowflake, ServerQueue>
 
   constructor({
     voiceChannel,
-    guild
+    guild,
+    map
   }: {
-    voiceChannel: Discord.VoiceChannel
+    voiceChannel: Discord.VoiceBasedChannel
     guild: Discord.Guild
+    map: Map<Snowflake, ServerQueue>
   }) {
     this.guild = guild
     this.voiceChannel = voiceChannel
@@ -98,14 +101,15 @@ export class ServerQueue {
       console.error(`Error: ${error.message} with resource ${error.resource}`)
     })
     this.audioPlayer.on(AudioPlayerStatus.Idle, () => {
-      this.playNextResource(true)
+      this.playNextResource({ shift: true })
     })
+    this.map = map
   }
 
   disconnect() {
     this.tracks = []
     this.audioPlayer.stop()
-
+    this.map.delete(this.guild.id)
     return getVoiceConnection(this.guild.id)?.destroy()
   }
 
@@ -117,8 +121,19 @@ export class ServerQueue {
     this.disconnect()
   }
 
-  async connect(forceNew: boolean) {
-    const existingConnection = !forceNew && getVoiceConnection(this.guild.id)
+  async connect({
+    forceNewConnection,
+    voiceChannel
+  }: {
+    forceNewConnection: boolean
+    voiceChannel?: VoiceBasedChannel
+  }) {
+    if (voiceChannel) {
+      this.voiceChannel = voiceChannel
+    }
+
+    const existingConnection =
+      !forceNewConnection && getVoiceConnection(this.guild.id)
     const connection =
       existingConnection ||
       joinVoiceChannel({
@@ -148,20 +163,32 @@ export class ServerQueue {
   }
 
   updateVoicechannel(c: Discord.VoiceChannel) {
-    this.voiceChannel = c
-    this.connect(true)
+    this.connect({ forceNewConnection: true, voiceChannel: c })
   }
 
   getIsPlaying() {
     return this.getIsConnected() && this.tracks.length > 0
   }
 
-  async playNextResource(shift: boolean, retries = 0): Promise<void> {
+  async playNextResource({
+    shift,
+    retries = 0,
+    forceNewConnection = false,
+    voiceChannel
+  }: {
+    shift: boolean
+    retries?: number
+    forceNewConnection?: boolean
+    voiceChannel?: VoiceBasedChannel
+  }): Promise<void> {
     if (shift) {
       this.tracks.shift()
     }
 
     const track = this.tracks[0]
+
+    console.log('playing with settings', { shift, retries, forceNewConnection })
+
     if (!track) {
       this.getPlayer().stop()
       this.subscription?.unsubscribe()
@@ -177,7 +204,7 @@ export class ServerQueue {
     resource.volume?.setVolume(this.options.volume)
     this.resource = resource
 
-    const connection = await this.connect(false)
+    const connection = await this.connect({ forceNewConnection, voiceChannel })
 
     const player = this.getPlayer()
 
@@ -186,9 +213,13 @@ export class ServerQueue {
       await entersState(player, AudioPlayerStatus.Playing, 5_000)
     } catch (error) {
       if (retries < 5) {
-        return this.playNextResource(false, retries + 1)
+        return this.playNextResource({
+          shift,
+          forceNewConnection,
+          retries: retries + 1
+        })
       }
-      return this.playNextResource(true)
+      return this.playNextResource({ shift: true, forceNewConnection })
     }
 
     this.subscription = connection.subscribe(player)
@@ -233,31 +264,12 @@ const getBasicInfo = memoize(
 export const getYoutubeVideo = memoize(
   async (searchString: string) => {
     if (YOUTUBE_LINK_REGEX.test(searchString)) {
-      const timeout0 = setTimeout(() => {
-        throw new Error('Failed to fetch :(')
-      }, 5_000)
-
       const track = await getBasicInfo(searchString)
-
-      clearTimeout(timeout0)
-
       return track
     }
-    const timeout1 = setTimeout(() => {
-      throw new Error('Failed to fetch :(')
-    }, 5_000)
-
     const searchResults = await getSearchResults(searchString)
 
-    clearTimeout(timeout1)
-
-    const timeout2 = setTimeout(() => {
-      throw new Error('Failed to fetch :(')
-    }, 5_000)
-
     const info = await getBasicInfo(searchResults[0].url)
-
-    clearTimeout(timeout2)
 
     return info
   },

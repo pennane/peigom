@@ -58,6 +58,7 @@ client.on('guildDelete', (guild) =>
 )
 client.on('resume', () => activityLogger.log({ id: 1 }))
 client.on('error', (error) => activityLogger.log({ id: 32, error }))
+
 process.on('uncaughtException', (error) =>
   activityLogger.log({ id: 31, error })
 )
