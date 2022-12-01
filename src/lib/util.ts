@@ -117,9 +117,10 @@ export class ServerQueue {
     this.disconnect()
   }
 
-  async connect() {
+  async connect(forceNew: boolean) {
+    const existingConnection = !forceNew && getVoiceConnection(this.guild.id)
     const connection =
-      getVoiceConnection(this.guild.id) ||
+      existingConnection ||
       joinVoiceChannel({
         guildId: this.guild.id,
         channelId: this.voiceChannel.id,
@@ -148,7 +149,7 @@ export class ServerQueue {
 
   updateVoicechannel(c: Discord.VoiceChannel) {
     this.voiceChannel = c
-    this.connect()
+    this.connect(true)
   }
 
   getIsPlaying() {
@@ -176,7 +177,7 @@ export class ServerQueue {
     resource.volume?.setVolume(this.options.volume)
     this.resource = resource
 
-    const connection = await this.connect()
+    const connection = await this.connect(false)
 
     const player = this.getPlayer()
 
@@ -202,8 +203,8 @@ export class ServerQueue {
   }
   addTrackToTop(track: Track) {
     if (this.tracks.length === 0) return this.addTrack(track)
-    const [firstTrack, restTracks] = this.tracks
-    this.tracks = [firstTrack, track, restTracks]
+    const [firstTrack, ...restTracks] = this.tracks
+    this.tracks = [firstTrack, track, ...restTracks]
   }
 }
 
