@@ -187,8 +187,6 @@ export class ServerQueue {
 
     const track = this.tracks[0]
 
-    console.log('playing with settings', { shift, retries, forceNewConnection })
-
     if (!track) {
       this.getPlayer().stop()
       this.subscription?.unsubscribe()
@@ -210,7 +208,7 @@ export class ServerQueue {
 
     player.play(resource)
     try {
-      await entersState(player, AudioPlayerStatus.Playing, 5_000)
+      await entersState(player, AudioPlayerStatus.Playing, 2_800)
     } catch (error) {
       if (retries < 5) {
         return this.playNextResource({
@@ -267,9 +265,11 @@ export const getYoutubeVideo = memoize(
       const track = await getBasicInfo(searchString)
       return track
     }
-    const searchResults = await getSearchResults(searchString)
+    const [searchResult] = await getSearchResults(searchString)
 
-    const info = await getBasicInfo(searchResults[0].url)
+    if (!searchResult) return null
+
+    const info = await getBasicInfo(searchResult.url)
 
     return info
   },
