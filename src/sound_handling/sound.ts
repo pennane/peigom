@@ -360,7 +360,7 @@ export const queueMethods = {
 
     const serverQueue = QueueMap.get(guild.id)
 
-    return serverQueue?.getIsPlaying()
+    return !!serverQueue?.getIsPlaying()
   },
   readOnlyQueue: function ({ guild }: { guild: Discord.Guild }) {
     const serverQueue = QueueMap.get(guild.id)
