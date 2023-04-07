@@ -2,7 +2,7 @@ import Discord from 'discord.js'
 import schedule from 'node-schedule'
 
 const zimmerChannelId = '759808413877796966'
-const zimmerDate = new Date(`Sep 23, 2022 19:00:00`).getTime()
+const zimmerDate = new Date(`May 13, 2022 01:00:00`).getTime()
 
 function calculateTimeDifference(d: number, ad: number) {
   const dateDistance = Math.abs(d - ad)
@@ -19,12 +19,12 @@ function editZimmerChannel(channel: Discord.VoiceChannel) {
   if (!remaining.days) return console.info('could not resolve tj')
   if (!channel.manageable) return console.info('zimmer channel not editable')
 
-  const oldTJ = parseInt(channel.name.replace('Hans Zimmer TJ: ', ''))
+  const oldTJ = parseInt(channel.name.replace('€viisu tj: ', ''))
 
   if (remaining.days == oldTJ) return
 
   channel.edit({
-    name: 'Hans Zimmer TJ: ' + remaining.days
+    name: '€viisu tj: ' + remaining.days
   })
 }
 
