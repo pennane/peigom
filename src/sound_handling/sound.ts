@@ -93,7 +93,8 @@ const play = async (guildId: Snowflake, track: Track) => {
   queue.nowPlaying = track
 
   const stream = ytdl(track.videoDetails.video_url, {
-    filter: 'audioonly'
+    filter: 'audioonly',
+    quality: 'highest'
   })
 
   const resource = createAudioResource(stream, { inlineVolume: true })
