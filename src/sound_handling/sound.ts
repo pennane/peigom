@@ -114,7 +114,7 @@ const play = async (guildId: Snowflake, track: Track) => {
   player.play(resource)
 
   try {
-    await entersState(player, AudioPlayerStatus.Playing, 2800)
+    await entersState(player, AudioPlayerStatus.Playing, 10000)
   } catch (error) {
     queue.nowPlaying = null
     queue.stream = null
