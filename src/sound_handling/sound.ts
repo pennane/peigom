@@ -91,24 +91,10 @@ const play = async (guildId: Snowflake, track: Track) => {
   if (!queue) return
 
   queue.nowPlaying = track
-  console.log('playing', track.videoDetails.title)
 
   const stream = ytdl(track.videoDetails.video_url, {
     filter: 'audioonly',
     quality: 'lowest'
-  })
-
-  ;[
-    'abort',
-    'error',
-    'redirect',
-    'retry',
-    'reconnect',
-    'close',
-    // 'data',
-    'end'
-  ].forEach((event) => {
-    stream.addListener(event, (v) => console.log(event, new Date(), v))
   })
 
   const resource = createAudioResource(stream, { inlineVolume: true })
@@ -130,7 +116,6 @@ const play = async (guildId: Snowflake, track: Track) => {
   try {
     await entersState(player, AudioPlayerStatus.Playing, 2800)
   } catch (error) {
-    console.log('player error', error)
     queue.nowPlaying = null
     queue.stream = null
     return startNext(guildId)
