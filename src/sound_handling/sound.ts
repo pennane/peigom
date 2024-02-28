@@ -43,6 +43,7 @@ const disconnect = (guildId: Snowflake) => {
   const queue = QueueMap.get(guildId)
   if (!queue) return
   queue.tracks = []
+  queue.stream?.destroy()
   QueueMap.delete(guildId)
   getVoiceConnection(guildId)?.destroy()
 }
@@ -94,7 +95,11 @@ const play = async (guildId: Snowflake, track: Track) => {
 
   const stream = ytdl(track.videoDetails.video_url, {
     filter: 'audioonly',
-    quality: 'highest'
+    quality: 'lowest',
+    requestOptions: {
+      maxReconnects: 50,
+      maxRetries: 20
+    }
   })
 
   const resource = createAudioResource(stream, { inlineVolume: true })
