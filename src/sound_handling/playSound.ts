@@ -45,19 +45,11 @@ const play = ({
       return reject()
     }
 
-    if (queueMethods.isPlaying({ guild: message.guild })) {
-      const embed = Command.createEmbed()
-      embed
-        .setTitle(`Botin kommentti:`)
-        .setDescription(`${user.username} sul on jo musat tulilla, kid.`)
-      message.channel.send({ embeds: [embed] })
-      return reject()
-    }
-
     const connection = joinVoiceChannel({
       guildId: voiceChannel.guild.id,
       channelId: voiceChannel.id,
-      adapterCreator: voiceChannel.guild.voiceAdapterCreator
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      adapterCreator: voiceChannel.guild.voiceAdapterCreator as any
     })
 
     const player = createAudioPlayer()

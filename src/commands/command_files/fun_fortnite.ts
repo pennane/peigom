@@ -32,15 +32,6 @@ const executor: CommandExecutor = async (message, client, args) => {
     return
   }
 
-  if (queueMethods.isPlaying({ guild: message.guild })) {
-    const embed = Command.createEmbed()
-    embed
-      .setTitle(`Botin kommentti:`)
-      .setDescription(`${user.username} sul on jo musat tulilla, kid.`)
-    message.channel.send({ embeds: [embed] })
-    return
-  }
-
   playSound({ soundfile, message, exitAfter: true })
   dancemoves.forEach((move, i) => {
     setTimeout(() => {
