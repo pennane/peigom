@@ -40,12 +40,13 @@ interface AddArguments {
 }
 
 const disconnect = (guildId: Snowflake) => {
+  getVoiceConnection(guildId)?.destroy()
+
   const queue = QueueMap.get(guildId)
   if (!queue) return
   queue.tracks = []
   queue.stream?.destroy()
   QueueMap.delete(guildId)
-  getVoiceConnection(guildId)?.destroy()
 }
 
 const connect = async (guildId: Snowflake) => {
@@ -102,7 +103,7 @@ const play = async (guildId: Snowflake, track: Track) => {
     }
   })
 
-  const resource = createAudioResource(stream, { inlineVolume: true })
+  const resource = createAudioResource(stream)
   const connection = await connect(guildId)
 
   if (!connection) {
@@ -127,6 +128,7 @@ const play = async (guildId: Snowflake, track: Track) => {
   }
 
   queue.nowPlaying = track
+
   try {
     await entersState(
       player,
