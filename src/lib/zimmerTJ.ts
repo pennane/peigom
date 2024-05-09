@@ -1,13 +1,13 @@
 import Discord from 'discord.js'
 import schedule from 'node-schedule'
-import { getDayDifferenceCeil } from './util'
+import { ceiledDayDifference } from './util'
 
 const zimmerChannelId = '759808413877796966'
 const zimmerDate = new Date(`May 11, 2024 00:00:00`).getTime()
 
 export function editZimmerChannel(channel: Discord.VoiceChannel) {
   if (!channel) return console.info('zimmer channel not available')
-  const daysRemaining = getDayDifferenceCeil(zimmerDate, Date.now())
+  const daysRemaining = ceiledDayDifference(zimmerDate, Date.now())
   if (!daysRemaining) return console.info('could not resolve tj')
   if (!channel.manageable) return console.info('zimmer channel not editable')
 

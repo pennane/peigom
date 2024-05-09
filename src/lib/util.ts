@@ -98,7 +98,7 @@ export const getYoutubeVideo = memoize(
 export const ONE_HOUR_MS = 1000 * 60 * 60
 export const ONE_DAY_MS = 24 * ONE_HOUR_MS
 
-export function getDayDifferenceCeil(msA: number, msB: number) {
+export function ceiledDayDifference(msA: number, msB: number) {
   const msDist = Math.abs(msA - msB)
   const days = Math.ceil(msDist / ONE_DAY_MS)
 
