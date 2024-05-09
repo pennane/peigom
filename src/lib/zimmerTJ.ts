@@ -1,30 +1,22 @@
 import Discord from 'discord.js'
 import schedule from 'node-schedule'
+import { getDayDifferenceCeil } from './util'
 
 const zimmerChannelId = '759808413877796966'
-const zimmerDate = new Date(`May 11, 2024 01:00:00`).getTime()
+const zimmerDate = new Date(`May 11, 2024 00:00:00`).getTime()
 
-function calculateTimeDifference(d: number, ad: number) {
-  const dateDistance = Math.abs(d - ad)
-  const daysBetween = Math.floor(dateDistance / (1000 * 60 * 60 * 24))
-  const hoursBetween = Math.floor(
-    (dateDistance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-  )
-  return { days: daysBetween, hours: hoursBetween }
-}
-
-function editZimmerChannel(channel: Discord.VoiceChannel) {
+export function editZimmerChannel(channel: Discord.VoiceChannel) {
   if (!channel) return console.info('zimmer channel not available')
-  const remaining = calculateTimeDifference(zimmerDate, Date.now())
-  if (!remaining.days) return console.info('could not resolve tj')
+  const daysRemaining = getDayDifferenceCeil(zimmerDate, Date.now())
+  if (!daysRemaining) return console.info('could not resolve tj')
   if (!channel.manageable) return console.info('zimmer channel not editable')
 
   const oldTJ = parseInt(channel.name.replace('€viisu tj: ', ''))
 
-  if (remaining.days == oldTJ) return
+  if (daysRemaining == oldTJ) return
 
   channel.edit({
-    name: '€viisu tj: ' + remaining.days
+    name: '€viisu tj: ' + daysRemaining
   })
 }
 
