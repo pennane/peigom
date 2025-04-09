@@ -1,3 +1,4 @@
+import { ChannelType } from 'discord.js'
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 
 const configuration: CommandConfiguration = {
@@ -10,11 +11,13 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
   const embed = Command.createEmbed()
   embed
     .setTitle(`OLET TEHNYT TUHMUUKSIA!`)
     .setDescription('NYT RIITTAEAE VANDALISOINTI')
-  const sentMessage = await message.channel.send({ embeds: [embed] })
+  const sentMessage = await channel.send({ embeds: [embed] })
   setTimeout(async () => {
     embed.setDescription(
       'NYT RIITTAEAE VANDALISOINTI\nTAEAE ON NYT TEIKAEN HAUTA'

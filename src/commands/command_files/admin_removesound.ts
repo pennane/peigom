@@ -1,6 +1,7 @@
-import Command, { CommandExecutor, CommandConfiguration } from '../Command'
-import { readSoundData, writeSoundData } from './admin_createsound'
+import { ChannelType } from 'discord.js'
 import fs from 'fs/promises'
+import Command, { CommandConfiguration, CommandExecutor } from '../Command'
+import { readSoundData, writeSoundData } from './admin_createsound'
 
 const configuration: CommandConfiguration = {
   name: 'poistaääni',
@@ -13,9 +14,11 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
   const sendHowToUse = () => {
     const embed = Command.syntaxEmbed({ configuration })
-    message.channel.send({ embeds: [embed] }).catch((err) => console.info(err))
+    channel.send({ embeds: [embed] }).catch((err) => console.info(err))
   }
 
   if (!message.guild) return
@@ -30,9 +33,7 @@ const executor: CommandExecutor = async (message, client, args) => {
   const commandExists = soundToRemove in customSoundCommands
 
   if (!commandExists) {
-    message.channel.send(
-      'Ääntä ei ole edes ollut olemassa. Tarkista kirjoitusasu'
-    )
+    channel.send('Ääntä ei ole edes ollut olemassa. Tarkista kirjoitusasu')
     return
   }
 
@@ -42,9 +43,7 @@ const executor: CommandExecutor = async (message, client, args) => {
     soundCommand.addedBy !== message.author.id &&
     message.author.id !== message.guild.ownerId
   ) {
-    message.channel.send(
-      'Voit poistaa vain omia ääniä ellet ole palvelimen omistaja.'
-    )
+    channel.send('Voit poistaa vain omia ääniä ellet ole palvelimen omistaja.')
     return
   }
 
@@ -56,7 +55,7 @@ const executor: CommandExecutor = async (message, client, args) => {
 
   await writeSoundData(message.guild, customSoundCommands)
 
-  message.channel.send('Ääni poistettu')
+  channel.send('Ääni poistettu')
 }
 
 export default new Command({

@@ -1,7 +1,8 @@
-import Command, { CommandConfiguration, CommandExecutor } from '../Command'
-import playSound from '../../sound_handling/playSound'
+import { ChannelType } from 'discord.js'
 import fs from 'fs'
 import { arrayToChunks, randomFromArray } from '../../lib/util'
+import playSound from '../../sound_handling/playSound'
+import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 
 const configuration: CommandConfiguration = {
   name: 'pussukat',
@@ -32,7 +33,8 @@ const guildPlayDate: Map<string, number> = new Map()
 
 const executor: CommandExecutor = async (message, client, args) => {
   if (!message.guild) return
-
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
   const embed = Command.createEmbed()
   embed.setTitle('Pussukka')
 
@@ -46,13 +48,15 @@ const executor: CommandExecutor = async (message, client, args) => {
     if (pageNumber < 0) pageNumber = 0
     else if (pageNumber > pageCount - 1) pageNumber -= 1
 
-    embed.setFooter(`Sivu ${pageNumber + 1} / ${pageCount}`)
-    embed.addField(
-      `Sivun ${pageNumber + 1} pussukat`,
-      fileChunks[pageNumber].join(' ')
-    )
+    embed.setFooter({ text: `Sivu ${pageNumber + 1} / ${pageCount}` })
+    embed.addFields([
+      {
+        name: `Sivun ${pageNumber + 1} pussukat`,
+        value: fileChunks[pageNumber].join(' ')
+      }
+    ])
 
-    message.channel.send({ embeds: [embed] })
+    channel.send({ embeds: [embed] })
     return
   }
 
@@ -72,7 +76,7 @@ const executor: CommandExecutor = async (message, client, args) => {
     const soundfile = soundRoot + fileName
 
     embed.setDescription(fileName)
-    message.channel.send({ embeds: [embed] })
+    channel.send({ embeds: [embed] })
 
     playSound({ soundfile, message, exitAfter: true })
     return
@@ -81,7 +85,7 @@ const executor: CommandExecutor = async (message, client, args) => {
     const soundfile = soundRoot + fileName
 
     embed.setDescription(fileName)
-    message.channel.send({ embeds: [embed] })
+    channel.send({ embeds: [embed] })
     playSound({ soundfile, message, exitAfter: true })
     return
   }
@@ -101,9 +105,7 @@ const executor: CommandExecutor = async (message, client, args) => {
     guildPlayCount.set(message.guild.id, 0)
 
     if (plays > 1) {
-      message.channel.send(
-        'Sheeesh, soitin just ' + plays + ' yhtenäistä pussukkaa'
-      )
+      channel.send('Sheeesh, soitin just ' + plays + ' yhtenäistä pussukkaa')
     }
   }
 
@@ -111,10 +113,9 @@ const executor: CommandExecutor = async (message, client, args) => {
     const fileName = getSoundFileName()
     const soundfile = soundRoot + fileName
 
-    const channel = await voiceChannel?.fetch()
+    const vc = await voiceChannel?.fetch()
 
-    const shouldLeave =
-      !channel || !channel?.isVoice() || channel.members.size <= 1
+    const shouldLeave = !vc || vc.members.filter((m) => !m.user.bot).size === 0
 
     if (plays > 0 && shouldLeave) {
       handleEnd()
@@ -128,7 +129,7 @@ const executor: CommandExecutor = async (message, client, args) => {
 
     try {
       embed.setDescription(fileName)
-      message.channel.send({ embeds: [embed] })
+      channel.send({ embeds: [embed] })
       await playSound({ soundfile, message, exitAfter: false })
     } catch {
       handleEnd()

@@ -1,4 +1,5 @@
-import { Util } from 'discord.js'
+import { ChannelType } from 'discord.js'
+import { splitMessage } from '../../lib/util'
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 
 const configuration: CommandConfiguration = {
@@ -13,14 +14,16 @@ const configuration: CommandConfiguration = {
 
 const executor: CommandExecutor = async (message, client, args) => {
   const emojis = client.emojis.cache
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
   let emojiMessage = ''
   emojis.forEach((emoji) => {
     if (!emoji.available) return
     emojiMessage += `${emoji.toString()} `
   })
-  const splitMessage = Util.splitMessage(emojiMessage, { char: ' ' })
-  splitMessage.forEach((content) => {
-    message.channel.send(content)
+  const split = splitMessage(emojiMessage, { char: ' ' })
+  split.forEach((content) => {
+    channel.send(content)
   })
 }
 

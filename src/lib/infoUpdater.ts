@@ -1,20 +1,20 @@
-import Discord from 'discord.js'
 import c from 'chalk'
+import Discord, { ActivityType } from 'discord.js'
 import fs from 'fs'
 import schedule from 'node-schedule'
 
-import time from './getTime'
-import ZimmerTj from '../lib/zimmerTJ'
 import badwords from '../assets/badwords/badwords.json'
 import commandLoader from '../commands/loader'
-import { randomFromArray, shuffleArray } from './util'
+import ZimmerTj from '../lib/zimmerTJ'
 import {
+  ClientActivity,
+  COMMAND_SPAM_PROTECTION,
   DISCORD,
   LOG_USED_COMMANDS,
-  COMMAND_SPAM_PROTECTION,
-  PREFIX,
-  ClientActivity
+  PREFIX
 } from './config'
+import time from './getTime'
+import { randomFromArray, shuffleArray } from './util'
 
 const { ACTIVITIES, REFRESH_RATE } = DISCORD.PRESENCE
 
@@ -29,7 +29,9 @@ const setActivity = (activity: ClientActivity, client: Discord.Client) => {
     name: activity.text,
     type: activity.type,
     url:
-      activity.type === 'STREAMING' ? 'https://www.twitch.tv/ninja' : undefined
+      activity.type === ActivityType.Streaming
+        ? 'https://www.twitch.tv/ninja'
+        : undefined
   }
   client.user.setPresence({
     status: 'online',

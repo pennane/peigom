@@ -1,6 +1,7 @@
-import Command, { CommandConfiguration, CommandExecutor } from '../Command'
-import playSound from '../../sound_handling/playSound'
 import { getVoiceConnection } from '@discordjs/voice'
+import { ChannelType } from 'discord.js'
+import playSound from '../../sound_handling/playSound'
+import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 
 const configuration: CommandConfiguration = {
   name: 'yike',
@@ -14,6 +15,8 @@ const configuration: CommandConfiguration = {
 const soundfile = './assets/misc/yike/yike.mp3'
 
 const executor: CommandExecutor = async (message, client, args) => {
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
   if (!message.guild) return
 
   const targetUser = args[1]
@@ -26,7 +29,7 @@ const executor: CommandExecutor = async (message, client, args) => {
       .setDescription(
         `${message.author.username} ei tollasille voi antaa yikejä. (yike <@user>)`
       )
-    message.channel.send({ embeds: [embed] })
+    channel.send({ embeds: [embed] })
     return
   }
 
@@ -35,7 +38,7 @@ const executor: CommandExecutor = async (message, client, args) => {
   const botVoiceConnection = getVoiceConnection(message.guild.id)
 
   if (!voiceChannel || botVoiceConnection) {
-    message.channel.send({
+    channel.send({
       content: targetUser.toString(),
       files: [
         {
@@ -48,7 +51,7 @@ const executor: CommandExecutor = async (message, client, args) => {
   }
 
   playSound({ soundfile, message, exitAfter: true })
-  message.channel.send({
+  channel.send({
     content: targetUser.toString(),
     files: [
       {

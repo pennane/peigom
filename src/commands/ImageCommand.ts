@@ -1,10 +1,10 @@
-import Discord from 'discord.js'
-import sharp from 'sharp'
-import Command, { CommandConfiguration, CommandExecutor } from './Command'
-import { fetchFile } from '../lib/util'
+import Discord, { ChannelType } from 'discord.js'
 import fs from 'fs'
+import sharp from 'sharp'
 import activityLogger from '../lib/activityLogger'
 import * as AppConfiguration from '../lib/config'
+import { fetchFile } from '../lib/util'
+import Command, { CommandConfiguration, CommandExecutor } from './Command'
 
 export type ImageManipulator = (sharp: sharp.Sharp) => sharp.Sharp
 
@@ -56,15 +56,15 @@ export class ImageCommand extends Command {
   }
 
   executor: CommandExecutor = async (message, client, args) => {
-    if (!message.guild) return
+    const channel = message.channel
+    if (!message.guild || channel.type !== ChannelType.GuildText) return
 
     let targetUser: Discord.User
 
     if (args[1]) {
       const target = args[1].replace(/\D/g, '')
       const member = message.guild.members.cache.get(target)
-      if (!member?.user)
-        return message.channel.send('broidi kohdennettu ukko on rikki')
+      if (!member?.user) return channel.send('broidi kohdennettu ukko on rikki')
       targetUser = member.user
     } else {
       targetUser = message.author
@@ -84,7 +84,7 @@ export class ImageCommand extends Command {
     embed.setImage(`attachment://${this.imageName}.jpg`)
 
     if (fs.existsSync(temporaryImage)) {
-      await message.channel.send({
+      await channel.send({
         embeds: [embed],
         files: [
           {
@@ -100,8 +100,8 @@ export class ImageCommand extends Command {
 
     if (!fs.existsSync(avatarFile)) {
       const avatar = targetUser.displayAvatarURL({
-        format: 'jpg',
-        dynamic: false,
+        extension: 'jpg',
+        forceStatic: true,
         size: 512
       })
       await fetchFile({ url: avatar, target: avatarFile })
@@ -110,7 +110,7 @@ export class ImageCommand extends Command {
       temporaryImage
     )
 
-    await message.channel.send({
+    await channel.send({
       embeds: [embed],
       files: [
         {

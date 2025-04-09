@@ -1,6 +1,7 @@
-import { Util } from 'discord.js'
-import { inspect } from 'util'
+import { ChannelType } from 'discord.js'
 import jsBeautify from 'js-beautify'
+import { inspect } from 'util'
+import { splitMessage } from '../../lib/util'
 import Command, { CommandExecutor } from '../Command'
 import syntaxEmbed from '../syntaxEmbed'
 
@@ -26,6 +27,8 @@ const evaluateCode = async (code: string): Promise<any> => {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
   if (!args[1]) {
     const embed = syntaxEmbed({ configuration })
     return message.reply({ embeds: [embed] })
@@ -39,15 +42,15 @@ const executor: CommandExecutor = async (message, client, args) => {
 
   const beautified = beautify(evaluated)
 
-  const parts = Util.splitMessage(beautified, { maxLength: 5000 })
+  const parts = splitMessage(beautified, { maxLength: 950 })
 
-  parts.forEach((part, i) => {
+  parts.forEach((part) => {
     const embed = Command.createEmbed()
-    const fields = Util.splitMessage(part, { maxLength: 1000 })
+    const fields = splitMessage(part, { maxLength: 950 })
     fields.forEach((field) => {
-      embed.addField('\u200b', `\`\`\`js\n${field}\n\`\`\``)
+      embed.addFields({ name: '\u200b', value: `\`\`\`js\n${field}\n\`\`\`` })
     })
-    message.channel.send({ embeds: [embed] })
+    channel.send({ embeds: [embed] })
   })
 
   return

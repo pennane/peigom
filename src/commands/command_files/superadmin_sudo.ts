@@ -1,5 +1,5 @@
+import Discord, { ChannelType } from 'discord.js'
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
-import Discord from 'discord.js'
 
 const configuration: CommandConfiguration = {
   name: 'sudo',
@@ -13,11 +13,13 @@ const configuration: CommandConfiguration = {
 
 const executor: CommandExecutor = async (message, client, args) => {
   const SyntaxEmbed = Command.syntaxEmbed({ configuration })
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
   if (!args[2]) {
     setTimeout(() => {
       message.delete()
     }, 10000)
-    const syntax = await message.channel.send({ embeds: [SyntaxEmbed] })
+    const syntax = await channel.send({ embeds: [SyntaxEmbed] })
     setTimeout(() => {
       syntax.delete()
     }, 15000)
@@ -30,11 +32,11 @@ const executor: CommandExecutor = async (message, client, args) => {
     channelId
   ) as Discord.TextChannel
 
-  if (!targetChannel || targetChannel.type !== 'GUILD_TEXT') {
+  if (!targetChannel || targetChannel.type !== ChannelType.GuildText) {
     setTimeout(() => {
       message.delete()
     }, 10000)
-    const syntax = await message.channel.send({ embeds: [SyntaxEmbed] })
+    const syntax = await channel.send({ embeds: [SyntaxEmbed] })
     setTimeout(() => {
       syntax.delete()
     }, 15000)

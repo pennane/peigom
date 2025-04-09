@@ -1,3 +1,4 @@
+import { ChannelType } from 'discord.js'
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 
 const configuration: CommandConfiguration = {
@@ -12,9 +13,11 @@ const configuration: CommandConfiguration = {
 
 const executor: CommandExecutor = async (message, client, args) => {
   const SyntaxEmbed = Command.syntaxEmbed({ configuration })
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
 
   if (!args[3]) {
-    const syntax = await message.channel.send({ embeds: [SyntaxEmbed] })
+    const syntax = await channel.send({ embeds: [SyntaxEmbed] })
     setTimeout(() => {
       syntax.delete()
       message.delete()
@@ -25,7 +28,7 @@ const executor: CommandExecutor = async (message, client, args) => {
   const messageAmount = Number(args[2])
 
   if (isNaN(messageAmount) || messageAmount > 100) {
-    const embed = await message.channel.send({
+    const embed = await channel.send({
       embeds: [
         Command.createEmbed()
           .setTitle('Epäkelpo määrä viestejä')
@@ -43,7 +46,7 @@ const executor: CommandExecutor = async (message, client, args) => {
   const userid = args[1].replace(/\D/g, '')
 
   if (!message.guild?.members.cache.get(userid)) {
-    const syntax = await message.channel.send({ embeds: [SyntaxEmbed] })
+    const syntax = await channel.send({ embeds: [SyntaxEmbed] })
     setTimeout(() => {
       syntax.delete()
       message.delete()
@@ -56,7 +59,7 @@ const executor: CommandExecutor = async (message, client, args) => {
   const targetUser = message.guild.members.cache.get(userid)
 
   if (!targetUser) {
-    const embed = await message.channel.send({
+    const embed = await channel.send({
       embeds: [
         Command.createEmbed()
           .setTitle('Epäkelpo vastaanottaja')

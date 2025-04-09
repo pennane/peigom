@@ -1,5 +1,5 @@
-import dotenv from 'dotenv'
 import Discord from 'discord.js'
+import dotenv from 'dotenv'
 dotenv.config()
 
 const DISCORD_TOKEN = process.env.TOKEN
@@ -20,55 +20,55 @@ export interface ClientActivity {
 const activities: ClientActivity[] = [
   {
     text: '4D Chess',
-    type: 'COMPETING'
+    type: Discord.ActivityType.Competing
   },
   {
     text: 'presidency',
-    type: 'COMPETING'
+    type: Discord.ActivityType.Competing
   },
   {
     text: ',auta',
-    type: 'LISTENING'
+    type: Discord.ActivityType.Listening
   },
   {
     text: 'Niinistö dab',
-    type: 'WATCHING'
+    type: Discord.ActivityType.Watching
   },
   {
     text: 'Borat on Amazon Prime',
-    type: 'STREAMING'
+    type: Discord.ActivityType.Streaming
   },
   {
     text: 'Fortnite',
-    type: 'STREAMING'
+    type: Discord.ActivityType.Streaming
   },
   {
     text: 'sugondese is still a funny meme',
-    type: 'PLAYING'
+    type: Discord.ActivityType.Playing
   },
   {
     text: 'Fröbelin palikat',
-    type: 'LISTENING'
+    type: Discord.ActivityType.Listening
   },
   {
     text: PREFIX + 'pussukat',
-    type: 'LISTENING'
+    type: Discord.ActivityType.Listening
   },
   {
     text: 'pullava',
-    type: 'WATCHING'
+    type: Discord.ActivityType.Watching
   },
   {
     text: 'documentaries',
-    type: 'WATCHING'
+    type: Discord.ActivityType.Watching
   },
   {
     text: 'smooth jazz',
-    type: 'LISTENING'
+    type: Discord.ActivityType.Listening
   },
   {
     text: 'your conversation',
-    type: 'LISTENING'
+    type: Discord.ActivityType.Listening
   }
 ]
 
@@ -96,9 +96,9 @@ if (process.env.NODE_ENV === 'development') {
 export {
   APP,
   COMMAND_SPAM_PROTECTION,
-  LOG_USED_COMMANDS,
-  DISCORD_TOKEN,
-  YOUTUBE_API_KEY,
   DISCORD,
-  PREFIX
+  DISCORD_TOKEN,
+  LOG_USED_COMMANDS,
+  PREFIX,
+  YOUTUBE_API_KEY
 }

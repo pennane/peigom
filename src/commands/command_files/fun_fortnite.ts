@@ -1,7 +1,7 @@
-import playSound from '../../sound_handling/playSound'
+import { ChannelType } from 'discord.js'
 import dancemoves from '../../assets/fortnite/dancemoves'
+import playSound from '../../sound_handling/playSound'
 import Command, { CommandExecutor } from '../Command'
-import { queueMethods } from '../../sound_handling/sound'
 
 const configuration = {
   name: 'fortnite',
@@ -15,6 +15,8 @@ const configuration = {
 const soundfile = './assets/sound/fortnite.mp3'
 
 const executor: CommandExecutor = async (message, client, args) => {
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
   if (!message.member || !message.guild) return
 
   const voiceChannel = message.member?.voice.channel
@@ -28,14 +30,14 @@ const executor: CommandExecutor = async (message, client, args) => {
       .setDescription(
         `${user.username} mene eka jollekki voicechannelille, kid.`
       )
-    message.channel.send({ embeds: [embed] })
+    channel.send({ embeds: [embed] })
     return
   }
 
   playSound({ soundfile, message, exitAfter: true })
   dancemoves.forEach((move, i) => {
     setTimeout(() => {
-      message.channel.send(move)
+      channel.send(move)
     }, (7000 * i) / dancemoves.length + 500)
   })
 }

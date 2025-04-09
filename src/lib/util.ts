@@ -1,8 +1,8 @@
-import { yt } from '../sound_handling/sound'
 import fs from 'fs'
 import https from 'https'
+import { yt } from '../sound_handling/sound'
 
-import ytdl from 'ytdl-core'
+import ytdl from '@distube/ytdl-core'
 import memoize from 'memoizee'
 
 export function arrayToChunks<T>(arr: T[], chunkSize: number): Array<T[]> {
@@ -103,4 +103,34 @@ export function ceiledDayDifference(msA: number, msB: number) {
   const days = Math.ceil(msDist / ONE_DAY_MS)
 
   return days
+}
+export const splitMessage = (
+  message: string,
+  options: { maxLength?: number; char?: string } = {}
+) => {
+  const { maxLength = 2000, char = '\n' } = options
+  const result: string[] = []
+
+  // Split the message by the delimiter if needed
+  if (message.length <= maxLength) {
+    return [message]
+  }
+
+  let currentChunk = ''
+  const messageParts = message.split(char)
+
+  messageParts.forEach((part) => {
+    if (currentChunk.length + part.length + char.length <= maxLength) {
+      currentChunk += part + char
+    } else {
+      result.push(currentChunk.trim())
+      currentChunk = part + char
+    }
+  })
+
+  if (currentChunk.length) {
+    result.push(currentChunk.trim())
+  }
+
+  return result
 }

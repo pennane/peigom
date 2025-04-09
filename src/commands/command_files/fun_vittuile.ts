@@ -1,7 +1,7 @@
+import { ChannelType, PermissionFlagsBits, Role } from 'discord.js'
 import names from '../../assets/badwords/badwords.json'
-import Command, { CommandConfiguration, CommandExecutor } from '../Command'
-import { Role, Permissions } from 'discord.js'
 import { randomFromArray } from '../../lib/util'
+import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 
 const configuration: CommandConfiguration = {
   name: 'vittuile',
@@ -13,17 +13,19 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
   if (!message.member || !client?.user) {
     return
   }
 
-  message.channel.send(
+  channel.send(
     `**${message.author.username} ${
       message.member.nickname ? `a.k.a ${message.member.nickname}` : ''
     }**, ai rupeet vittuilee hä?`
   )
 
-  if (message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
+  if (message.member.permissions.has(PermissionFlagsBits.Administrator)) {
     return message
       .reply('Oops, sori oot vissii joku admin kid.')
       .catch((err) => console.info(err))
@@ -33,7 +35,7 @@ const executor: CommandExecutor = async (message, client, args) => {
 
   if (
     !clientMember ||
-    !clientMember.permissions.has(Permissions.FLAGS.MANAGE_NICKNAMES)
+    !clientMember.permissions.has(PermissionFlagsBits.ManageNicknames)
   ) {
     message.reply('Jaha, no eipä mulla ollukkaa oikeuksia pistää sua turpaa.')
     return

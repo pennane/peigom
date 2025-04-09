@@ -1,3 +1,4 @@
+import { ChannelType } from 'discord.js'
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 
 const configuration: CommandConfiguration = {
@@ -12,12 +13,14 @@ const configuration: CommandConfiguration = {
 
 const executor: CommandExecutor = async (message, client, args) => {
   const SyntaxEmbed = Command.syntaxEmbed({ configuration })
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
 
   if (!args[2]) {
     setTimeout(() => {
       message.delete()
     }, 10000)
-    const notifyMessage = await message.channel.send({ embeds: [SyntaxEmbed] })
+    const notifyMessage = await channel.send({ embeds: [SyntaxEmbed] })
     setTimeout(() => {
       notifyMessage.delete()
     }, 15000)
@@ -33,7 +36,7 @@ const executor: CommandExecutor = async (message, client, args) => {
     setTimeout(() => {
       message.delete()
     }, 1200)
-    const notifyMessage = await message.channel.send({ embeds: [SyntaxEmbed] })
+    const notifyMessage = await channel.send({ embeds: [SyntaxEmbed] })
     setTimeout(() => {
       notifyMessage.delete()
     }, 15000)

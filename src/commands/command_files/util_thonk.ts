@@ -1,5 +1,5 @@
+import Discord, { ChannelType, PermissionFlagsBits } from 'discord.js'
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
-import Discord, { Permissions } from 'discord.js'
 
 const configuration: CommandConfiguration = {
   name: 'thonk',
@@ -11,6 +11,8 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
   const hasEmoji = client.emojis.cache.some(
     (emoji) => emoji.id === '443343009229045760'
   )
@@ -19,24 +21,24 @@ const executor: CommandExecutor = async (message, client, args) => {
 
   if (message.guild) {
     const channel = message.channel as Discord.TextChannel
-    const permissions = message.guild.me
-      ? channel.permissionsFor(message.guild.me)
+    const permissions = message.guild.members.me
+      ? channel.permissionsFor(message.guild.members.me)
       : null
     if (!permissions) {
       hasPermissions = false
     } else {
-      hasPermissions = permissions.has(Permissions.FLAGS.USE_EXTERNAL_EMOJIS)
+      hasPermissions = permissions.has(PermissionFlagsBits.UseExternalEmojis)
     }
   } else {
     hasPermissions = true
   }
 
   if (!hasEmoji || !hasPermissions) {
-    message.channel.send(':thinking:')
+    channel.send(':thinking:')
     return
   }
 
-  message.channel.send('<a:thonk:443343009229045760>')
+  channel.send('<a:thonk:443343009229045760>')
 }
 
 export default new Command({

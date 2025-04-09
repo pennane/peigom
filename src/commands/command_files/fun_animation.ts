@@ -1,5 +1,6 @@
-import Command, { CommandConfiguration, CommandExecutor } from '../Command'
+import { ChannelType } from 'discord.js'
 import { PREFIX } from '../../lib/config'
+import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 
 const animations = [
   {
@@ -37,13 +38,15 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
   const embed = Command.createEmbed()
 
   if (Object.keys(animations).length === 0) {
     embed
       .setTitle(`Hupsista saatana`)
       .setDescription(`Botilla ei ole yhtäkään animaatiota ladattuna.`)
-    message.channel.send({ embeds: [embed] })
+    channel.send({ embeds: [embed] })
     return
   }
 
@@ -55,14 +58,15 @@ const executor: CommandExecutor = async (message, client, args) => {
     embed
       .setTitle(`Lista saatavailla olevista animaatioista:`)
       .setDescription(`\`${animationNames}\``)
-      .setFooter(
-        'Käyttöesimerkki: ' +
+      .setFooter({
+        text:
+          'Käyttöesimerkki: ' +
           PREFIX +
           configuration.name +
           ' ' +
           animationNames[0]
-      )
-    await message.channel.send({ embeds: [embed] })
+      })
+    await channel.send({ embeds: [embed] })
     return
   }
 
@@ -75,18 +79,19 @@ const executor: CommandExecutor = async (message, client, args) => {
     embed
       .setTitle(`Lista saatavailla olevista animaatioista:`)
       .setDescription(`\`${animationNames}\``)
-      .setFooter(
-        'Käyttöesimerkki: ' +
+      .setFooter({
+        text:
+          'Käyttöesimerkki: ' +
           PREFIX +
           configuration.name +
           ' ' +
           animationNames[0]
-      )
-    await message.channel.send({ embeds: [embed] })
+      })
+    await channel.send({ embeds: [embed] })
     return
   }
 
-  const animationMessage = await message.channel.send(animation.keyframes[0])
+  const animationMessage = await channel.send(animation.keyframes[0])
 
   animation.keyframes.slice(1).forEach((frame, i) => {
     if (!animation) return

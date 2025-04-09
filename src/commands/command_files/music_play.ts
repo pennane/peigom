@@ -1,6 +1,7 @@
-import Command, { CommandConfiguration, CommandExecutor } from '../Command'
-import { queueMethods, Track } from '../../sound_handling/sound'
+import { ChannelType } from 'discord.js'
 import { getYoutubeVideo } from '../../lib/util'
+import { queueMethods, Track } from '../../sound_handling/sound'
+import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 
 const configuration: CommandConfiguration = {
   name: 'play',
@@ -15,16 +16,16 @@ const configuration: CommandConfiguration = {
 const executor: CommandExecutor = async (message, client, args) => {
   const voiceChannel = message.member?.voice.channel
   const guild = message.guild
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
 
   if (!message.member || !guild) return
 
   if (!voiceChannel)
     return message.reply('Mene ensin jollekin puhekanavalle, kid.')
 
-  if (voiceChannel.type !== 'GUILD_VOICE') return
-
   if (!args[1]) {
-    message.channel.send({
+    channel.send({
       embeds: [
         Command.syntaxEmbed({
           configuration,
@@ -37,7 +38,7 @@ const executor: CommandExecutor = async (message, client, args) => {
 
   const query = args.slice(1).join(' ')
 
-  message.channel.send(`:mag: Etitään \`${query}\``)
+  channel.send(`:mag: Etitään \`${query}\``)
   let track: Track | null
   try {
     const fetchedTrack = await getYoutubeVideo(query)

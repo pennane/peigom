@@ -1,3 +1,4 @@
+import { ChannelType } from 'discord.js'
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 
 const configuration: CommandConfiguration = {
@@ -10,7 +11,8 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
-  if (message.channel.type !== 'GUILD_TEXT') return
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
 
   const embed = Command.createEmbed().setTitle('Botin kommentti:')
 
@@ -23,13 +25,13 @@ const executor: CommandExecutor = async (message, client, args) => {
     amountToRemove > 99
   ) {
     const syntaxEmbed = Command.syntaxEmbed({ configuration })
-    message.channel.send({ embeds: [syntaxEmbed] })
+    channel.send({ embeds: [syntaxEmbed] })
     return
   }
 
-  await message.channel.bulkDelete(amountToRemove + 1)
+  await channel.bulkDelete(amountToRemove + 1)
   embed.setDescription(`Poistin ${amountToRemove} viestiä.`)
-  message.channel
+  channel
     .send({ embeds: [embed] })
     .then((message) => setTimeout(() => message.delete(), 8000))
 }

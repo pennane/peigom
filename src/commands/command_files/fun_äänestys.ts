@@ -1,3 +1,4 @@
+import { ChannelType } from 'discord.js'
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 
 const configuration: CommandConfiguration = {
@@ -10,8 +11,10 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
   if (args.length === 1) {
-    return message.channel.send({
+    return channel.send({
       embeds: [Command.syntaxEmbed({ configuration })]
     })
   }
@@ -25,7 +28,7 @@ const executor: CommandExecutor = async (message, client, args) => {
     .setDescription(`${voteArgs.join(' ')}`)
     .setTimestamp()
 
-  const voteMessage = await message.channel.send({ embeds: [embed] })
+  const voteMessage = await channel.send({ embeds: [embed] })
   message.deletable ? message.delete() : null
   await voteMessage.react('👍')
   voteMessage.react('👎')

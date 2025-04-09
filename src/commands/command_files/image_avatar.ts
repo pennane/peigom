@@ -1,3 +1,4 @@
+import { ChannelType } from 'discord.js'
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 
 const configuration: CommandConfiguration = {
@@ -11,16 +12,17 @@ const configuration: CommandConfiguration = {
 
 const executor: CommandExecutor = async (message, client, args) => {
   const embed = Command.createEmbed()
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
   if (args.length === 1) {
     const user = message.author
     const image = user.displayAvatarURL({
-      format: 'png',
-      dynamic: true,
+      extension: 'png',
       size: 4096
     })
 
     embed.setTitle(`Käyttäjän ${user.username} avatari.`).setImage(image)
-    message.channel.send({ embeds: [embed] })
+    channel.send({ embeds: [embed] })
     return
   }
 
@@ -45,15 +47,14 @@ const executor: CommandExecutor = async (message, client, args) => {
   }
 
   const image = member.user.displayAvatarURL({
-    format: 'png',
-    dynamic: true,
+    extension: 'png',
     size: 4096
   })
 
   embed.setTitle(`Käyttäjän ${member.displayName} avatari.`)
   embed.setImage(image)
 
-  message.channel.send({ embeds: [embed] })
+  channel.send({ embeds: [embed] })
   return
 }
 

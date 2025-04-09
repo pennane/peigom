@@ -1,11 +1,11 @@
-import Command, { CommandExecutor, CommandConfiguration } from '../Command'
-import fs from 'fs/promises'
-import { fetchFile } from '../../lib/util'
-import getLoadedCommands from '../loader'
-import { PREFIX } from '../../lib/config'
-import { Guild } from 'discord.js'
+import { ChannelType, Guild } from 'discord.js'
 import FileType from 'file-type'
+import fs from 'fs/promises'
 import { log } from '../../lib/activityLogger'
+import { PREFIX } from '../../lib/config'
+import { fetchFile } from '../../lib/util'
+import Command, { CommandConfiguration, CommandExecutor } from '../Command'
+import getLoadedCommands from '../loader'
 
 const configuration: CommandConfiguration = {
   name: 'luoääni',
@@ -48,8 +48,13 @@ export const readSoundData = async (guild: Guild): Promise<SoundData> => {
     if (file) file.close()
   }
 
-  const data = await fs.readFile(guildSoundDataPath, 'utf8')
-  return JSON.parse(data)
+  try {
+    const data = await fs.readFile(guildSoundDataPath, 'utf8')
+    const parsed = JSON.parse(data)
+    return parsed
+  } catch {
+    return {}
+  }
 }
 export const writeSoundData = async (
   guild: Guild,
@@ -65,9 +70,11 @@ const executor: CommandExecutor = async (message, client, args) => {
 
   const soundFileExtensions = ['mp3']
 
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
   const sendHowToUse = () => {
     const embed = Command.syntaxEmbed({ configuration })
-    message.channel.send({ embeds: [embed] }).catch((err) => console.info(err))
+    channel.send({ embeds: [embed] }).catch((err) => console.info(err))
   }
 
   const soundCommandName = args[1]
@@ -89,7 +96,7 @@ const executor: CommandExecutor = async (message, client, args) => {
   }
 
   if (attachedSoundFile.size > 3000000) {
-    message.channel.send('Liian iso tiedosto. Vain alle 3mb on ok')
+    channel.send('Liian iso tiedosto. Vain alle 3mb on ok')
     return
   }
 
@@ -101,19 +108,19 @@ const executor: CommandExecutor = async (message, client, args) => {
   const target = `./assets/createsound/guilds/${message.guild.id}/${fileName}`
 
   if (soundCommandName in loadedBaseTriggers) {
-    message.channel.send('Nimi on jo käytössä')
+    channel.send('Nimi on jo käytössä')
     return
   }
 
   if (!message.guild) {
-    message.channel.send('Lähetä viesti palvelimen teksikanavalle')
+    channel.send('Lähetä viesti palvelimen teksikanavalle')
     return
   }
 
   const loadedCustomSounds = await readSoundData(message.guild)
 
   if (soundCommandName in loadedCustomSounds) {
-    message.channel.send('Nimi on jo toisella äänellä käytössä')
+    channel.send('Nimi on jo toisella äänellä käytössä')
     return
   }
 
@@ -125,7 +132,7 @@ const executor: CommandExecutor = async (message, client, args) => {
       throw new Error()
     }
   } catch (e) {
-    message.channel.send('Ei perseillä. Pelkkiä mp3 tiedostoja.')
+    channel.send('Ei perseillä. Pelkkiä mp3 tiedostoja.')
     log({
       id: 15,
       content: `User ${
@@ -154,7 +161,7 @@ const executor: CommandExecutor = async (message, client, args) => {
   embed.setDescription(
     `Komento \`${PREFIX}${soundCommandName}\` on nyt käytössä.`
   )
-  message.channel.send({ embeds: [embed] })
+  channel.send({ embeds: [embed] })
 }
 
 export default new Command({

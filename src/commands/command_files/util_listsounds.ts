@@ -1,6 +1,7 @@
-import Command, { CommandExecutor, CommandConfiguration } from '../Command'
-import { arrayToChunks } from '../../lib/util'
+import { ChannelType } from 'discord.js'
 import { PREFIX } from '../../lib/config'
+import { arrayToChunks } from '../../lib/util'
+import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 import { readSoundData } from './admin_createsound'
 
 const configuration: CommandConfiguration = {
@@ -15,13 +16,15 @@ const configuration: CommandConfiguration = {
 
 const executor: CommandExecutor = async (message, client, args) => {
   if (!message.guild) return
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
   const customSounds = await readSoundData(message.guild)
   const soundNames = Object.keys(customSounds)
 
   const embed = Command.createEmbed()
 
   if (soundNames.length === 0) {
-    message.channel.send('Ei custom äänikomentoja.')
+    channel.send('Ei custom äänikomentoja.')
     return
   }
 
@@ -37,14 +40,14 @@ const executor: CommandExecutor = async (message, client, args) => {
 
   embed.setTitle('Custom äänikomennot')
   currentPageSoundNames.forEach((soundName) => {
-    embed.addField(
-      `${PREFIX}${soundName}`,
-      `Lisännyt <@${customSounds[soundName].addedBy}>`
-    )
+    embed.addFields({
+      name: `${PREFIX}${soundName}`,
+      value: `Lisännyt <@${customSounds[soundName].addedBy}>`
+    })
   })
-  embed.setFooter(`Sivu ${pageNumber + 1} / ${pageCount}`)
+  embed.setFooter({ text: `Sivu ${pageNumber + 1} / ${pageCount}` })
 
-  message.channel.send({ embeds: [embed] })
+  channel.send({ embeds: [embed] })
 }
 
 export default new Command({

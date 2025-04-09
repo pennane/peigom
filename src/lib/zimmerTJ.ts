@@ -3,7 +3,7 @@ import schedule from 'node-schedule'
 import { ceiledDayDifference } from './util'
 
 const zimmerChannelId = '759808413877796966'
-const zimmerDate = new Date(`May 11, 2024 00:00:00`).getTime()
+const zimmerDate = new Date(`May 17, 2025 00:00:00`).getTime()
 
 export function editZimmerChannel(channel: Discord.VoiceChannel) {
   if (!channel) return console.info('zimmer channel not available')

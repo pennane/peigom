@@ -1,5 +1,6 @@
-import Command, { CommandExecutor, CommandConfiguration } from '../Command'
+import { ChannelType } from 'discord.js'
 import fs from 'fs'
+import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 
 if (!fs.existsSync('./data/disabledChannels/channels.json')) {
   fs.writeFileSync('./data/disabledChannels/channels.json', '{}')
@@ -21,9 +22,11 @@ const configuration: CommandConfiguration = {
 }
 
 const executor: CommandExecutor = async (message, client, args) => {
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
   const sendHowToUse = () => {
     const embed = Command.syntaxEmbed({ configuration })
-    message.channel.send({ embeds: [embed] }).catch((err) => console.info(err))
+    channel.send({ embeds: [embed] }).catch((err) => console.info(err))
   }
 
   if (!message.guild) return
@@ -55,20 +58,20 @@ const executor: CommandExecutor = async (message, client, args) => {
   if (!args[2]) {
     if (args[1] === 'joo') {
       disabledChannels[channelId] = 'listening'
-      message.channel.send(' Peigom kuuntelee taas <#' + channelId + '>')
+      channel.send(' Peigom kuuntelee taas <#' + channelId + '>')
     } else if (args[1] === 'ei') {
       disabledChannels[channelId] = 'disabled'
-      message.channel.send(' Peigom ei enää kuuntele <#' + channelId + '>')
+      channel.send(' Peigom ei enää kuuntele <#' + channelId + '>')
     } else {
       sendHowToUse()
     }
   } else {
     if (args[2] === 'joo') {
       disabledChannels[channelId] = 'listening'
-      message.channel.send(' Peigom kuuntelee taas ' + args[1])
+      channel.send(' Peigom kuuntelee taas ' + args[1])
     } else if (args[2] === 'ei') {
       disabledChannels[channelId] = 'disabled'
-      message.channel.send(' Peigom ei enää kuuntele ' + args[1])
+      channel.send(' Peigom ei enää kuuntele ' + args[1])
     } else {
       sendHowToUse()
     }

@@ -11,8 +11,8 @@ type SoundCommandExecutor = (
 
 export const executor: SoundCommandExecutor = async (
   message,
-  client,
-  args,
+  _client,
+  _args,
   sound
 ) => {
   const guild = message.guild

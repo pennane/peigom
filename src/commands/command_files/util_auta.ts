@@ -1,7 +1,7 @@
-import Command, { CommandConfiguration, CommandExecutor } from '../Command'
+import { EmbedBuilder, TextChannel } from 'discord.js'
 import * as AppConfiguration from '../../lib/config'
+import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 import commandLoader from '../loader'
-import Discord from 'discord.js'
 
 const prefix = AppConfiguration.PREFIX
 
@@ -25,17 +25,11 @@ const embedConfiguration = {
 async function loadCommandData() {
   const { commands: loadedCommands } = await commandLoader()
   const triggers: Map<string, string> = new Map()
-  const types: {
-    [type: string]: Command[]
-  } = {}
+  const types: { [type: string]: Command[] } = {}
 
   loadedCommands.forEach((command, name) => {
-    if (
-      !AppConfiguration.YOUTUBE_API_KEY &&
-      command.types.some((type) => type === 'music')
-    )
+    if (!AppConfiguration.YOUTUBE_API_KEY && command.types.includes('music'))
       return
-
     if (command.hidden) return
 
     command.types.forEach((type) => {
@@ -48,6 +42,7 @@ async function loadCommandData() {
       }
     })
   })
+
   return { commands: loadedCommands, triggers, types }
 }
 
@@ -56,36 +51,43 @@ const commandData = loadCommandData()
 const executor: CommandExecutor = async (message, client, args) => {
   const { commands, triggers, types } = await commandData
 
-  const action = args[1] ? args[1].toLowerCase() : null
-  const subAction = args[2] ? args[2].toLowerCase() : null
+  const action = args[1]?.toLowerCase() || null
+  const subAction = args[2]?.toLowerCase() || null
 
   function createBaseEmbed() {
-    const embed = new Discord.MessageEmbed()
-      .setAuthor(`${client.user?.username}`, `${client.user?.avatarURL()}`)
+    return new EmbedBuilder()
+      .setAuthor({
+        name: `${client.user?.username}`,
+        iconURL: `${client.user?.avatarURL()}`
+      })
       .setTitle(`${AppConfiguration.APP.NAME}  \`${configuration.name}\``)
       .setColor(embedConfiguration.color)
       .setDescription(embedConfiguration.desc)
-      .setFooter(
-        embedConfiguration.footer,
-        'https://arttu.pennanen.org/file/thonk.gif'
-      )
+      .setFooter({
+        text: embedConfiguration.footer,
+        iconURL: 'https://arttu.pennanen.org/file/thonk.gif'
+      })
       .setTimestamp()
-
-    return embed
   }
 
-  function createNoActionEmbed(action: string): Discord.MessageEmbed {
+  function createNoActionEmbed(action: string) {
     const embed = createBaseEmbed()
-
-    embed
-      .setTitle(':eyes: Hupsista')
-      .setDescription(
-        `Antamaasi \`${prefix}${configuration.name}\` toimintoa \`${action}\` ei ole olemassa.`
-      )
-      .addField(
-        `:pencil: **Kokeile** \`${prefix}${configuration.name} komennot\``,
-        `(tai pelkästään ${prefix}${configuration.name})`
-      )
+    embed.setTitle(':eyes: Hupsista')
+    embed.setDescription(
+      `Antamaasi \`${prefix}${configuration.name}\` toimintoa \`${action}\` ei ole olemassa.`
+    )
+    embed.addFields([
+      {
+        name: ':pencil: **Kokeile**',
+        value: `\`${prefix}${configuration.name} komennot\``,
+        inline: false
+      },
+      {
+        name: '(tai pelkästään',
+        value: `${prefix}${configuration.name})`,
+        inline: false
+      }
+    ])
     return embed
   }
 
@@ -93,109 +95,102 @@ const executor: CommandExecutor = async (message, client, args) => {
     const embed = createBaseEmbed()
     const adminAuthorized = Command.isMemberSuperAdminAuthorized(message)
 
-    embed.addField(
-      `:mega: Tietoa komennoista:`,
-      `\`${prefix}${configuration.name} komennot\``,
-      false
-    )
+    embed.addFields([
+      {
+        name: ':mega: Tietoa komennoista:',
+        value: `\`${prefix}${configuration.name} komennot\``,
+        inline: false
+      }
+    ])
+
     if (adminAuthorized) {
-      embed.addField(
-        `:loudspeaker: Tietoa admin komennoista:`,
-        `\`${prefix}${configuration.name} admin\``,
-        false
-      )
+      embed.addFields([
+        {
+          name: ':loudspeaker: Tietoa admin komennoista:',
+          value: `\`${prefix}${configuration.name} admin\``,
+          inline: false
+        }
+      ])
     }
 
-    embed.addField(
-      `:thinking: Tietoa botista:`,
-      `\`${prefix}${configuration.name} ${AppConfiguration.APP.NAME} \``,
-      false
-    )
-    embed.addField(
-      `:question: Tietoa tietystä komennosta:`,
-      `\`${prefix}${configuration.name} <komennon nimi> \``,
-      false
-    )
+    embed.addFields([
+      {
+        name: ':thinking: Tietoa botista:',
+        value: `\`${prefix}${configuration.name} ${AppConfiguration.APP.NAME} \``,
+        inline: false
+      },
+      {
+        name: ':question: Tietoa tietystä komennosta:',
+        value: `\`${prefix}${configuration.name} <komennon nimi> \``,
+        inline: false
+      }
+    ])
+
     return embed
   }
 
-  function createTypesEmbed(loadedTypes: {
-    [type: string]: Command[]
-  }): Discord.MessageEmbed {
+  function createTypesEmbed(loadedTypes: { [type: string]: Command[] }) {
     const embed = createBaseEmbed()
-    let types = Object.keys(loadedTypes)
+    let typeKeys = Object.keys(loadedTypes)
     const variants = Command.variants()
-
     const adminAuthorized = Command.isMemberAdminAuthorized(message)
     const superadminAuthorized = Command.isMemberSuperAdminAuthorized(message)
 
-    if (!adminAuthorized) {
-      types = types.filter((type) => type !== 'admin')
-    }
-
-    if (!superadminAuthorized) {
-      types = types.filter((type) => type !== 'superadmin')
-    }
+    if (!adminAuthorized) typeKeys = typeKeys.filter((t) => t !== 'admin')
+    if (!superadminAuthorized)
+      typeKeys = typeKeys.filter((t) => t !== 'superadmin')
 
     embed.setTitle('Komentotyypit:')
     embed.setDescription('Kaikki eri komentotyypit listattuna')
 
-    types.forEach((type) => {
+    typeKeys.forEach((type) => {
       const variant = variants[type]
-      const amountOfCommands = loadedTypes[type].length
-      embed.addField(
-        `${variant.emoji} ${variant.name}`,
-        `\`${prefix}${configuration.name} ${type}\`\n${
-          amountOfCommands === 1 ? '1 komento' : `${amountOfCommands} komentoa`
-        }`,
-        true
-      )
+      const count = loadedTypes[type].length
+      embed.addFields([
+        {
+          name: `${variant.emoji} ${variant.name}`,
+          value: `\`${prefix}${configuration.name} ${type}\`\n${
+            count === 1 ? '1 komento' : `${count} komentoa`
+          }`,
+          inline: true
+        }
+      ])
     })
 
-    if (types.length % 3 === 2) {
-      embed.addField('\u200b', '\u200b', true)
+    if (typeKeys.length % 3 === 2) {
+      embed.addFields([{ name: '​', value: '​', inline: true }])
     }
 
     return embed
   }
 
-  function createCommandTypeEmbed(
-    type: string,
-    typeCommands: Command[]
-  ): Discord.MessageEmbed {
+  function createCommandTypeEmbed(type: string, typeCommands: Command[]) {
     const embed = createBaseEmbed()
-
     embed.setTitle(`Tyypin \`${type}\` komennot`)
     embed.setDescription(`Kaikki antamasi tyypin \`${type}\` komennot`)
 
     const isAdmin = Command.isMemberAdminAuthorized(message)
     const isSuperAdmin = Command.isMemberSuperAdminAuthorized(message)
 
-    if (type.toLowerCase() === 'admin' && !isAdmin) {
-      embed.addField(':sos: Tsot tsot', 'et sä saa näitä nähdä.')
-      return embed
-    } else if (type.toLowerCase() === 'superadmin' && !isSuperAdmin) {
-      embed.addField(':sos: Tsot tsot', 'et sä saa näitä nähdä.')
+    if (
+      (type === 'admin' && !isAdmin) ||
+      (type === 'superadmin' && !isSuperAdmin)
+    ) {
+      embed.addFields([
+        { name: ':sos: Tsot tsot', value: 'et sä saa näitä nähdä.' }
+      ])
       return embed
     }
 
     let commands = typeCommands
-
     if (!isAdmin && !isSuperAdmin) {
       commands = commands.filter(
-        (command) =>
-          !command.types.some(
-            (type) => type === 'admin' || type === 'superadmin'
-          )
+        (c) => !c.types.includes('admin') && !c.types.includes('superadmin')
       )
     } else if (!isAdmin) {
-      commands = commands.filter(
-        (command) => !command.types.some((type) => type === 'admin')
-      )
+      commands = commands.filter((c) => !c.types.includes('admin'))
     } else if (!isSuperAdmin) {
-      commands = commands.filter(
-        (command) => !command.types.some((type) => type === 'superadmin')
-      )
+      commands = commands.filter((c) => !c.types.includes('superadmin'))
     }
 
     if (commands.length === 0) {
@@ -206,66 +201,78 @@ const executor: CommandExecutor = async (message, client, args) => {
     }
 
     commands.forEach((command) => {
-      embed.addField(
-        ` ${
-          command.types.includes('admin') ||
-          command.types.includes('superadmin')
-            ? ':unlock: '
-            : ''
-        }${command.name}`,
-        `\`${prefix}${configuration.name} ${command.name} \``,
-        true
-      )
+      embed.addFields([
+        {
+          name: `${
+            command.types.includes('admin') ||
+            command.types.includes('superadmin')
+              ? ':unlock: '
+              : ''
+          }${command.name}`,
+          value: `\`${prefix}${configuration.name} ${command.name} \``,
+          inline: true
+        }
+      ])
     })
 
     if (commands.length % 3 === 2) {
-      embed.addField('\u200b', '\u200b', true)
+      embed.addFields([{ name: '​', value: '​', inline: true }])
     }
 
     return embed
   }
 
-  function createApplicationInformationEmbed(): Discord.MessageEmbed {
+  function createApplicationInformationEmbed() {
     const embed = createBaseEmbed()
     const avatarURL = client.user?.avatarURL()
-    if (avatarURL) {
-      embed.setThumbnail(avatarURL)
-    }
+    if (avatarURL) embed.setThumbnail(avatarURL)
+
     embed
       .setTitle(`${AppConfiguration.APP.NAME}  \`tietoa\``)
-      .setDescription(`Tietoa botista`)
-      .addField(
-        `:question: Mikä ihmeen ${AppConfiguration.APP.NAME} ?`,
-        `${AppConfiguration.APP.NAME} on [node.js](https://nodejs.org/) discord botti, jonka lähdekoodi on [nähtävillä](https://github.com/Pennane/peigom-bot).`,
-        false
-      )
-      .addField(
-        `:vertical_traffic_light: Versio:`,
-        `${AppConfiguration.APP.VERSION}`,
-        false
-      )
+      .setDescription('Tietoa botista')
+      .addFields([
+        {
+          name: `:question: Mikä ihmeen ${AppConfiguration.APP.NAME} ?`,
+          value: `${AppConfiguration.APP.NAME} on [node.js](https://nodejs.org/) discord botti, jonka lähdekoodi on [nähtävillä](https://github.com/Pennane/peigom-bot).`,
+          inline: false
+        },
+        {
+          name: ':vertical_traffic_light: Versio:',
+          value: `${AppConfiguration.APP.VERSION}`,
+          inline: false
+        },
+        {
+          name: ':1234: Komentojen määrä:',
+          value: commands.size.toString(),
+          inline: true
+        },
+        {
+          name: ':file_cabinet: Serverien määrä:',
+          value: client.guilds.cache.size.toString(),
+          inline: true
+        },
+        {
+          name: ':pencil: Kehittäjä:',
+          value: '@Susse#9999',
+          inline: true
+        }
+      ])
 
-      .addField(`:1234: Komentojen määrä:`, commands.size.toString(), true)
-      .addField(
-        `:file_cabinet: Serverien määrä:`,
-        client.guilds.cache.size.toString(),
-        true
-      )
-      .addField(`:pencil: Kehittäjä:`, `@Susse#9999`, true)
     return embed
   }
 
-  function createCommandEmbed(command: Command): Discord.MessageEmbed {
+  function createCommandEmbed(command: Command) {
     const isAdmin = Command.isMemberAdminAuthorized(message)
     const isSuperAdmin = Command.isMemberSuperAdminAuthorized(message)
-
     const embed = createBaseEmbed()
 
-    if (command.types.includes('admin') && !isAdmin) {
-      embed.addField(':sos: tsot tsot', 'et sina nähdä tänne')
-      return embed
-    } else if (command.types.includes('superadmin') && !isSuperAdmin) {
-      embed.addField(':sos: tsot tsot', 'et sina nähdä tänne')
+    if (
+      (command.types.includes('admin') && !isAdmin) ||
+      (command.types.includes('superadmin') && !isSuperAdmin)
+    ) {
+      embed.addFields([
+        { name: ':sos: tsot tsot', value: 'et sina nähdä tänne' }
+      ])
       return embed
     }
 
@@ -275,65 +282,63 @@ const executor: CommandExecutor = async (message, client, args) => {
           ' '
         )})`
       )
-      .addField(
-        `:pencil: Komento toimii näin:`,
-        `\`${prefix}${command._syntax}\``
-      )
-      .addField(`:gear: Komennon toiminto:`, `${command._description}`)
-      .addField(
-        `:book: Komennon liipaisimet:`,
-        `\`${prefix + [...command.triggers].join(' ' + prefix)}\``
-      )
-      .addField('\u200b', '\u200b')
+      .addFields([
+        {
+          name: ':pencil: Komento toimii näin:',
+          value: `\`${prefix}${command._syntax}\``,
+          inline: false
+        },
+        {
+          name: ':gear: Komennon toiminto:',
+          value: `${command._description}`,
+          inline: false
+        },
+        {
+          name: ':book: Komennon liipaisimet:',
+          value: `\`${prefix + [...command.triggers].join(' ' + prefix)}\``,
+          inline: false
+        }
+      ])
 
     if (command._superadminCommand || command.types.includes('superadmin')) {
-      embed.addField(
-        `:warning::warning: **Huom**`,
-        `Kyseessä on super admin komento.`
-      )
+      embed.addFields([
+        {
+          name: ':warning::warning: **Huom**',
+          value: 'Kyseessä on super admin komento.'
+        }
+      ])
     } else if (command._adminCommand || command.types.includes('admin')) {
-      embed.addField(`:warning: **Huom**`, `Kyseessä on admin komento.`)
+      embed.addFields([
+        { name: ':warning: **Huom**', value: 'Kyseessä on admin komento.' }
+      ])
     }
+
     return embed
   }
 
-  if (!action) {
-    return message.channel.send({ embeds: [createHomeEmbed()] })
-  } else if (action === 'komennot' && !subAction) {
-    return message.channel.send({ embeds: [createTypesEmbed(types)] })
-  } else if (action === 'komennot' && subAction && types[subAction]) {
-    const commands = types[action]
-    return message.channel.send({
-      embeds: [createCommandTypeEmbed(action, commands)]
+  const channel = message.channel as TextChannel
+
+  if (!action) return channel.send({ embeds: [createHomeEmbed()] })
+  else if (action === 'komennot' && !subAction)
+    return channel.send({ embeds: [createTypesEmbed(types)] })
+  else if (action === 'komennot' && subAction && types[subAction])
+    return channel.send({
+      embeds: [createCommandTypeEmbed(action, types[action])]
     })
-  } else if (types[action]) {
-    const commands = types[action]
-    return message.channel.send({
-      embeds: [createCommandTypeEmbed(action, commands)]
+  else if (types[action])
+    return channel.send({
+      embeds: [createCommandTypeEmbed(action, types[action])]
     })
-  } else if (action === AppConfiguration.APP.NAME.toLowerCase()) {
-    return message.channel.send({
-      embeds: [createApplicationInformationEmbed()]
-    })
-  } else if (triggers.has(action)) {
+  else if (action === AppConfiguration.APP.NAME.toLowerCase())
+    return channel.send({ embeds: [createApplicationInformationEmbed()] })
+  else if (triggers.has(action)) {
     const name = triggers.get(action)
-
     if (!name) throw new Error('this simply can not happen')
-
     const command = commands.get(name)
-
     if (!command)
       throw new Error('action in triggers but trigger not in command')
-
-    message.channel.send({ embeds: [createCommandEmbed(command)] })
-  } else {
-    message.channel.send({ embeds: [createNoActionEmbed(action)] })
-  }
-
-  return
+    return channel.send({ embeds: [createCommandEmbed(command)] })
+  } else return channel.send({ embeds: [createNoActionEmbed(action)] })
 }
 
-export default new Command({
-  configuration,
-  executor
-})
+export default new Command({ configuration, executor })

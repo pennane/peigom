@@ -1,7 +1,6 @@
 import ImageCommand, {
   CommandBaseImageManipulator,
-  ImageCommandConfiguration,
-  ImageManipulator
+  ImageCommandConfiguration
 } from '../ImageCommand'
 
 const configuration: ImageCommandConfiguration = {

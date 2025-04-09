@@ -1,3 +1,4 @@
+import { ChannelType } from 'discord.js'
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
 
 const configuration: CommandConfiguration = {
@@ -11,11 +12,15 @@ const configuration: CommandConfiguration = {
 
 const executor: CommandExecutor = async (message, client, args) => {
   const embed = Command.createEmbed()
+  const channel = message.channel
+  if (channel.type !== ChannelType.GuildText) return
   embed.setTitle('Botin uptime:')
 
   if (!client?.uptime) {
-    embed.description = `Botti on kadonnut matriisiin, ja jostain syystä päälläoloaikaa ei ole saatavilla.`
-    message.channel.send({ embeds: [embed] })
+    embed.setDescription(
+      `Botti on kadonnut matriisiin, ja jostain syystä päälläoloaikaa ei ole saatavilla.`
+    )
+    channel.send({ embeds: [embed] })
     return
   }
 
@@ -49,7 +54,7 @@ const executor: CommandExecutor = async (message, client, args) => {
     `Tää botti o ollu hereillä jo ${up.h}${up.m}${up.s} :hourglass_flowing_sand:`
   )
 
-  message.channel.send({ embeds: [embed] })
+  channel.send({ embeds: [embed] })
 }
 
 export default new Command({

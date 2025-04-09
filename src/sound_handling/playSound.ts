@@ -1,12 +1,14 @@
-import Discord from 'discord.js'
-import { queueMethods } from './sound'
-import Command from '../commands/Command'
 import {
-  joinVoiceChannel,
+  AudioPlayerStatus,
   createAudioPlayer,
   createAudioResource,
-  AudioPlayerStatus
+  DiscordGatewayAdapterCreator,
+  entersState,
+  joinVoiceChannel,
+  VoiceConnectionStatus
 } from '@discordjs/voice'
+import { ChannelType, Message, VoiceBasedChannel } from 'discord.js'
+import Command from '../commands/Command'
 
 const play = ({
   soundfile,
@@ -14,56 +16,70 @@ const play = ({
   exitAfter
 }: {
   soundfile: string
-  message: Discord.Message
+  message: Message
   exitAfter: boolean
 }): Promise<void> =>
-  new Promise((resolve, reject) => {
-    if (!message.member || !message.guild) return
+  new Promise(async (resolve, reject) => {
+    const channel = message.channel
 
-    const voiceChannel = message.member?.voice.channel
+    const member = message.member
+    const guild = message.guild
 
-    const user = message.member.user
+    if (!member || !guild || channel.type !== ChannelType.GuildText)
+      return reject()
 
-    if (!voiceChannel || !voiceChannel.isVoice()) {
+    const voiceChannel = member.voice.channel as VoiceBasedChannel | null
+    const user = member.user
+
+    if (!voiceChannel || voiceChannel.type !== ChannelType.GuildVoice) {
       const embed = Command.createEmbed()
-      embed
         .setTitle(`Botin kommentti:`)
         .setDescription(
           `${user.username} mene eka jollekki voicechannelille, kid.`
         )
-      message.channel.send({ embeds: [embed] })
 
+      await channel.send({ embeds: [embed] })
       return reject()
     }
 
-    if (voiceChannel.type === 'GUILD_STAGE_VOICE') {
+    try {
+      const connection = joinVoiceChannel({
+        guildId: voiceChannel.guild.id,
+        channelId: voiceChannel.id,
+        adapterCreator: voiceChannel.guild
+          .voiceAdapterCreator as DiscordGatewayAdapterCreator // Cast the type here
+      })
+
+      await entersState(connection, VoiceConnectionStatus.Ready, 5_000)
+
+      const player = createAudioPlayer()
+      const resource = createAudioResource(soundfile)
+
+      connection.subscribe(player)
+
+      player.on(AudioPlayerStatus.Idle, () => {
+        if (exitAfter) {
+          connection.destroy()
+        }
+        resolve()
+      })
+
+      player.on('error', (err) => {
+        console.error('Audio player error:', err)
+        if (exitAfter) connection.destroy()
+        reject(err)
+      })
+
+      player.play(resource)
+    } catch (err) {
+      console.error('Voice connection error:', err)
       const embed = Command.createEmbed()
-      embed
-        .setTitle(`Botin kommentti:`)
-        .setDescription(`Botti ei osaa liittyä stage channeleille, sori.`)
-      message.channel.send({ embeds: [embed] })
-      return reject()
+        .setTitle(`Virhe`)
+        .setDescription(`Jotain meni pieleen ääntä soitettaessa.`)
+
+      await channel.send({ embeds: [embed] })
+      reject(err)
     }
-
-    const connection = joinVoiceChannel({
-      guildId: voiceChannel.guild.id,
-      channelId: voiceChannel.id,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      adapterCreator: voiceChannel.guild.voiceAdapterCreator as any
-    })
-
-    const player = createAudioPlayer()
-
-    const resource = createAudioResource(soundfile)
-    connection.subscribe(player)
-    player.on(AudioPlayerStatus.Idle, () => {
-      if (connection && exitAfter) {
-        connection.destroy()
-      }
-      return resolve()
-    })
-
-    player.play(resource)
   })
 
 export default play

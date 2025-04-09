@@ -1,5 +1,4 @@
 import Command, { CommandConfiguration, CommandExecutor } from '../Command'
-import Discord from 'discord.js'
 
 const configuration: CommandConfiguration = {
   name: 'sammuta',

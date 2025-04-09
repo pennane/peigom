@@ -1,6 +1,6 @@
 import Discord from 'discord.js'
-import { CommandConfiguration } from './Command'
 import * as AppConfiguration from '../lib/config'
+import { CommandConfiguration } from './Command'
 
 const prefix = AppConfiguration.PREFIX
 
@@ -9,12 +9,8 @@ export interface SyntaxEmbedOptions {
   heading?: string | null
   body?: string | null
 }
-const syntaxEmbed: (options: SyntaxEmbedOptions) => Discord.MessageEmbed = ({
-  configuration,
-  heading,
-  body
-}) => {
-  const embed = new Discord.MessageEmbed()
+const syntaxEmbed = ({ configuration, heading, body }: SyntaxEmbedOptions) => {
+  const embed = new Discord.EmbedBuilder()
   embed.setColor('#FF0000')
 
   if (!configuration) throw new Error('No configuration to search syntax for.')
@@ -23,14 +19,14 @@ const syntaxEmbed: (options: SyntaxEmbedOptions) => Discord.MessageEmbed = ({
   if (!configuration.name)
     throw new Error('configuration did not include a name for the commmand.')
 
-  embed.title = heading || `Komento ${configuration.name} toimii näin:`
-  embed.description = body || `\`${prefix}${configuration.syntax}\``
+  embed.setTitle(heading || `Komento ${configuration.name} toimii näin:`)
+  embed.setDescription(body || `\`${prefix}${configuration.syntax}\``)
 
   if (configuration.triggers.length > 1) {
-    embed.addField(
-      `Vaihtoehtoiset nimet komennolle`,
-      configuration.triggers.join(' ')
-    )
+    embed.addFields({
+      name: `Vaihtoehtoiset nimet komennolle`,
+      value: configuration.triggers.join(' ')
+    })
   }
 
   return embed

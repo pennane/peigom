@@ -1,13 +1,13 @@
+import Discord, { ChannelType } from 'discord.js'
 import { EventEmitter } from 'events'
-import Discord from 'discord.js'
-import * as AppConfiguration from '../lib/config'
+import badWords from '../assets/badwords/badwords.json'
 import Command from '../commands/Command'
 import loader from '../commands/loader'
-import badWords from '../assets/badwords/badwords.json'
 import { executor as SoundCommandExecutor } from '../commands/SoundCommand'
+import * as AppConfiguration from '../lib/config'
 
-import { disabledChannels } from '../commands/command_files/admin_disable'
 import { readSoundData } from '../commands/command_files/admin_createsound'
+import { disabledChannels } from '../commands/command_files/admin_disable'
 
 let triggers: { [trigger: string]: string }
 let commands: Map<string, Command>
@@ -38,26 +38,33 @@ const handler = {
       ? await readSoundData(message.guild)
       : null
 
-    const hasBadWords = badWords.some((word) => message.content.includes(word))
     const hasPrefix = message.content.startsWith(prefix)
+    console.log(message.content)
+    const channel = message.channel
+    if (channel.type !== ChannelType.GuildText) return
 
-    if (!hasPrefix && hasBadWords) {
-      const reactEmoji = client.emojis.cache.get('304687480471289866')
-      if (!reactEmoji) return
-      message.react(reactEmoji)
-    }
+    if (!hasPrefix) {
+      const hasBadWords = badWords.some((word) =>
+        message.content.includes(word)
+      )
+      if (hasBadWords) {
+        const reactEmoji = client.emojis.cache.get('304687480471289866')
+        if (!reactEmoji) return
+        message.react(reactEmoji)
+      }
 
-    if (!hasPrefix && message.content.includes('bad bot')) {
-      message.channel.send('no u')
+      if (message.content.includes('bad bot')) {
+        channel.send('no u')
+        return
+      }
+
+      if (message.content.includes('good bot')) {
+        channel.send('ty')
+        return
+      }
+
       return
     }
-
-    if (!hasPrefix && message.content.includes('good bot')) {
-      message.channel.send('ty')
-      return
-    }
-
-    if (!hasPrefix) return
 
     const args = message.content.trim().substr(prefix.length).split(' ')
 
@@ -81,7 +88,7 @@ const handler = {
       disabledChannels[channelId] === 'disabled'
 
     if (ignoreCommand) {
-      const notifyMessage = await message.channel.send(
+      const notifyMessage = await channel.send(
         'Botti ei toimi tällä tekstikanavalla.'
       )
       setTimeout(() => notifyMessage.delete(), 10000)

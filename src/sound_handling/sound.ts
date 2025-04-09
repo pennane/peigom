@@ -1,7 +1,6 @@
+import Discord, { Snowflake } from 'discord.js'
 import { YOUTUBE_API_KEY } from '../lib/config'
-import Discord, { Snowflake, Util } from 'discord.js'
-import ytdl, { videoInfo } from 'ytdl-core'
-import { msToReadable } from '../lib/util'
+
 import {
   AudioPlayerStatus,
   VoiceConnectionStatus,
@@ -12,6 +11,9 @@ import {
   joinVoiceChannel
 } from '@discordjs/voice'
 import internal from 'stream'
+
+import ytdl, { videoInfo } from '@distube/ytdl-core'
+import { msToReadable, splitMessage } from '../lib/util'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Youtube = require('simple-youtube-api')
@@ -90,38 +92,42 @@ const startNext = (guildId: Snowflake) => {
 }
 const play = async (guildId: Snowflake, track: Track) => {
   const queue = QueueMap.get(guildId)
-  if (!queue) return
+  if (!queue) {
+    console.error(`No queue found for guild ${guildId}`)
+    return
+  }
+  console.log(track)
+  console.log(track.videoDetails.video_url)
 
   queue.nowPlaying = track
-
   const stream = ytdl(track.videoDetails.video_url, {
     filter: 'audioonly',
     quality: 'lowest',
-    requestOptions: {
-      maxReconnects: 50,
-      maxRetries: 20
-    }
+    requestOptions: {}
   })
 
   const resource = createAudioResource(stream)
   const connection = await connect(guildId)
 
   if (!connection) {
+    console.error(`Failed to connect to the voice channel for guild ${guildId}`)
     queue.nowPlaying = null
     queue.stream = null
     return
   }
 
   queue.stream = stream
-
   const player = createAudioPlayer()
 
   connection.subscribe(player)
   player.play(resource)
 
   try {
+    console.log(`Waiting for player to start playing...`)
     await entersState(player, AudioPlayerStatus.Playing, 10000)
+    console.log(`Player started playing!`)
   } catch (error) {
+    console.error(`Failed to enter the playing state: ${error}`)
     queue.nowPlaying = null
     queue.stream = null
     return startNext(guildId)
@@ -130,22 +136,27 @@ const play = async (guildId: Snowflake, track: Track) => {
   queue.nowPlaying = track
 
   try {
+    console.log(`Waiting for player to go idle...`)
     await entersState(
       player,
       AudioPlayerStatus.Idle,
       Number(track.videoDetails.lengthSeconds) * 1000 + 2000
     )
+    console.log(`Player is idle, track has finished`)
   } catch (e) {
-    //
+    console.error(`Error waiting for idle state: ${e}`)
   } finally {
     queue.nowPlaying = null
     queue.stream = null
+    console.log(`Cleaning up queue for guild ${guildId}`)
     startNext(guildId)
   }
 }
 
 export const queueMethods = {
   add: async function ({ guild, message, voiceChannel, track }: AddArguments) {
+    const channel = message.channel
+    if (channel.type !== Discord.ChannelType.GuildText) return
     if (!track) {
       return
     }
@@ -166,21 +177,31 @@ export const queueMethods = {
       Number(track.videoDetails.lengthSeconds) * 1000
     )
 
-    const responseEmbed = new Discord.MessageEmbed()
-      .addField(
-        `Jonoon lisätty`,
-        `[${track.videoDetails.title}](${track.videoDetails.video_url})`
-      )
+    const responseEmbed = new Discord.EmbedBuilder()
+      .addFields([
+        {
+          name: `Jonoon lisätty`,
+          value: `[${track.videoDetails.title}](${track.videoDetails.video_url})`
+        },
+        {
+          name: `Pituus`,
+          value: trackDuration,
+          inline: true
+        },
+        {
+          name: `Biisiä toivo`,
+          value: track.requestedBy?.toString() || '?',
+          inline: true
+        }
+      ])
       .setColor('#2f3136')
-      .addField('Pituus', trackDuration, true)
-      .addField('Biisiä toivo:', track.requestedBy?.toString() || '?', true)
       .setURL(track.videoDetails.video_url)
 
     if (track.videoDetails.thumbnails[0].url) {
       responseEmbed.setThumbnail(track.videoDetails.thumbnails[0].url)
     }
 
-    message.channel.send({ embeds: [responseEmbed] })
+    channel.send({ embeds: [responseEmbed] })
 
     serverQueue.tracks.push(track)
     if (serverQueue.nowPlaying === null) {
@@ -194,17 +215,19 @@ export const queueMethods = {
     guild: Discord.Guild
     message: Discord.Message
   }) {
+    const channel = message.channel
+    if (channel.type !== Discord.ChannelType.GuildText) return
     const serverQueue = QueueMap.get(guild.id)
     if (!serverQueue) {
-      message.channel.send(':hand_splayed: Bro, no keke')
+      channel.send(':hand_splayed: Bro, no keke')
       return
     }
     if (!serverQueue.nowPlaying) {
-      message.channel.send(':hand_splayed: Bro, tyhjä keke ? impossible')
+      channel.send(':hand_splayed: Bro, tyhjä keke ? impossible')
       return
     }
 
-    message.channel.send(
+    channel.send(
       `:track_next: skipataan ${serverQueue.nowPlaying.videoDetails.title}`
     )
 
@@ -220,13 +243,15 @@ export const queueMethods = {
     message: Discord.Message
   }) {
     const serverQueue = QueueMap.get(guild.id)
+    const channel = message.channel
+    if (channel.type !== Discord.ChannelType.GuildText) return
 
     if (
       !serverQueue ||
       !serverQueue.nowPlaying ||
       !getVoiceConnection(guild.id)
     ) {
-      return message.channel.send(':hand_splayed: Bro, ei täällä soi mikään.')
+      return channel.send(':hand_splayed: Bro, ei täällä soi mikään.')
     }
     const trackLength = msToReadable(
       Number(serverQueue.nowPlaying.videoDetails.lengthSeconds) * 1000
@@ -234,14 +259,17 @@ export const queueMethods = {
 
     const track = serverQueue.nowPlaying
 
-    const responseEmbed = new Discord.MessageEmbed()
+    const responseEmbed = new Discord.EmbedBuilder()
       .setColor('#2f3136')
-      .addField(
-        `Nyt soi:`,
-        `[${track.videoDetails.title}](${track.videoDetails.video_url})\njotain / ${trackLength}`,
-        true
-      )
-      .addField('Biisiä toivo:', track.requestedBy?.toString() || '?', true)
+      .addFields({
+        name: 'Nyt soi',
+        value: `[${track.videoDetails.title}](${track.videoDetails.video_url})\njotain / ${trackLength}`
+      })
+      .addFields({
+        name: `Biisiä toivo`,
+        value: track.requestedBy?.toString() || '?',
+        inline: true
+      })
       .setURL(track.videoDetails.video_url)
 
     if (track?.videoDetails?.thumbnails[0]?.url) {
@@ -249,7 +277,7 @@ export const queueMethods = {
     }
 
     if (!serverQueue.tracks[0]) {
-      message.channel.send({ embeds: [responseEmbed] })
+      channel.send({ embeds: [responseEmbed] })
       return
     }
 
@@ -260,22 +288,22 @@ export const queueMethods = {
         })`
     )
     const tracksMessage = tracks.join('\n')
-    const parts = Util.splitMessage(tracksMessage, { maxLength: 950 })
+    const parts = splitMessage(tracksMessage, { maxLength: 950 })
     const first = parts[0]
     const rest = parts.slice(1, 2)
 
-    responseEmbed.addField('Seuraavana', first)
+    responseEmbed.addFields({ name: 'Seuraavana', value: first })
 
     if (!rest) {
-      message.channel.send({ embeds: [responseEmbed] })
+      channel.send({ embeds: [responseEmbed] })
       return
     }
 
     for (const part of rest) {
-      responseEmbed.addField('\u200b', part)
+      responseEmbed.addFields({ name: '\u200b', value: part })
     }
 
-    message.channel.send({ embeds: [responseEmbed] })
+    channel.send({ embeds: [responseEmbed] })
 
     return
   },
@@ -286,6 +314,8 @@ export const queueMethods = {
     guild: Discord.Guild
     message: Discord.Message
   }) {
+    const channel = message.channel
+    if (channel.type !== Discord.ChannelType.GuildText) return
     const serverQueue = QueueMap.get(guild.id)
 
     if (
@@ -293,30 +323,33 @@ export const queueMethods = {
       !serverQueue.nowPlaying ||
       !getVoiceConnection(guild.id)
     ) {
-      message.channel.send(':hand_splayed: Bro, ei täällä soi mikään.')
+      channel.send(':hand_splayed: Bro, ei täällä soi mikään.')
       return
     }
 
-    const responseEmbed = new Discord.MessageEmbed()
+    const responseEmbed = new Discord.EmbedBuilder()
     const track = serverQueue.nowPlaying
     const trackLength = msToReadable(
       Number(track.videoDetails.lengthSeconds) * 1000
     )
 
     responseEmbed
-      .addField(
-        `Nyt soi:`,
-        `[${track.videoDetails.title}](${track.videoDetails.video_url})\njotain / ${trackLength}`,
-        true
-      )
+      .addFields({
+        name: 'Nyt soi',
+        value: `[${track.videoDetails.title}](${track.videoDetails.video_url})\njotain / ${trackLength}`
+      })
       .setColor('#2f3136')
-      .addField('Biisiä toivo:', track.requestedBy?.toString() || '?', true)
+      .addFields({
+        name: `Biisiä toivo`,
+        value: track.requestedBy?.toString() || '?',
+        inline: true
+      })
 
     if (track?.videoDetails?.thumbnails[0]?.url) {
       responseEmbed.setThumbnail(track.videoDetails.thumbnails[0].url)
     }
 
-    message.channel.send({ embeds: [responseEmbed] })
+    channel.send({ embeds: [responseEmbed] })
     return
   }
 }

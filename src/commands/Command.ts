@@ -1,4 +1,4 @@
-import Discord, { Permissions } from 'discord.js'
+import Discord from 'discord.js'
 import activityLogger from '../lib/activityLogger'
 import * as AppConfiguration from '../lib/config'
 import SyntaxEmbed, { SyntaxEmbedOptions } from './syntaxEmbed'
@@ -164,7 +164,9 @@ class Command {
   static isMemberAdminAuthorized(message: Discord.Message): boolean {
     if (!message.member) return false
 
-    if (message.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR))
+    if (
+      message.member.permissions.has(Discord.PermissionFlagsBits.Administrator)
+    )
       return true
 
     if (
@@ -187,8 +189,8 @@ class Command {
     return SyntaxEmbed(options)
   }
 
-  static createEmbed(): Discord.MessageEmbed {
-    return new Discord.MessageEmbed().setColor(0xf4e542)
+  static createEmbed() {
+    return new Discord.EmbedBuilder().setColor(0xf4e542)
   }
 
   unauthorizedAction(message: Discord.Message): void {
